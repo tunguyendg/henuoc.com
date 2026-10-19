@@ -1,0 +1,7 @@
+.next
+node_modules
+release
+src/generated
+package-lock.json
+docs
+*.md

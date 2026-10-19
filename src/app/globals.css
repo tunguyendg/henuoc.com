@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Design tokens — nguồn: docs/02-DESIGN_SYSTEM.md §2.
+   rose-500 chỉ cho logo/icon/chữ lớn; nền nút dùng rose-600 (đạt WCAG AA với chữ trắng). */
+@theme {
+  --color-rose-50: #f6e6e8;
+  --color-rose-100: #efd3d7;
+  --color-rose-500: #bd6477;
+  --color-rose-600: #a84e63;
+  --color-rose-700: #943f54;
+  --color-canvas: #fbfaf8;
+  --color-surface: #ffffff;
+  --color-ink: #24252a;
+  --color-muted: #706d72;
+  --color-border: #ebe5e4;
+  --color-success: #1f7a5a;
+  --color-success-soft: #e6f2ed;
+  --color-warning: #9a5b13;
+  --color-warning-soft: #f7eddf;
+  --color-danger: #b4232f;
+  --color-danger-soft: #f8e4e6;
+
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+
+  --radius-btn: 0.75rem;
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgb(36 37 42 / 0.04), 0 8px 24px rgb(36 37 42 / 0.06);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-rose-600;
+  }
+
+  ::selection {
+    @apply bg-rose-100;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

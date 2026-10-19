@@ -1,0 +1,367 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────── Auth (Better Auth — sinh bằng `npx @better-auth/cli generate`, giữ đúng tên field) ─────────
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  memberships   WeddingMember[]
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@map("verification")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// ───────── Wedding ─────────
+model Wedding {
+  id              String        @id @default(cuid())
+  slug            String        @unique              // /w/[slug], vd "minh-anh-hoang-nam-2026"
+  status          WeddingStatus @default(DRAFT)
+  plan            Plan          @default(FREE)        // MVP: admin set tay
+  themeSlug       String
+  themeVersion    Int           @default(1)           // pin version, theme breaking change không làm vỡ thiệp cũ
+  themeOptions    Json          @default("{}")        // palette variant, font variant… (validate bằng zod schema của theme)
+  brideName       String
+  groomName       String
+  brideShortName  String?
+  groomShortName  String?
+  brideFirst      Boolean       @default(true)        // thứ tự hiển thị
+  brideParents    String?                              // "Ông Nguyễn Văn A & Bà Trần Thị B"
+  groomParents    String?
+  brideFamilyAddr String?
+  groomFamilyAddr String?
+  inviteMessage   String?
+  sections        Json          @default("{}")        // { countdown: true, album: true, gift: true, rsvp: true, music: true }
+  musicTrackId    String?
+  coverMediaId    String?       @unique
+  rsvpDeadline    DateTime?
+  allowWalkInRsvp Boolean       @default(false)
+  tableSize       Int           @default(10)
+  weddingDate     DateTime?                             // ngày chính — tính countdown & hạn checklist
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  members      WeddingMember[]
+  events       WeddingEvent[]
+  media        Media[]         @relation("WeddingMedia")
+  cover        Media?          @relation("WeddingCover", fields: [coverMediaId], references: [id])
+  giftAccounts GiftAccount[]
+  groups       GuestGroup[]
+  invitations  Invitation[]
+  rsvps        Rsvp[]
+  checklist    ChecklistItem[]
+  clicks       AffiliateClick[]
+}
+
+enum WeddingStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+enum Plan {
+  FREE
+  WEDDING
+  SIGNATURE
+}
+
+model WeddingMember {
+  weddingId String
+  userId    String
+  role      MemberRole @default(OWNER)
+  createdAt DateTime   @default(now())
+  wedding   Wedding    @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([weddingId, userId])
+  @@index([userId])
+}
+
+enum MemberRole {
+  OWNER
+  EDITOR
+}
+
+model WeddingEvent {
+  id        String    @id @default(cuid())
+  weddingId String
+  type      EventType
+  side      Side      @default(CHUNG)
+  title     String?                       // override tên hiển thị
+  startsAt  DateTime                      // UTC
+  venueName String
+  address   String
+  mapUrl    String?
+  sortOrder Int       @default(0)
+  wedding   Wedding   @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  invitations InvitationEvent[]
+  rsvps       RsvpEvent[]
+  @@index([weddingId])
+}
+
+enum EventType {
+  AN_HOI
+  VU_QUY
+  THANH_HON
+  TAN_HON
+  TIEC
+}
+enum Side {
+  NHA_TRAI
+  NHA_GAI
+  CHUNG
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  weddingId String
+  kind      MediaKind
+  key       String    @unique             // R2 object key
+  url       String                        // https://media.henuoc.com/<key>
+  width     Int
+  height    Int
+  bytes     Int
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  wedding   Wedding   @relation("WeddingMedia", fields: [weddingId], references: [id], onDelete: Cascade)
+  coverOf   Wedding?  @relation("WeddingCover")
+  @@index([weddingId, kind])
+}
+
+enum MediaKind {
+  COVER
+  GALLERY
+}
+
+model GiftAccount {
+  id          String  @id @default(cuid())
+  weddingId   String
+  side        Side
+  bankBin     String                     // mã BIN ngân hàng (Napas)
+  accountNo   String
+  accountName String
+  wedding     Wedding @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  @@unique([weddingId, side])
+}
+
+// ───────── Khách mời ─────────
+model GuestGroup {
+  id        String  @id @default(cuid())
+  weddingId String
+  side      Side
+  name      String                       // "Họ hàng", "Bạn đại học"…
+  sortOrder Int     @default(0)
+  wedding   Wedding @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  invitations Invitation[]
+  @@unique([weddingId, side, name])
+}
+
+model Invitation {
+  id               String         @id @default(cuid())
+  weddingId        String
+  groupId          String?
+  side             Side
+  salutationPrefix String         @default("Trân trọng kính mời")
+  displayName      String                     // "Anh Minh", "Cô Chú Tư"
+  salutationSuffix String?                    // "& Gia đình"
+  maxAttendees     Int            @default(1)
+  phone            String?                    // tuỳ chọn, chỉ để mở Zalo
+  note             String?                    // ghi chú riêng của chủ tiệc
+  tokenHash        String         @unique     // sha256(token) — dùng để tra cứu
+  tokenCipher      String                     // AES-256-GCM(token) — để hiện lại link trong dashboard
+  deliveryStatus   DeliveryStatus @default(NOT_SENT)
+  markedSentAt     DateTime?
+  firstOpenedAt    DateTime?
+  lastOpenedAt     DateTime?
+  openCount        Int            @default(0)
+  revokedAt        DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  wedding          Wedding        @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  group            GuestGroup?    @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  events           InvitationEvent[]
+  rsvp             Rsvp?
+  @@index([weddingId, side])
+}
+
+enum DeliveryStatus {
+  NOT_SENT
+  MARKED_SENT
+}
+
+model InvitationEvent {
+  invitationId String
+  eventId      String
+  invitation   Invitation   @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  event        WeddingEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  @@id([invitationId, eventId])
+}
+
+// ───────── RSVP ─────────
+model Rsvp {
+  id            String     @id @default(cuid())
+  weddingId     String
+  invitationId  String?    @unique              // null = khách vãng lai từ /w/[slug]
+  source        RsvpSource
+  status        RsvpStatus
+  attendeeCount Int        @default(0)
+  message       String?
+  walkInName    String?
+  walkInPhone   String?
+  respondedAt   DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  wedding       Wedding    @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  invitation    Invitation? @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  events        RsvpEvent[]
+  history       RsvpHistory[]
+  @@index([weddingId, status])
+}
+
+enum RsvpSource {
+  INVITATION
+  WALK_IN
+}
+enum RsvpStatus {
+  ATTENDING
+  DECLINED
+}
+
+model RsvpEvent {
+  rsvpId  String
+  eventId String
+  rsvp    Rsvp         @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
+  event   WeddingEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  @@id([rsvpId, eventId])
+}
+
+model RsvpHistory {
+  id        String   @id @default(cuid())
+  rsvpId    String
+  snapshot  Json                          // { status, attendeeCount, eventIds, message }
+  createdAt DateTime @default(now())
+  rsvp      Rsvp     @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
+  @@index([rsvpId])
+}
+
+// ───────── Checklist ─────────
+model ChecklistItem {
+  id              String    @id @default(cuid())
+  weddingId       String
+  templateKey     String?                     // null = user tự thêm
+  title           String
+  dueOffsetDays   Int                         // âm = trước ngày cưới
+  productCategory String?                     // gắn danh mục affiliate
+  doneAt          DateTime?
+  hidden          Boolean   @default(false)
+  spentAmount     Int?                        // VND, user tự nhập
+  sortOrder       Int       @default(0)
+  wedding         Wedding   @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  @@index([weddingId])
+}
+
+// ───────── Affiliate ─────────
+model AffiliateProduct {
+  id            String   @id @default(cuid())
+  category      String                      // gia-tien | an-hoi | co-dau | qua-cam-on | trang-tri | chup-anh
+  title         String
+  imageUrl      String
+  originUrl     String                      // link Shopee gốc
+  affLink       String                      // từ ACCESSTRADE product_link/create
+  shortLink     String?
+  priceRef      Int?                        // giá tham khảo lúc thêm — hiển thị "khoảng", không phải giá checkout
+  shopName      String?
+  note          String?                     // lý do chọn (Tony viết)
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  lastCheckedAt DateTime?
+  createdAt     DateTime @default(now())
+  clicks        AffiliateClick[]
+  @@index([category, active])
+}
+
+model AffiliateClick {
+  id        String           @id @default(cuid())
+  productId String
+  weddingId String?
+  placement String                          // checklist | shop | dashboard-tip
+  createdAt DateTime         @default(now())
+  product   AffiliateProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  wedding   Wedding?         @relation(fields: [weddingId], references: [id], onDelete: SetNull)
+  @@index([productId, createdAt])
+}
+
+model AffiliateConversion {
+  id              String   @id @default(cuid())
+  transactionId   String   @unique
+  merchant        String
+  productName     String?
+  transactionValue Int
+  commission      Int
+  status          Int                       // 0 hold · 1 approved · 2 rejected (theo ACCESSTRADE)
+  utmContent      String?                   // = AffiliateProduct.id
+  transactionTime DateTime
+  syncedAt        DateTime @default(now())
+}
+
+// ───────── Hạ tầng ─────────
+model RateLimit {
+  key         String   @id                  // "rsvp:ip:<hash>" | "rsvp:token:<hash>"
+  windowStart DateTime
+  count       Int
+}
