@@ -6,7 +6,7 @@
 Từ 15–16/10/2026, docs bị viết qua 4 lần đổi hướng (Modern Romance burgundy → SaaS tím → Rose Say I do → visual-reference coral). 13 file mâu thuẫn về màu, logo, cách làm việc. Repo `henuoc.com` chỉ có frontend localStorage, chưa có DB/auth.
 
 ## Quyết định
-1. Repo mới `tunguyendg/henuoc`; repo cũ archive. Chỉ mang sang `public/brand/*`.
+1. Repo mới `tunguyendg/henuoc.com`; repo cũ archive. Chỉ mang sang `public/brand/*`.
 2. Gộp docs thành `00`→`07` + ADR. Docs cũ xoá khỏi repo mới (vẫn còn trong repo cũ để tra cứu).
 3. Brand: Rose `#BD6477` (brand) + `#A84E63` (nền nút, đạt WCAG AA). Bỏ `#6255E8`, `#9B5C64`, `#E3707C`.
 4. Bỏ toàn bộ số liệu giả trong visual-reference (10.000+, 98%, 4.9/5).
