@@ -1,21 +1,27 @@
+import { Container } from "@/components/ui/container";
 import { Photo } from "./photo";
 
-/** Dải ảnh cưới tràn màn hình + 1 câu cảm xúc — tạo nhịp "nhìn là biết đám cưới". */
+/** Dải ảnh cưới + 1 câu cảm xúc. Nằm trong khung bo góc như các section khác, phủ tông hồng để không lạc màu. */
 export function PhotoBand() {
   return (
-    <section className="relative">
-      <Photo
-        src="/images/wedding/band.jpg"
-        alt="Cô dâu chú rể nắm tay nhau trong ngày cưới"
-        sizes="100vw"
-        className="h-[52vh] min-h-[340px] md:h-[64vh]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/20 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-5 pb-10 md:px-8 md:pb-14">
-        <p className="max-w-2xl font-display text-3xl leading-tight font-extrabold tracking-[-0.03em] text-white md:text-5xl">
-          Ngày vui của hai bạn, gói trọn trong một đường link.
-        </p>
-      </div>
+    <section className="py-10 md:py-14">
+      <Container>
+        <div className="relative isolate overflow-hidden rounded-[2rem]">
+          <Photo
+            src="/images/wedding/band.jpg"
+            alt="Cô dâu chú rể bên hồ trong ngày cưới"
+            sizes="(min-width: 1152px) 1088px, 100vw"
+            position="50% 80%"
+            className="h-[300px] md:h-[420px]"
+          />
+          {/* Phủ hồng ấm: kéo màu xanh của ảnh về tông brand */}
+          <div aria-hidden className="absolute inset-0 bg-rose-700/25 mix-blend-multiply" />
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-transparent" />
+          <p className="absolute inset-x-0 bottom-0 max-w-2xl p-6 font-display text-2xl leading-tight font-extrabold tracking-[-0.03em] text-white md:p-10 md:text-4xl">
+            Ngày vui của hai bạn, gói trọn trong một đường link.
+          </p>
+        </div>
+      </Container>
     </section>
   );
 }
