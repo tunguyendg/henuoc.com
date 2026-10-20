@@ -62,12 +62,12 @@ tests/  e2e/
 - Không hiển thị số liệu bịa (số khách hàng, rating, review) ở bất kỳ đâu.
 - Không claim "đã gửi" / "đã đọc" khi chỉ có copy link. Trạng thái gửi do user tự đánh dấu.
 
-## 5. Git & PR
+## 5. Git
 
-- Branch: `feat/T-012-short-name`, `fix/…`, `chore/…`. Không commit thẳng `main`.
-- Commit nhỏ, Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`).
-- Mỗi agent làm trong **git worktree riêng**; 2 task song song không được sửa cùng file.
-- PR mô tả theo mẫu: *Task ID · Đã làm · Cách test · Ảnh chụp (UI) · Ghi chú cho reviewer · Kiến thức đáng chú ý*.
+- Làm và commit thẳng `main` (Tony chọn quy trình đơn giản). Không branch/PR trừ khi Tony yêu cầu.
+- Commit nhỏ, Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`). **Chỉ `git push` khi Tony đồng ý.**
+- 2 agent chạy song song không được sửa cùng file; cần song song thật thì dùng git worktree riêng.
+- Báo cáo mỗi việc: *Đã làm · Cách test · Ghi chú · Kiến thức đáng chú ý*. Đội agent & quyền: `docs/09-AGENTS.md`.
 
 ## 6. Definition of Done (mọi task)
 
@@ -77,7 +77,7 @@ npm run typecheck && npm run lint && npm run test && npm run build
 - Pass hết 4 lệnh. UI: chụp màn hình mobile 390px + desktop 1280px.
 - Không có `console.log` thừa. Không file rác.
 - Cập nhật docs nếu thay đổi schema, route, env var (`.env.example`).
-- Mục **"Kiến thức đáng chú ý"** trong PR: 3–5 gạch đầu dòng giải thích khái niệm Next/React/Node quan trọng đã dùng (Tony đang học — viết ngắn, cụ thể, gắn với code vừa viết).
+- Mục **"Kiến thức đáng chú ý"** trong báo cáo: 3–5 gạch đầu dòng giải thích khái niệm Next/React/Node quan trọng đã dùng (Tony đang học — viết ngắn, cụ thể, gắn với code vừa viết).
 
 ## 7. Task 🔴 (Tony tự code)
 

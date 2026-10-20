@@ -32,3 +32,8 @@ next-env.d.ts
 
 # prisma client sinh tự động
 /src/generated/
+
+# claude code — cài đặt cá nhân & file tạm của agent
+.claude/settings.local.json
+.claude/worktrees/
+.claude/codex-*.md
