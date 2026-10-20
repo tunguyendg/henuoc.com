@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { footerNav, site } from "@/lib/site";
+import { footerNav, legalNav, site } from "@/lib/site";
 import { Logo } from "./logo";
 
 export function SiteFooter() {
@@ -29,10 +29,22 @@ export function SiteFooter() {
       </Container>
 
       <div className="border-t border-border">
-        <Container className="flex flex-col gap-2 py-6 text-sm text-muted sm:flex-row sm:justify-between">
+        <Container className="flex flex-col gap-3 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
             © 2026 {site.name} · {site.domain}
           </p>
+          <nav aria-label="Pháp lý">
+            <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {legalNav.map((link, i) => (
+                <li key={link.href} className="flex items-center gap-2">
+                  {i > 0 ? <span aria-hidden>·</span> : null}
+                  <Link href={link.href} className="transition-colors hover:text-rose-600">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <p>Làm bằng cả trái tim tại Việt Nam.</p>
         </Container>
       </div>

@@ -16,7 +16,8 @@ import {
  * `tests/seo.test.ts` kiểm tra độ dài, trùng lặp, từ khoá trong H1 và link gãy.
  */
 
-export type SchemaType = "WebPage" | "CollectionPage" | "ItemPage" | "AboutPage" | "ContactPage";
+export type SchemaType =
+  "WebPage" | "CollectionPage" | "ItemPage" | "AboutPage" | "ContactPage" | "FAQPage";
 
 export interface SeoPage {
   path: string; // URL, cũng là canonical
@@ -42,7 +43,7 @@ const staticPages: SeoPage[] = [
     keyword: "thiệp cưới online",
     breadcrumb: "Trang chủ",
     schema: "WebPage",
-    related: ["/mau-thiep-cuoi", "/tinh-nang", "/bang-gia", "/cam-nang"],
+    related: ["/mau-thiep-cuoi", "/tinh-nang", "/bang-gia", "/cau-hoi-thuong-gap", "/cam-nang"],
     index: true,
     priority: 1,
   },
@@ -62,6 +63,7 @@ const staticPages: SeoPage[] = [
       "/tinh-nang/loi-moi-rieng",
       "/tinh-nang/checklist-dam-cuoi",
       "/mau-thiep-cuoi",
+      "/cau-hoi-thuong-gap",
     ],
     index: true,
     priority: 0.8,
@@ -138,16 +140,71 @@ const staticPages: SeoPage[] = [
   },
   {
     path: "/bang-gia",
-    title: "Bảng giá thiệp cưới online · Hẹn Ước",
+    title: "Bảng giá thiệp cưới online: Miễn phí và Cao cấp · Hẹn Ước",
     description:
-      "Bắt đầu miễn phí, trả một lần cho mỗi đám cưới khi cần thêm mẫu cao cấp và không giới hạn lời mời. Không thuê bao hằng tháng.",
-    h1: "Bảng giá thiệp cưới online",
-    keyword: "thiệp cưới online",
+      "Bảng giá thiệp cưới online Hẹn Ước: gói Miễn phí để bắt đầu, gói Cao cấp trả một lần cho mỗi đám cưới, không thuê bao hằng tháng. Giá Cao cấp sắp công bố.",
+    h1: "Bảng giá thiệp cưới online: Miễn phí hoặc trả một lần",
+    keyword: "giá thiệp cưới online",
     breadcrumb: "Bảng giá",
     parent: "/",
     schema: "WebPage",
-    related: ["/mau-thiep-cuoi", "/tao-thiep"],
-    index: false, // trang tạm — bật khi có nội dung thật
+    related: ["/tinh-nang", "/cau-hoi-thuong-gap", "/mau-thiep-cuoi", "/tao-thiep"],
+    index: true,
+    priority: 0.7,
+  },
+  {
+    path: "/cau-hoi-thuong-gap",
+    title: "Câu hỏi thường gặp về thiệp cưới online · Hẹn Ước",
+    description:
+      "Giải đáp thắc mắc về thiệp cưới online Hẹn Ước: chi phí, gửi thiệp qua Zalo, khách có cần đăng nhập không, đổi mẫu sau khi gửi, bảo mật khách mời.",
+    h1: "Câu hỏi thường gặp về thiệp cưới online",
+    keyword: "câu hỏi thường gặp về thiệp cưới online",
+    breadcrumb: "Câu hỏi thường gặp",
+    parent: "/",
+    schema: "FAQPage",
+    related: ["/bang-gia", "/tinh-nang", "/mau-thiep-cuoi", "/gioi-thieu"],
+    index: true,
+    priority: 0.6,
+  },
+  {
+    path: "/gioi-thieu",
+    title: "Giới thiệu Hẹn Ước: thiệp cưới online cho người Việt",
+    description:
+      "Hẹn Ước là dịch vụ thiệp cưới online giúp hai bạn gửi lời mời đúng tên từng khách, nhận xác nhận tham dự và quản lý khách mời gọn trong một chỗ.",
+    h1: "Giới thiệu Hẹn Ước",
+    keyword: "giới thiệu Hẹn Ước",
+    breadcrumb: "Giới thiệu",
+    parent: "/",
+    schema: "AboutPage",
+    related: ["/tinh-nang", "/mau-thiep-cuoi", "/cau-hoi-thuong-gap", "/lien-he"],
+    index: true,
+    priority: 0.4,
+  },
+  {
+    path: "/chinh-sach-bao-mat",
+    title: "Chính sách bảo mật · Hẹn Ước",
+    description:
+      "Chính sách bảo mật của Hẹn Ước: thông tin nào được thu thập khi tạo thiệp cưới, cách lưu trữ, bảo vệ dữ liệu khách mời và quyền của bạn với dữ liệu đó.",
+    h1: "Chính sách bảo mật",
+    keyword: "chính sách bảo mật",
+    breadcrumb: "Chính sách bảo mật",
+    parent: "/",
+    schema: "WebPage",
+    related: ["/dieu-khoan", "/lien-he"],
+    index: false, // legal text pending Tony's review
+  },
+  {
+    path: "/dieu-khoan",
+    title: "Điều khoản sử dụng · Hẹn Ước",
+    description:
+      "Điều khoản sử dụng dịch vụ thiệp cưới online Hẹn Ước: quyền và trách nhiệm của người dùng, nội dung đăng trên thiệp, thanh toán gói Cao cấp và cách liên hệ.",
+    h1: "Điều khoản sử dụng",
+    keyword: "điều khoản sử dụng",
+    breadcrumb: "Điều khoản",
+    parent: "/",
+    schema: "WebPage",
+    related: ["/chinh-sach-bao-mat", "/lien-he"],
+    index: false, // legal text pending Tony's review
   },
   {
     path: "/cam-nang",
@@ -172,7 +229,7 @@ const staticPages: SeoPage[] = [
     breadcrumb: "Liên hệ",
     parent: "/",
     schema: "ContactPage",
-    related: ["/"],
+    related: ["/", "/gioi-thieu", "/cau-hoi-thuong-gap"],
     index: false,
   },
   {
@@ -185,7 +242,7 @@ const staticPages: SeoPage[] = [
     breadcrumb: "Tạo thiệp",
     parent: "/",
     schema: "WebPage",
-    related: ["/mau-thiep-cuoi"],
+    related: ["/mau-thiep-cuoi", "/cau-hoi-thuong-gap"],
     index: false, // app, không phải trang nội dung
   },
   {

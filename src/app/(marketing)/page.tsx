@@ -1,6 +1,6 @@
 import { AlbumSection } from "@/components/home/album-section";
 import { ChecklistSection } from "@/components/home/checklist-section";
-import { Faq, faqs } from "@/components/home/faq";
+import { Faq } from "@/components/home/faq";
 import { FeaturedThemes } from "@/components/home/featured-themes";
 import { FinalCta } from "@/components/home/final-cta";
 import { GuestManagement } from "@/components/home/guest-management";
@@ -31,17 +31,6 @@ const siteJsonLd = {
   },
 };
 
-// JSON-LD FAQPage: giúp Google hiểu phần hỏi–đáp (dùng khi trang được mở index lúc launch).
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-
 /** Trang chủ = ghép các section. Mỗi section là 1 component riêng trong components/home/. */
 export default function HomePage() {
   return (
@@ -59,7 +48,6 @@ export default function HomePage() {
       <Faq />
       <FinalCta />
       <JsonLd data={siteJsonLd} />
-      <JsonLd data={faqJsonLd} />
     </>
   );
 }

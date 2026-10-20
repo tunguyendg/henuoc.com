@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { FeatureList, SectionHeading } from "@/components/home/section-heading";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
+import type { FaqItem } from "@/data/faq";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { site } from "@/lib/site";
@@ -103,11 +104,6 @@ export function FeatureSteps({
       </Container>
     </section>
   );
-}
-
-export interface FaqItem {
-  q: string;
-  a: string;
 }
 
 /** Short plain-text FAQ (no FAQPage schema on feature pages). */

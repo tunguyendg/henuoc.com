@@ -13,7 +13,7 @@
 | `<title>`, meta, canonical | `src/lib/seo/metadata.ts` → `pageMetadata()`    | Mỗi trang: `export const metadata = pageMetadata("/duong-dan")`   |
 | Breadcrumb + JSON-LD       | `src/components/seo/breadcrumb.tsx`             | Dựng từ `parent`                                                  |
 | Link nội bộ "Xem thêm"     | `src/components/seo/related-links.tsx`          | Dựng từ `related`                                                 |
-| Schema khác                | `src/components/seo/json-ld.tsx`                | WebSite + FAQPage (trang chủ), CollectionPage, ItemPage           |
+| Schema khác                | `src/components/seo/json-ld.tsx`                | WebSite (trang chủ), FAQPage (chỉ `/cau-hoi-thuong-gap`, nguồn `src/data/faq.ts`), CollectionPage, ItemPage, AboutPage |
 | sitemap.xml / robots.txt   | `src/app/sitemap.ts`, `src/app/robots.ts`       | Sinh tự động                                                      |
 | Cảnh sát SEO               | `tests/seo.test.ts`                             | Chạy trong `npm test` + CI                                        |
 
