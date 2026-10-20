@@ -8,7 +8,7 @@
                     ┌──────────────────────── AZDIGI (Passenger, Node 22) ────────────────────────┐
  Browser / Zalo ───▶│  Next.js 16 standalone server.js                                            │
                     │   ├─ (marketing)  SSG/ISR ── "use cache"                                    │
-                    │   ├─ (public) /w/[slug], /i/[token]  ── cached wedding + dynamic guest      │
+                    │   ├─ (public) /thiepcuoi/[slug], /thiepcuoi/[slug]/[token]  ── cached wedding + dynamic guest      │
                     │   ├─ (app) /dashboard ── dynamic, auth                                      │
                     │   ├─ Server Actions (mutations)                                             │
                     │   └─ Route Handlers: /api/auth/*, /api/rsvp, /go/[id], /api/cron/*          │
@@ -48,8 +48,8 @@ src/app/
 │  ├─ mua-sam/page.tsx
 │  └─ cai-dat/page.tsx
 ├─ (admin)/admin/…                      # role ADMIN
-├─ (public)/w/[slug]/page.tsx           # trang cưới chung
-├─ (public)/i/[token]/page.tsx          # thiệp riêng
+├─ (public)/thiepcuoi/[slug]/page.tsx           # trang cưới chung
+├─ (public)/thiepcuoi/[slug]/[token]/page.tsx          # thiệp riêng
 ├─ demo/[themeSlug]/page.tsx            # demo theme với dữ liệu mẫu (noindex, dùng cho iframe)
 ├─ go/[productId]/route.ts              # redirect affiliate + log click
 ├─ api/auth/[...all]/route.ts           # Better Auth
@@ -69,8 +69,8 @@ Bật trong `next.config.ts`: `cacheComponents: true`, `output: "standalone"`.
 |---|---|
 | Marketing, gallery, cẩm nang | Static. `"use cache"` + `cacheLife("days")` |
 | `/mau-thiep-cuoi/[slug]` | `generateStaticParams` từ theme registry |
-| `/w/[slug]` | Hàm `getPublishedWedding(slug)` có `"use cache"` + `cacheTag("wedding:" + id)`. Publish/sửa → `revalidateTag` |
-| `/i/[token]` | Phần wedding dùng **cùng** cache trên; phần danh xưng + RSVP là dynamic (đọc token) bọc trong `<Suspense>` |
+| `/thiepcuoi/[slug]` | Hàm `getPublishedWedding(slug)` có `"use cache"` + `cacheTag("wedding:" + id)`. Publish/sửa → `revalidateTag` |
+| `/thiepcuoi/[slug]/[token]` | Phần wedding dùng **cùng** cache trên; phần danh xưng + RSVP là dynamic (đọc token) bọc trong `<Suspense>` |
 | Dashboard | Dynamic hoàn toàn (đọc session) |
 
 **Next 16.4 (đã kiểm tra trong `node_modules/next/dist/docs`):**
@@ -181,7 +181,7 @@ enum UserRole {
 // ───────── Wedding ─────────
 model Wedding {
   id              String        @id @default(cuid())
-  slug            String        @unique              // /w/[slug], vd "minh-anh-hoang-nam-2026"
+  slug            String        @unique              // /thiepcuoi/[slug], vd "minhanh-hoangnam" — tên cặp đôi viết liền, không dấu
   status          WeddingStatus @default(DRAFT)
   plan            Plan          @default(FREE)        // MVP: admin set tay
   themeSlug       String
@@ -366,7 +366,7 @@ model InvitationEvent {
 model Rsvp {
   id            String     @id @default(cuid())
   weddingId     String
-  invitationId  String?    @unique              // null = khách vãng lai từ /w/[slug]
+  invitationId  String?    @unique              // null = khách vãng lai từ /thiepcuoi/[slug]
   source        RsvpSource
   status        RsvpStatus
   attendeeCount Int        @default(0)
@@ -481,13 +481,14 @@ model RateLimit {
 ### 6.1 Tạo lời mời & token
 ```
 token = randomBytes(24).base64url          // 32 ký tự, 192 bit
-tokenHash   = sha256(token)                // tra cứu khi khách mở /i/[token]
+tokenHash   = sha256(token)                // tra cứu khi khách mở /thiepcuoi/[slug]/[token]
 tokenCipher = aes256gcm(token, TOKEN_ENC_KEY)  // dashboard giải mã để copy link
 ```
 DB lộ ra ngoài → kẻ tấn công không dựng được link (cần thêm `TOKEN_ENC_KEY` ở env). Revoke = set `revokedAt` + tạo token mới.
 
-### 6.2 Khách mở `/i/[token]`
+### 6.2 Khách mở `/thiepcuoi/[slug]/[token]`
 1. `sha256(token)` → tìm Invitation, `revokedAt IS NULL`, wedding `PUBLISHED`. Không thấy → `notFound()`.
+   `slug` trong URL chỉ để **dễ đọc** (bạn bè nhìn link là biết thiệp cưới của ai), không dùng để xác thực. Slug sai/cũ mà token đúng → `redirect` 308 sang slug hiện tại.
 2. Cập nhật `firstOpenedAt / lastOpenedAt / openCount` (fire-and-forget, `after()` của Next).
 3. Render theme với `WeddingContent` (cached) + `GuestContext` (danh xưng, sự kiện được mời, RSVP hiện tại).
 4. `metadata`: `robots: noindex`, `title` = "Thiệp cưới Minh Anh & Hoàng Nam" (không tên khách).

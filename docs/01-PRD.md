@@ -17,8 +17,8 @@ Google / Zalo / bạn bè
   → Trang mẫu thiệp (SEO) → xem demo thật
   → "Dùng mẫu này" → Builder (KHÔNG cần đăng nhập, nháp localStorage)
   → Bấm "Lưu & chia sẻ" → Đăng nhập Google / Email OTP → nháp chuyển lên DB
-  → Publish → có link /w/[slug]
-  → Thêm khách (tay hoặc CSV) → mỗi khách 1 link /i/[token]
+  → Publish → có link /thiepcuoi/[slug]
+  → Thêm khách (tay hoặc CSV) → mỗi khách 1 link /thiepcuoi/[slug]/[token]
   → Copy tin nhắn mẫu → dán Zalo → tự đánh dấu "Đã gửi"
   → Khách mở thiệp → RSVP
   → Dashboard: ai đến, bao nhiêu người, ≈ bao nhiêu bàn, xuất CSV
@@ -51,8 +51,8 @@ Google / Zalo / bạn bè
 - Đổi theme bất cứ lúc nào, **không mất dữ liệu**.
 
 ### F3. Thiệp & trang cưới (khách xem)
-- `/w/[slug]`: trang chung, lời mời chung ("Trân trọng kính mời quý khách").
-- `/i/[token]`: như trên + **danh xưng riêng** ("Kính mời Anh Minh & Gia đình"), chỉ hiện sự kiện khách được mời, form RSVP gắn với lời mời.
+- `/thiepcuoi/[slug]`: trang chung, lời mời chung ("Trân trọng kính mời quý khách").
+- `/thiepcuoi/[slug]/[token]`: như trên + **danh xưng riêng** ("Kính mời Anh Minh & Gia đình"), chỉ hiện sự kiện khách được mời, form RSVP gắn với lời mời.
 - Mở phong bì → nhạc phát **sau khi chạm**; nút tắt nhạc luôn hiện; tôn trọng `prefers-reduced-motion`.
 - Section chuẩn (mỗi theme vẽ theo cách riêng): Bìa · Lời mời · Cặp đôi · Sự kiện (dương + âm lịch, đếm ngược, thêm vào lịch `.ics`, chỉ đường) · Album · Mừng cưới QR · RSVP · Lời cảm ơn.
 - Free: watermark nhỏ "Tạo bởi Hẹn Ước" ở cuối thiệp.
@@ -70,7 +70,7 @@ Google / Zalo / bạn bè
 ### F5. RSVP
 - Khách: **Sẽ đến / Không đến được**, số người (≤ `maxAttendees`), sự kiện tham dự (nếu được mời nhiều sự kiện), lời nhắn (≤ 500 ký tự).
 - Sửa lại được trước hạn RSVP; mỗi lần sửa ghi lịch sử, **không đếm trùng**.
-- Trang `/w/[slug]` (không token): RSVP "khách vãng lai" — nhập tên + SĐT, tạo bản ghi chờ chủ tiệc duyệt/gộp. Có thể tắt.
+- Trang `/thiepcuoi/[slug]` (không token): RSVP "khách vãng lai" — nhập tên + SĐT, tạo bản ghi chờ chủ tiệc duyệt/gộp. Có thể tắt.
 - Rate limit theo IP + token. Honeypot chống bot.
 - Email thông báo cho chủ tiệc (tuỳ chọn, gom theo ngày).
 
@@ -83,7 +83,7 @@ Tổng quan thay đổi theo trạng thái (không hiện 4 con số 0 vô nghĩ
 |---|---|
 | Chưa có thiệp | Gallery mini → chọn mẫu |
 | Nháp | Preview + "còn thiếu: địa điểm, ảnh bìa" + nút Publish |
-| Đã publish, chưa khách | Link `/w/`, hướng dẫn thêm khách, import CSV |
+| Đã publish, chưa khách | Link `/thiepcuoi/`, hướng dẫn thêm khách, import CSV |
 | Đang mời | Countdown · chưa gửi / đã gửi / đã phản hồi · tổng người đến · ≈ số bàn (10 người/bàn, chỉnh được) |
 | < 14 ngày | RSVP nổi bật, danh sách chưa phản hồi + nút copy tin nhắc, xuất CSV cho nhà hàng |
 | Sau cưới | Cảm ơn, gợi ý thiệp cảm ơn (v2) |
@@ -128,8 +128,8 @@ RSVP: bảng lọc theo bên / nhóm / trạng thái, tổng theo từng sự ki
 | AT-05 | RSVP vượt `maxAttendees` | Bị từ chối, báo lỗi rõ |
 | AT-06 | Đổi theme sau khi đã gửi link | Link cũ vẫn chạy, RSVP giữ nguyên |
 | AT-07 | Thu hồi link | Link cũ trả 404, link mới chạy |
-| AT-08 | `/i/[token]`, `/dashboard` | Header `noindex`, không có trong `sitemap.xml` |
-| AT-09 | OG của `/i/[token]` | Không chứa tên khách |
+| AT-08 | `/thiepcuoi/[slug]/[token]`, `/dashboard` | Header `noindex`, không có trong `sitemap.xml` |
+| AT-09 | OG của `/thiepcuoi/[slug]/[token]` | Không chứa tên khách |
 | AT-10 | User A truy cập wedding của user B (đoán ID) | 404 |
 | AT-11 | Gửi 30 RSVP / phút từ 1 IP | Bị rate limit |
 | AT-12 | Click sản phẩm Shopee | Redirect đúng `aff_link`, log click không có PII |

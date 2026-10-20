@@ -9,7 +9,7 @@ function RsvpMock() {
       <p className="text-[10px] font-medium tracking-[0.3em] text-[#b07686] uppercase">
         Xác nhận tham dự
       </p>
-      <p className="mt-3 font-display text-xl text-[#8a3d52] italic">Minh Anh & Hoàng Nam</p>
+      <p className="mt-3 font-serif text-xl text-[#8a3d52] italic">Minh Anh & Hoàng Nam</p>
       <p className="mt-1 text-xs text-[#b07686]">Rất mong được đón tiếp Anh Minh & Gia đình</p>
 
       <div className="mt-6 grid grid-cols-2 gap-2 text-sm">

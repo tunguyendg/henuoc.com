@@ -1,6 +1,6 @@
 # ADR-002 — Logo: chữ "Ư" với dấu râu trái tim
 
-**Ngày:** 2026-10-19 · **Trạng thái:** Accepted · **Người quyết:** Tony
+**Ngày:** 2026-10-19 · **Trạng thái:** ~~Accepted~~ **Superseded bởi ADR-003** (2026-10-20) · **Người quyết:** Tony
 
 ## Bối cảnh
 Logo tạm (hai vòng nhẫn) quá phổ biến trong ngành cưới, nét mảnh, mờ ở 16 px, không gắn với tên thương hiệu. Đã so sánh 4 hướng: A Tơ Hồng, B Phong Thư, C Chữ Ư, D Khung Vòm.

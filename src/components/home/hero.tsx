@@ -21,7 +21,7 @@ export function Hero() {
           <p className="inline-flex rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold tracking-[0.12em] text-rose-700 uppercase">
             Thiệp cưới online · Miễn phí bắt đầu
           </p>
-          <h1 className="mt-6 font-display text-[2.4rem] leading-[1.12] font-medium text-ink md:text-6xl">
+          <h1 className="mt-6 font-display text-[2.4rem] leading-[1.08] font-extrabold tracking-[-0.03em] text-ink md:text-6xl">
             Thiệp cưới online,
             <span className="block text-rose-500">gửi đúng tên từng khách.</span>
           </h1>

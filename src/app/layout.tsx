@@ -7,10 +7,11 @@ import "./globals.css";
 const beVietnam = Be_Vietnam_Pro({
   variable: "--font-be-vietnam",
   subsets: ["vietnamese", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
+// Playfair chỉ phục vụ thiệp minh hoạ (font-serif); UI thương hiệu dùng Be Vietnam Pro.
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["vietnamese", "latin"],
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FBFAF8",
+  themeColor: "#FFF8F9",
   width: "device-width",
   initialScale: 1,
 };

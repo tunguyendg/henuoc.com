@@ -3,44 +3,53 @@ import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 
 /**
- * Biểu tượng Hẹn Ước: chữ "Ư" — nét riêng của tiếng Việt, có trong chữ "Hẹn Ước" —
- * với dấu râu là một trái tim nhỏ. Vẽ bằng SVG inline + currentColor nên đổi màu theo
- * class `text-*` của thẻ cha (dùng được trên nền sáng lẫn nền màu).
+ * Biểu tượng Hẹn Ước — "Nhẫn Tim": nhẫn cưới đội trái tim vàng (ADR-003).
+ * Nhìn là biết đám cưới; nhẫn = lời hẹn ước.
+ * - `ringClassName` đổi màu vành nhẫn qua `currentColor` (trắng trên ô hồng, hồng trên nền sáng).
+ * - Trái tim luôn là Vàng Nhẫn #F6C76B — màu nhận diện, không đổi theo nền.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        transform="translate(32 32) translate(-37 -32.5)"
-        stroke="currentColor"
-        strokeWidth={6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M16 16 V36 C16 46 22.5 52 30 52 C37.5 52 44 46 44 36 V25" />
-        <path
-          d="M53 22.5 C47 18.8 45.6 15 47.6 12.6 C49.6 10.4 52.2 11.2 53 13.4 C53.8 11.2 56.4 10.4 58.4 12.6 C60.4 15 59 18.8 53 22.5Z"
-          fill="currentColor"
-          stroke="none"
-        />
-      </g>
+      <circle cx="32" cy="41" r="14.5" stroke="currentColor" strokeWidth={5.5} />
+      <path
+        d="M32 30 C21 23 19 17 21.8 13 C24.6 9.2 29.8 10.2 32 14.4 C34.2 10.2 39.4 9.2 42.2 13 C45 17 43 23 32 30Z"
+        fill="#F6C76B"
+      />
     </svg>
   );
 }
 
-/** Logo ngang: biểu tượng + chữ "Hẹn Ước" (chữ HTML để dấu tiếng Việt luôn sắc nét). */
-export function Logo({ className }: { className?: string }) {
+/** Ô vuông hồng chứa nhẫn — giống favicon/app icon để mọi nơi chỉ có MỘT hình. */
+export function LogoTile({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-rose-500 text-white",
+        className,
+      )}
+    >
+      <LogoMark className="size-[78%]" />
+    </span>
+  );
+}
+
+/** Logo ngang: ô nhẫn + chữ "Hẹn Ước" (chữ HTML để dấu tiếng Việt luôn sắc nét). */
+export function Logo({ className, inverted }: { className?: string; inverted?: boolean }) {
   return (
     <Link
       href="/"
       aria-label={`${site.name} — Trang chủ`}
-      className={cn("inline-flex items-center gap-2.5 text-rose-500", className)}
+      className={cn(
+        "inline-flex items-center gap-2.5",
+        inverted ? "text-white" : "text-ink",
+        className,
+      )}
     >
-      {/* Ô vuông bo góc giống favicon → logo trên web và icon trên tab trình duyệt đồng bộ */}
-      <span className="flex size-9 items-center justify-center rounded-[10px] bg-rose-500 text-white">
-        <LogoMark className="size-7" />
+      <LogoTile />
+      <span className="text-[1.55rem] leading-none font-extrabold tracking-[-0.035em]">
+        {site.name}
       </span>
-      <span className="font-display text-[1.6rem] leading-none font-semibold">{site.name}</span>
     </Link>
   );
 }

@@ -15,7 +15,7 @@ export const miniStyles = {
     ink: "text-[#8a3d52]",
     sub: "text-[#b07686]",
     frame: "border-[#e8b9c3]",
-    names: "font-display italic",
+    names: "font-serif italic",
   },
   songhy: {
     label: "Song Hỷ",
@@ -24,7 +24,7 @@ export const miniStyles = {
     ink: "text-[#f3d28b]",
     sub: "text-[#e9b96e]",
     frame: "border-[#d4a24c]",
-    names: "font-display",
+    names: "font-serif",
   },
   bantin: {
     label: "Bản Tin",
@@ -42,7 +42,7 @@ export const miniStyles = {
     ink: "text-[#3e5641]",
     sub: "text-[#728a74]",
     frame: "border-[#a9bba8]",
-    names: "font-display",
+    names: "font-serif",
   },
   hanquoc: {
     label: "Seoul",
@@ -60,7 +60,7 @@ export const miniStyles = {
     ink: "text-[#5a3e2b]",
     sub: "text-[#8c6c52]",
     frame: "border-[#b89474]",
-    names: "font-display italic",
+    names: "font-serif italic",
   },
 } as const;
 

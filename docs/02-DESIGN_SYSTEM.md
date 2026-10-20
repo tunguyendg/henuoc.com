@@ -1,82 +1,71 @@
 # 02 — Design System & Page Map
 
-**Version:** 2.0 · 2026-10-19 · Thay thế: `BRAND_GUIDELINES.md`, `SAAS_BRAND_V2.md`, `DESIGN_DIRECTION_SAYIDO.md`, `HOMEPAGE_DIRECTION_SAYIDO.md`, `BRAND_LOGO_ROSE.md`, `GALLERY_SECTION_DECISION.md` (đã xoá).
+**Version:** 3.0 (Brand v3, 2026-10-20) · 2026-10-19 · Thay thế: `BRAND_GUIDELINES.md`, `SAAS_BRAND_V2.md`, `DESIGN_DIRECTION_SAYIDO.md`, `HOMEPAGE_DIRECTION_SAYIDO.md`, `BRAND_LOGO_ROSE.md`, `GALLERY_SECTION_DECISION.md` (đã xoá).
 
 ## 1. Nguyên tắc
 
 1. **Brand là khung, theme là tác phẩm.** UI Hẹn Ước (marketing, builder, dashboard) dùng một hệ màu thống nhất. Theme thiệp có palette/font/hiệu ứng riêng — **không** ép theo brand.
-2. **Tham chiếu sayi.do:** nền trắng, khoảng trắng rộng, ảnh cặp đôi thật cạnh screenshot sản phẩm thật, section xen kẽ trái–phải, giọng văn thân thiện có chút vui. Không copy asset/code/review.
+2. **Tham chiếu sayi.do (bố cục), cá tính riêng (trẻ, tươi):** nền trắng, khoảng trắng rộng, ảnh cặp đôi thật cạnh screenshot sản phẩm thật, section xen kẽ trái–phải, giọng văn thân thiện có chút vui. Không copy asset/code/review.
 3. **Mobile & Zalo first.** 70%+ khách mở thiệp trên điện thoại trong Zalo.
 4. **Dashboard bình tĩnh.** Không giống admin panel. Một CTA chính mỗi màn hình.
 5. **Trung thực.** Không số liệu bịa, không review giả, không mockup giả làm tính năng thật.
 
-## 2. Color tokens
+## 2. Thương hiệu: Brand v3 (ADR-003)
+
+**Định vị hình ảnh:** trẻ, hiện đại, năng động, khách muốn khoe với bạn bè; **nhìn là biết đám cưới**.
+
+### Logo: Nhẫn Tim
+- Nhẫn cưới (vành tròn) đội **trái tim vàng**. Nhẫn = lời hẹn ước.
+- Luôn đặt trong **ô vuông bo góc màu Hồng Cưới** ở header, footer, favicon, app icon: chỉ có MỘT hình ở mọi nơi.
+- Chữ đi kèm: **"Hẹn Ước"** viết hoa chữ cái đầu mỗi từ, Be Vietnam Pro **800**, letter-spacing −0.035em, màu Mận Đậm (nền sáng) hoặc trắng (nền tối).
+- Nguồn hình: `src/components/site/logo.tsx` (`LogoMark`, `LogoTile`, `Logo`). File xuất: `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`, `public/brand/mark.svg`, `icon-192/512.png`.
+- Không: đổi màu trái tim, kéo méo, đặt nhẫn trần không ô trên nền ảnh, dùng lại logo chữ Ư, Tơ Hồng, hai vòng nhẫn.
+
+### Link chia sẻ: phần bạn bè thấy đầu tiên
+- URL: `henuoc.com/thiepcuoi/minhanh-hoangnam` (thiệp chung) · `henuoc.com/thiepcuoi/minhanh-hoangnam/<mã>` (thiệp riêng).
+- Ảnh OG: nền Hồng Cưới, nhẫn tim, **tên cặp đôi + ngày**, chữ nhỏ "hẹn ước" ở góc. **Không bao giờ có tên khách.**
+- Tiêu đề OG: `Thiệp cưới Minh Anh & Hoàng Nam · 20.12.2026`.
+
+## 3. Color tokens
 
 | Token | HEX | Dùng cho | Contrast |
 |---|---|---|---|
-| `rose-500` (brand) | `#BD6477` | Logo, icon, viền nhấn, chữ **lớn** ≥ 24px, illustration | 4.0 trên trắng — **không** dùng cho chữ nhỏ / nền nút có chữ nhỏ |
-| `rose-600` (primary) | `#A84E63` | **Nền nút CTA**, link, focus ring | 5.3 trên trắng ✅ |
-| `rose-700` | `#943F54` | Hover/pressed CTA | 6.8 ✅ |
-| `rose-50` (blush) | `#F6E6E8` | Nền section nhấn, badge, chip active | — |
-| `canvas` | `#FBFAF8` | Nền trang marketing | — |
+| `rose-500` (**Hồng Cưới**) | `#E8436A` | Logo, ô icon, chữ **lớn** ≥ 24px, illustration | 3.7 trên nền, chỉ dùng cho chữ lớn |
+| `rose-600` (nút) | `#D6335C` | **Nền nút CTA**, link | 4.7 với chữ trắng ✅ |
+| `rose-700` | `#C92A53` | Hover, eyebrow chữ nhỏ, badge | ≥ 4.6 ✅ |
+| `rose-50` (Hồng Phấn) | `#FFE9EE` | Nền section nhấn, badge, chip | — |
+| `gold-400` (**Vàng Nhẫn**) | `#F6C76B` | Trái tim trong logo, điểm nhấn, highlight | Chữ Mận Đậm trên vàng 10.2 ✅ |
+| `gold-100` | `#FDF0D5` | Nền nhấn phụ | — |
+| `canvas` | `#FFF8F9` | Nền trang | — |
 | `surface` | `#FFFFFF` | Card, form, bảng | — |
-| `ink` | `#24252A` | Tiêu đề, body | 14.7 ✅ |
-| `muted` | `#706D72` | Chú thích, placeholder | 4.9 ✅ |
-| `border` | `#EBE5E4` | Viền card/input | — |
-| `success` | `#1F7A5A` | RSVP "Sẽ đến" | 5.3 ✅ |
-| `warning` | `#9A5B13` | "Chưa phản hồi" | 5.4 ✅ |
-| `danger` | `#B4232F` | "Không đến", xoá, lỗi | 6.5 ✅ |
+| `ink` (Mận Đậm) | `#2B1B30` | Tiêu đề, body | 15.4 ✅ |
+| `muted` | `#6E5F72` | Chú thích | 5.7 ✅ |
+| `border` | `#F1DFE4` | Viền | — |
+| `success` / `warning` / `danger` | `#1F7A5A` / `#9A5B13` / `#B4232F` | Trạng thái RSVP | ≥ 5.3 ✅ |
 
-Trạng thái luôn đi kèm **chữ + icon**, không chỉ màu.
+Trạng thái luôn có **chữ + icon**, không chỉ màu. Token nằm trong `src/app/globals.css` (`@theme`). Tên `rose-*` được giữ nguyên từ v2 để component không phải đổi.
 
-Tailwind 4 (`src/app/globals.css`):
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-rose-50: #F6E6E8;
-  --color-rose-500: #BD6477;
-  --color-rose-600: #A84E63;
-  --color-rose-700: #943F54;
-  --color-canvas: #FBFAF8;
-  --color-surface: #FFFFFF;
-  --color-ink: #24252A;
-  --color-muted: #706D72;
-  --color-border: #EBE5E4;
-  --color-success: #1F7A5A;
-  --color-warning: #9A5B13;
-  --color-danger: #B4232F;
-
-  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
-
-  --radius-btn: 0.75rem;   /* 12px */
-  --radius-card: 1rem;     /* 16px */
-  --shadow-card: 0 1px 2px rgb(36 37 42 / 0.04), 0 8px 24px rgb(36 37 42 / 0.06);
-}
-```
-
-## 3. Typography
+## 3b. Typography
 
 | Vai trò | Font | Size desktop / mobile | Weight |
 |---|---|---|---|
-| Display (H1 hero, tiêu đề section marketing) | **Playfair Display** (`subsets: ["vietnamese"]`) | 56 / 36px, line-height 1.15 | 500 |
-| H2 | Playfair Display | 40 / 28px | 500 |
-| H3, UI heading | **Be Vietnam Pro** | 20 / 18px | 600 |
+| H1 hero | **Be Vietnam Pro** | 60 / 38px, line-height 1.08, tracking −0.03em | **800** |
+| H2 section | Be Vietnam Pro | 42 / 30px, tracking −0.03em | 800 |
+| H3, UI heading | Be Vietnam Pro | 20 / 18px | 600–700 |
 | Body | Be Vietnam Pro | 17 / 16px, line-height 1.65 | 400 |
 | Small, label | Be Vietnam Pro | 14px | 500 |
+| Eyebrow | Be Vietnam Pro | 12px, UPPERCASE, tracking 0.16em | 700 |
 
-- Load bằng `next/font/google`, `display: "swap"`, chỉ weight cần dùng.
-- **Không** dùng serif cho form, bảng, dashboard số liệu.
-- Kiểm tra chuỗi: "Nguyễn Thị Thùy Dương", "Trân trọng kính mời", "Lễ Vu Quy — Thứ Bảy, 20.12.2026 (nhằm ngày 01.11 Bính Ngọ)".
+- Class Tailwind cho tiêu đề: `font-display font-extrabold tracking-[-0.03em]`.
+- **Playfair Display** (`font-serif`) chỉ dùng **bên trong thiệp minh hoạ / theme**, không dùng cho UI thương hiệu.
+- Kiểm tra chuỗi: "Nguyễn Thị Thùy Dương", "Trân trọng kính mời", "Lễ Vu Quy (nhằm ngày 01.11 Bính Ngọ)".
 
 ## 4. Component rules
 
 | Component | Quy tắc |
 |---|---|
-| Button | Cao 44px (lg 52px), radius 12px, chữ 15px/600. Variant: `primary` (rose-600), `secondary` (viền border, chữ ink), `ghost`. Mỗi màn hình **1** primary |
-| Card | Nền surface, viền border, radius 16px, `shadow-card` nhẹ, padding 24px |
+| Button | Cao 44px (lg 52px), radius 14px, chữ 15px/600. Variant: `primary` (rose-600), `secondary` (viền border, chữ ink), `ghost`. Mỗi màn hình **1** primary |
+| Card | Nền surface, viền border, radius 20px, `shadow-card` nhẹ, padding 24px |
 | Input | Label luôn hiện phía trên, 16px, cao 48px, lỗi hiện ngay dưới field màu danger |
 | Badge trạng thái | Pill, icon + chữ: ✓ Sẽ đến · ✕ Không đến · ⏱ Chưa phản hồi · ✉ Đã gửi |
 | Icon | `lucide-react`, stroke 1.75, 20px |
@@ -169,4 +158,4 @@ Bảng khách: cột **Danh xưng · Bên · Nhóm · Số người · Gửi · 
 
 - `public/brand/`: logo, mark, favicon (mang từ repo cũ — **tạm**). Tạo `public/brand/CREDITS.md` ghi nguồn mọi ảnh.
 - `public/themes/<slug>/`: asset riêng của từng theme.
-- Ảnh marketing: Unsplash / Pexels, export WebP ≤ 200KB, có `width/height` chính xác (tránh lỗi "width or height modified").
+- `public/brand/`: logo Nhẫn Tim (ADR-003). Ảnh marketing: Unsplash / Pexels, export WebP ≤ 200KB, có `width/height` chính xác (tránh lỗi "width or height modified").

@@ -31,7 +31,9 @@ export default function UiKitPage() {
     <main className="py-12">
       <Container className="space-y-12">
         <section>
-          <h1 className="font-display text-4xl font-medium">UI kit · Hẹn Ước</h1>
+          <h1 className="font-display text-4xl font-extrabold tracking-[-0.03em]">
+            UI kit · Hẹn Ước
+          </h1>
           <p className="mt-2 text-muted">
             Kiểm tra dấu: Nguyễn Thị Thùy Dương — Trân trọng kính mời — Lễ Vu Quy (nhằm ngày 01.11
             Bính Ngọ)

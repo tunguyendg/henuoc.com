@@ -62,7 +62,7 @@ export interface GuestContext {
 
 export interface ThemeProps<TOptions = unknown> {
   content: WeddingContent;
-  guest?: GuestContext;         // undefined ở /w/[slug] và demo
+  guest?: GuestContext;         // undefined ở /thiepcuoi/[slug] và demo
   options: TOptions;
   mode: "live" | "preview" | "demo";   // preview = trong builder (không phát nhạc, không submit RSVP)
 }
