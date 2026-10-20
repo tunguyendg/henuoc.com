@@ -37,6 +37,9 @@ src/
   components/<feature>/    # component theo feature
   features/<feature>/      # actions.ts, queries.ts, schema.ts (zod), service.ts
   themes/<theme-slug>/     # mỗi theme 1 folder, xem docs/07-THEMES.md
+  data/                    # dữ liệu tĩnh có type (themes, features, faq, articles, banks) — nguồn cho trang + sổ SEO
+  content/<section>/       # MDX chỉ chứa thân bài; metadata nằm ở data/
+  app/(dev)/               # trang nội bộ khi dev, notFound() ở production
   lib/                     # db.ts, auth.ts, r2.ts, accesstrade.ts, lunar.ts, utils
 prisma/schema.prisma
 tests/  e2e/

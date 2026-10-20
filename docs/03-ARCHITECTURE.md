@@ -36,7 +36,9 @@ src/app/
 │  ├─ checklist-dam-cuoi/page.tsx       # tool public
 │  ├─ bang-gia/page.tsx
 │  ├─ cau-hoi-thuong-gap/page.tsx
-│  └─ cam-nang/[[...slug]]/page.tsx     # MDX
+│  ├─ tinh-nang/page.tsx + tinh-nang/<tinh-nang>/page.tsx
+│  ├─ gioi-thieu/ · chinh-sach-bao-mat/ · dieu-khoan/
+│  └─ cam-nang/page.tsx + cam-nang/[slug]/page.tsx  # MDX ở src/content/cam-nang, metadata ở src/data/articles.ts
 ├─ (builder)/tao-thiep/page.tsx         # builder, không cần login
 ├─ (auth)/dang-nhap/page.tsx
 ├─ (app)/dashboard/                     # layout: sidebar, yêu cầu session

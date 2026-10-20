@@ -17,6 +17,7 @@
 - Đội agent Claude Code: `.claude/agents/`, `.claude/skills/` (docs/09-AGENTS.md)
 - T-024 (một phần) `/tinh-nang` + 4 trang con (rsvp, quan-ly-khach-moi, loi-moi-rieng, checklist-dam-cuoi), menu trỏ `/tinh-nang`
 - T-024 phần 2: `/bang-gia` (Miễn phí / Cao cấp "Sắp công bố", nút "Sắp mở"), `/cau-hoi-thuong-gap` (FAQPage, nguồn `src/data/faq.ts`), `/gioi-thieu`, `/chinh-sach-bao-mat` + `/dieu-khoan` (DỰ THẢO, noindex), footer
+- T-025 Cẩm nang: `@next/mdx` (Tony duyệt), `/cam-nang` + `/cam-nang/[slug]`, 2 bài (cách ghi thiệp cưới, lời mời đám cưới hay), JSON-LD Article; MDX ở `src/content/cam-nang`, metadata ở `src/data/articles.ts`
 - T-012 VietQR: `src/lib/vietqr.ts` (payload EMVCo + CRC16) + `src/data/banks.{json,ts}` (23 ngân hàng NAPAS, freeze), 26 test
 
 ## 🔨 Đang làm
@@ -25,8 +26,9 @@
 
 ## ⏭️ Tiếp theo (frontend)
 
-1. Cẩm nang (MDX — chờ Tony duyệt dependency) — 2 bài đầu: cách ghi thiệp cưới, lời mời đám cưới hay
-2. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
+1. Trang `/lien-he` thật (cần Tony chốt kênh: email / Zalo OA) — đang chặn nút nâng cấp + câu "liên hệ" ở trang pháp lý
+2. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
+3. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 

@@ -1,3 +1,4 @@
+import { articlePath, articles, type Article } from "@/data/articles";
 import {
   MIN_THEMES_FOR_STYLE_INDEX,
   publishedCount,
@@ -17,7 +18,7 @@ import {
  */
 
 export type SchemaType =
-  "WebPage" | "CollectionPage" | "ItemPage" | "AboutPage" | "ContactPage" | "FAQPage";
+  "WebPage" | "CollectionPage" | "ItemPage" | "AboutPage" | "ContactPage" | "FAQPage" | "Article";
 
 export interface SeoPage {
   path: string; // URL, cũng là canonical
@@ -208,16 +209,22 @@ const staticPages: SeoPage[] = [
   },
   {
     path: "/cam-nang",
-    title: "Cẩm nang cưới: ghi thiệp, lời mời, checklist · Hẹn Ước",
+    title: "Cẩm nang cưới: cách ghi thiệp, lời mời hay · Hẹn Ước",
     description:
-      "Hướng dẫn cách ghi thiệp cưới, lời mời đám cưới hay, phân biệt lễ vu quy và thành hôn, checklist chuẩn bị đám cưới từ A đến Z.",
+      "Cẩm nang cưới cho hai bạn: cách ghi thiệp cưới đúng danh xưng, viết lời mời đám cưới hay, trang trọng cho từng khách, kèm mẫu câu mời dùng ngay.",
     h1: "Cẩm nang cưới",
     keyword: "cẩm nang cưới",
     breadcrumb: "Cẩm nang",
     parent: "/",
     schema: "CollectionPage",
-    related: ["/mau-thiep-cuoi"],
-    index: false,
+    related: [
+      articlePath("cach-ghi-thiep-cuoi"),
+      articlePath("loi-moi-dam-cuoi-hay"),
+      "/mau-thiep-cuoi",
+      "/tinh-nang",
+    ],
+    index: true,
+    priority: 0.7,
   },
   {
     path: "/lien-he",
@@ -308,10 +315,27 @@ function themePage(t: Theme): SeoPage {
   };
 }
 
+function articlePage(a: Article): SeoPage {
+  return {
+    path: articlePath(a.slug),
+    title: a.title,
+    description: a.description,
+    h1: a.h1,
+    keyword: a.keyword,
+    breadcrumb: a.breadcrumb,
+    parent: "/cam-nang",
+    schema: "Article",
+    related: a.related,
+    index: true,
+    priority: 0.6,
+  };
+}
+
 export const seoPages: SeoPage[] = [
   ...staticPages,
   ...themeStyles.map(stylePage),
   ...themes.map(themePage),
+  ...articles.map(articlePage),
 ];
 
 const byPath = new Map(seoPages.map((p) => [p.path, p]));

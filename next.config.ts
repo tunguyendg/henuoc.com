@@ -1,3 +1,4 @@
+import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -18,4 +19,9 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// No remark/rehype plugins on purpose: Turbopack only accepts serializable plugin options, and
+// every extra plugin is a new dependency. Article metadata lives in src/data/articles.ts.
+// .mdx is only imported from src/content/ (not used as routes), so pageExtensions stays default.
+const withMDX = createMDX();
+
+export default withMDX(nextConfig);

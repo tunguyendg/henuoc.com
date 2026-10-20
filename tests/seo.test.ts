@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { articles } from "@/data/articles";
 import { breadcrumbTrail, seoPages } from "@/lib/seo/pages";
 
 /**
@@ -41,5 +42,23 @@ describe("Sổ SEO (src/lib/seo/pages.ts)", () => {
 
   it("breadcrumb luôn bắt đầu từ trang chủ", () => {
     for (const p of seoPages) expect(breadcrumbTrail(p.path)[0]?.path).toBe("/");
+  });
+});
+
+describe("Cẩm nang (src/data/articles.ts)", () => {
+  const isoDate = /^\d{4}-\d{2}-\d{2}$/;
+  const isRealDate = (d: string) => new Date(`${d}T00:00:00Z`).toISOString().startsWith(d);
+
+  it("slug không trùng", () => {
+    expect(new Set(articles.map((a) => a.slug)).size).toBe(articles.length);
+  });
+
+  it.each(articles)("$slug: publishedAt / updatedAt đúng YYYY-MM-DD", (a) => {
+    expect(a.publishedAt).toMatch(isoDate);
+    expect(isRealDate(a.publishedAt)).toBe(true);
+    if (a.updatedAt) {
+      expect(a.updatedAt).toMatch(isoDate);
+      expect(a.updatedAt >= a.publishedAt).toBe(true);
+    }
   });
 });
