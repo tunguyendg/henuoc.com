@@ -1,6 +1,7 @@
 import { Badge, StatusBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { Photo } from "./photo";
 import { FeatureList, SectionHeading } from "./section-heading";
 
 // Dữ liệu mẫu cho mockup — không phải khách thật.
@@ -34,6 +35,12 @@ export function GuestManagement() {
               "Nhập danh sách từ file Excel/CSV",
               "Xuất danh sách cho nhà hàng chỉ một lần bấm",
             ]}
+          />
+          <Photo
+            src="/images/wedding/guests.jpg"
+            alt="Họ hàng và bạn bè chụp ảnh cùng cô dâu chú rể"
+            sizes="(min-width: 768px) 40vw, 90vw"
+            className="mt-10 aspect-[16/10] rounded-(--radius-card)"
           />
         </div>
 

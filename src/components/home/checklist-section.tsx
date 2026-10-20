@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
+import { Photo } from "./photo";
 import { FeatureList, SectionHeading } from "./section-heading";
 
 const items = [
@@ -16,31 +17,44 @@ export function ChecklistSection() {
   return (
     <section className="py-20 md:py-28">
       <Container className="grid items-center gap-14 md:grid-cols-[1.2fr_1fr]">
-        <Card className="order-2 md:order-1">
-          <p className="text-sm font-semibold text-ink">Còn 87 ngày · Việc cần làm</p>
-          <ol className="mt-5 space-y-4">
-            {items.map((it) => (
-              <li key={it.task} className="flex items-start gap-3">
-                <span
-                  className={cn(
-                    "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border",
-                    it.done ? "border-rose-600 bg-rose-600 text-white" : "border-border bg-surface",
-                  )}
-                >
-                  {it.done ? <Check aria-hidden className="size-3.5" strokeWidth={3} /> : null}
-                </span>
-                <div>
-                  <p
-                    className={cn("font-medium", it.done ? "text-muted line-through" : "text-ink")}
+        <div className="relative order-2 md:order-1">
+          <Photo
+            src="/images/wedding/checklist.jpg"
+            alt="Chuẩn bị đồ cưới trước ngày trọng đại"
+            sizes="(min-width: 768px) 50vw, 90vw"
+            className="absolute -top-6 right-0 bottom-6 left-10 rounded-[2rem]"
+          />
+          <Card className="relative mt-16 mr-10 md:mt-24">
+            <p className="text-sm font-semibold text-ink">Còn 87 ngày · Việc cần làm</p>
+            <ol className="mt-5 space-y-4">
+              {items.map((it) => (
+                <li key={it.task} className="flex items-start gap-3">
+                  <span
+                    className={cn(
+                      "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border",
+                      it.done
+                        ? "border-rose-600 bg-rose-600 text-white"
+                        : "border-border bg-surface",
+                    )}
                   >
-                    {it.task}
-                  </p>
-                  <p className="text-sm text-muted">{it.when}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Card>
+                    {it.done ? <Check aria-hidden className="size-3.5" strokeWidth={3} /> : null}
+                  </span>
+                  <div>
+                    <p
+                      className={cn(
+                        "font-medium",
+                        it.done ? "text-muted line-through" : "text-ink",
+                      )}
+                    >
+                      {it.task}
+                    </p>
+                    <p className="text-sm text-muted">{it.when}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Card>
+        </div>
 
         <div className="order-1 md:order-2">
           <SectionHeading

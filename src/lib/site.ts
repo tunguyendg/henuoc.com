@@ -28,10 +28,10 @@ export const footerNav = [
   {
     title: "Phong cách",
     links: [
-      { href: "/mau-thiep-cuoi", label: "Thiệp cưới truyền thống" },
-      { href: "/mau-thiep-cuoi", label: "Thiệp cưới tối giản" },
-      { href: "/mau-thiep-cuoi", label: "Thiệp cưới hoa lá" },
-      { href: "/mau-thiep-cuoi", label: "Thiệp cưới Hàn Quốc" },
+      { href: "/mau-thiep-cuoi/phong-cach/truyen-thong", label: "Thiệp cưới truyền thống" },
+      { href: "/mau-thiep-cuoi/phong-cach/toi-gian", label: "Thiệp cưới tối giản" },
+      { href: "/mau-thiep-cuoi/phong-cach/hoa-la", label: "Thiệp cưới hoa lá" },
+      { href: "/mau-thiep-cuoi/phong-cach/han-quoc", label: "Thiệp cưới Hàn Quốc" },
     ],
   },
   {

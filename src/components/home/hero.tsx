@@ -3,6 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { MiniInvitation } from "./mini-invitation";
+import { Photo } from "./photo";
 import { PhoneFrame } from "./phone-frame";
 
 const ticks = ["Không cần biết thiết kế", "Xem trước ngay", "Khách không cần cài app"];
@@ -52,17 +53,21 @@ export function Hero() {
           </ul>
         </div>
 
-        <div className="relative mx-auto">
-          <PhoneFrame>
-            <MiniInvitation style="pastel" salutation="Trân trọng kính mời Anh Minh & Gia đình" />
-          </PhoneFrame>
-
-          {/* Thẻ nổi minh hoạ lời mời riêng & RSVP */}
-          <div className="absolute top-16 -left-16 hidden w-52 rounded-2xl border border-border bg-surface p-4 shadow-(--shadow-card) sm:block">
-            <p className="text-xs text-muted">Lời mời riêng</p>
-            <p className="mt-1 text-sm font-semibold text-ink">Kính mời Cô Chú Tư & Gia đình</p>
+        {/* Ảnh cưới thật + điện thoại đè lên góc: khách nhìn là biết "đây là thiệp cưới" */}
+        <div className="relative mx-auto w-full max-w-[460px] pb-12 pl-12 sm:pl-20">
+          <Photo
+            src="/images/wedding/hero.jpg"
+            alt="Cô dâu và chú rể trong ngày cưới"
+            priority
+            sizes="(min-width: 768px) 400px, 80vw"
+            className="aspect-[4/5] rounded-[2rem] shadow-(--shadow-card)"
+          />
+          <div className="absolute bottom-0 left-0">
+            <PhoneFrame className="w-[140px] rounded-[1.9rem] border-[7px] sm:w-[190px]">
+              <MiniInvitation style="pastel" salutation="Trân trọng kính mời Anh Minh & Gia đình" />
+            </PhoneFrame>
           </div>
-          <div className="absolute -right-12 bottom-20 hidden w-48 rounded-2xl border border-border bg-surface p-4 shadow-(--shadow-card) sm:block">
+          <div className="absolute top-6 -right-2 w-44 rounded-2xl border border-border bg-surface/95 p-3.5 shadow-(--shadow-card) backdrop-blur sm:-right-8 sm:w-48">
             <p className="text-xs text-muted">Bạn Lan vừa phản hồi</p>
             <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-success">
               <Check aria-hidden className="size-4" strokeWidth={2.5} /> Sẽ đến · 2 người

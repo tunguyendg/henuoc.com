@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
-import { MiniInvitation, miniStyles, type MiniStyle } from "./mini-invitation";
+import { ThemeCard } from "@/components/themes/theme-card";
+import { themes } from "@/data/themes";
 import { SectionHeading } from "./section-heading";
-
-const order: MiniStyle[] = ["pastel", "songhy", "bantin", "sage", "hanquoc", "vintage"];
 
 export function FeaturedThemes() {
   return (
@@ -24,15 +23,9 @@ export function FeaturedThemes() {
         </div>
 
         <ul className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-6">
-          {order.map((key) => (
-            <li key={key}>
-              <Link href="/mau-thiep-cuoi" className="group block">
-                <div className="aspect-[3/4] overflow-hidden rounded-(--radius-card) border border-border shadow-(--shadow-card) transition-transform duration-300 group-hover:-translate-y-1">
-                  <MiniInvitation style={key} />
-                </div>
-                <p className="mt-3 font-semibold text-ink">{miniStyles[key].label}</p>
-                <p className="text-sm text-muted">{miniStyles[key].category}</p>
-              </Link>
+          {themes.map((t) => (
+            <li key={t.slug}>
+              <ThemeCard theme={t} />
             </li>
           ))}
         </ul>

@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/container";
 import { PhoneFrame } from "./phone-frame";
+import { Photo } from "./photo";
 import { FeatureList, SectionHeading } from "./section-heading";
 
 /** Mockup form RSVP (tĩnh, chỉ minh hoạ — form thật làm ở M4). */
@@ -42,8 +43,14 @@ export function RsvpSection() {
   return (
     <section className="py-20 md:py-28">
       <Container className="grid items-center gap-14 md:grid-cols-2">
-        <div className="order-2 flex justify-center md:order-1">
-          <PhoneFrame>
+        <div className="relative order-2 flex justify-center md:order-1">
+          <Photo
+            src="/images/wedding/rsvp.jpg"
+            alt="Khách mời chung vui trong tiệc cưới"
+            sizes="(min-width: 768px) 45vw, 90vw"
+            className="absolute inset-x-0 inset-y-10 rounded-[2rem]"
+          />
+          <PhoneFrame className="relative">
             <RsvpMock />
           </PhoneFrame>
         </div>
