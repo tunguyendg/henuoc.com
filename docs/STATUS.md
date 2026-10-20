@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-20 (/bao-cao: typecheck ✅ · lint ✅ · test 87/87)
+> Cập nhật lần cuối: 2026-10-20 (test 128/128)
 
 ## Đang ở đâu
 
@@ -15,18 +15,17 @@
 - Sổ SEO `src/lib/seo/pages.ts`: metadata, canonical, breadcrumb, related links, sitemap, robots, test (docs/08-SEO.md)
 - Trang Mẫu thiệp: `/mau-thiep-cuoi`, `/mau-thiep-cuoi/phong-cach/[style]`, `/mau-thiep-cuoi/[slug]`
 - Đội agent Claude Code: `.claude/agents/`, `.claude/skills/` (docs/09-AGENTS.md)
+- T-024 (một phần) `/tinh-nang` + 4 trang con (rsvp, quan-ly-khach-moi, loi-moi-rieng, checklist-dam-cuoi), menu trỏ `/tinh-nang`
 - T-012 (một phần) `src/lib/vietqr.ts`: payload VietQR EMVCo + CRC16, 16 test. Còn thiếu: bank list JSON
 
 ## 🔨 Đang làm
 
-- (trống)
+- T-024 phần 2: bảng giá, FAQ, giới thiệu, chính sách bảo mật, điều khoản, footer
 
 ## ⏭️ Tiếp theo (frontend)
 
-1. `/tinh-nang` + 4 landing page tính năng (RSVP, quản lý khách, lời mời riêng, checklist)
-2. Cẩm nang (MDX) — 2 bài đầu: cách ghi thiệp cưới, lời mời đám cưới hay
-3. Bảng giá, FAQ, giới thiệu / liên hệ / chính sách
-4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
+1. Cẩm nang (MDX — chờ Tony duyệt dependency) — 2 bài đầu: cách ghi thiệp cưới, lời mời đám cưới hay
+2. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
@@ -37,8 +36,9 @@
 - Chưa launch → `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
 - VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex.
+- `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới" để chừa "checklist đám cưới" cho công cụ `/checklist-dam-cuoi` (PRD F1).
 - Chưa có backend → chưa có bề mặt tấn công dữ liệu. Khi làm M3/M4: IDOR, token khách, rate limit RSVP là ưu tiên.
 
 ## 🧭 Quyết định chờ Tony
 
-- Menu "Tính năng" đổi thành trang `/tinh-nang` thật + thêm mục "Công cụ"? (mặc định: có)
+- Thêm mục menu "Công cụ" (checklist public) khi có `/checklist-dam-cuoi`? (mặc định: có)

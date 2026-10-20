@@ -10,7 +10,7 @@ export const site = {
 /** Menu chính — dùng chung cho header desktop và menu mobile. */
 export const mainNav = [
   { href: "/mau-thiep-cuoi", label: "Mẫu thiệp" },
-  { href: "/#tinh-nang", label: "Tính năng" },
+  { href: "/tinh-nang", label: "Tính năng" },
   { href: "/bang-gia", label: "Bảng giá" },
   { href: "/cam-nang", label: "Cẩm nang" },
 ] as const;
@@ -20,7 +20,7 @@ export const footerNav = [
     title: "Sản phẩm",
     links: [
       { href: "/mau-thiep-cuoi", label: "Mẫu thiệp cưới" },
-      { href: "/#tinh-nang", label: "Tính năng" },
+      { href: "/tinh-nang", label: "Tính năng" },
       { href: "/bang-gia", label: "Bảng giá" },
       { href: "/tao-thiep", label: "Tạo thiệp miễn phí" },
     ],

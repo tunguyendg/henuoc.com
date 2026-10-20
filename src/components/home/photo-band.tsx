@@ -16,7 +16,10 @@ export function PhotoBand() {
           />
           {/* Phủ hồng ấm: kéo màu xanh của ảnh về tông brand */}
           <div aria-hidden className="absolute inset-0 bg-rose-700/25 mix-blend-multiply" />
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-transparent" />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-transparent"
+          />
           <p className="absolute inset-x-0 bottom-0 max-w-2xl p-6 font-display text-2xl leading-tight font-extrabold tracking-[-0.03em] text-white md:p-10 md:text-4xl">
             Ngày vui của hai bạn, gói trọn trong một đường link.
           </p>

@@ -31,7 +31,8 @@ Google / Zalo / bạn bè
 - Homepage (cấu trúc ở `02-DESIGN_SYSTEM.md` §5).
 - `/mau-thiep-cuoi` gallery + lọc theo phong cách; `/mau-thiep-cuoi/[slug]` chi tiết theme có **demo tương tác thật** với dữ liệu mẫu.
 - `/mau-thiep-cuoi/phong-cach/[style]` landing theo phong cách.
-- Landing tính năng: `/thiep-cuoi-online`, `/thiep-cuoi-gui-zalo`, `/thiep-cuoi-co-ten-khach`.
+- Trang tính năng: `/tinh-nang` + `/tinh-nang/{rsvp,quan-ly-khach-moi,loi-moi-rieng,checklist-dam-cuoi}` (Tony chốt 2026-10-20).
+- Landing từ khoá (sau, nếu cần): `/thiep-cuoi-online`, `/thiep-cuoi-gui-zalo`, `/thiep-cuoi-co-ten-khach` — phải dùng keyword khác trang `/tinh-nang/*` (xem sổ SEO) để không ăn thịt từ khoá.
 - `/bang-gia`, `/cau-hoi-thuong-gap`.
 - `/cam-nang` + `/cam-nang/[slug]` (MDX trong repo, ≥ 5 bài khi launch).
 - `/checklist-dam-cuoi` công cụ public (không cần đăng nhập, SEO) — dùng chung data với checklist dashboard.

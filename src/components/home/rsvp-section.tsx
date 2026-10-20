@@ -4,7 +4,7 @@ import { Photo } from "./photo";
 import { FeatureList, SectionHeading } from "./section-heading";
 
 /** Mockup form RSVP (tĩnh, chỉ minh hoạ — form thật làm ở M4). */
-function RsvpMock() {
+export function RsvpMock() {
   return (
     <div className="flex h-full flex-col bg-[#fbeef0] px-5 pt-12 pb-6 text-center">
       <p className="text-[10px] font-medium tracking-[0.3em] text-[#b07686] uppercase">
