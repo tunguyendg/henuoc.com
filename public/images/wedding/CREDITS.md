@@ -1,0 +1,17 @@
+# Ảnh cưới — Unsplash License (miễn phí dùng thương mại)
+- hero.jpg — Bin Thieu — https://unsplash.com/photos/ADsHesTIq-M
+- band.jpg — Tanny Do — https://unsplash.com/photos/i-BGw5GoLtM
+- rsvp.jpg — Elist Nguyen — https://unsplash.com/photos/eiPPKC1TQeg
+- guests.jpg — Hưng Phạm — https://unsplash.com/photos/Cn8xYl6NoH0
+- checklist.jpg — Duong Ngan — https://unsplash.com/photos/cfk4k2QQ0Wk
+- cta.jpg — Beth Macdonald — https://unsplash.com/photos/SucXuXI9758
+- landing-1.jpg — Khoai Tây — https://unsplash.com/photos/8iq2-xcCL60
+- landing-2.jpg — Địa Cầu Nhân — https://unsplash.com/photos/JGrpx4ZLY80
+- landing-3.jpg — Địa Cầu Nhân — https://unsplash.com/photos/Z-ozwuk9dzU
+- landing-4.jpg — Thanh Thang — https://unsplash.com/photos/BuYnTe1k6kM
+- album-1.jpg — Bin Thieu — https://unsplash.com/photos/YljccDnjRno
+- album-2.jpg — Trái Đất Nhân — https://unsplash.com/photos/opYIROPs0l4
+- album-3.jpg — Địa Cầu Nhân — https://unsplash.com/photos/1foetTLmjk8
+- album-4.jpg — HACA Wedding — https://unsplash.com/photos/tUz0kv5KyFM
+- album-5.jpg — Duong Ngan — https://unsplash.com/photos/1jhCf0gZXoc
+- album-6.jpg — Bin Thieu — https://unsplash.com/photos/5PHiAPTtM5k
