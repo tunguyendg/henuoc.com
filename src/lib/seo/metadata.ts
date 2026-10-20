@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { env } from "@/lib/env";
 import { site } from "@/lib/site";
 import { getSeoPage } from "./pages";
 
@@ -6,7 +7,7 @@ import { getSeoPage } from "./pages";
  * Chỉ cho Google index khi đã launch (NEXT_PUBLIC_ALLOW_INDEXING=true lúc build).
  * Trước launch: mọi trang noindex, robots.txt chặn hết → tránh Google lưu bản dở dang.
  */
-export const allowIndexing = process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true";
+export const allowIndexing = env.NEXT_PUBLIC_ALLOW_INDEXING;
 
 /** Metadata cho 1 trang, lấy từ sổ SEO. Dùng: `export const metadata = pageMetadata("/bang-gia")`. */
 export function pageMetadata(path: string): Metadata {

@@ -1,7 +1,9 @@
+import { env } from "@/lib/env";
+
 export const site = {
   name: "Hẹn Ước",
   domain: "henuoc.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: env.NEXT_PUBLIC_SITE_URL,
   tagline: "Thiệp cưới online đẹp, gửi đúng tên từng khách",
   description:
     "Tạo thiệp cưới online đẹp trong vài phút, gửi lời mời mang tên từng khách qua Zalo và quản lý khách mời, RSVP dễ dàng.",
@@ -45,8 +47,15 @@ export const footerNav = [
   {
     title: "Hẹn Ước",
     links: [
-      { href: "/#cau-hoi", label: "Câu hỏi thường gặp" },
+      { href: "/gioi-thieu", label: "Giới thiệu" },
+      { href: "/cau-hoi-thuong-gap", label: "Câu hỏi thường gặp" },
       { href: "/lien-he", label: "Liên hệ" },
     ],
   },
+] as const;
+
+/** Legal links on the bottom row of the footer. */
+export const legalNav = [
+  { href: "/chinh-sach-bao-mat", label: "Chính sách bảo mật" },
+  { href: "/dieu-khoan", label: "Điều khoản" },
 ] as const;
