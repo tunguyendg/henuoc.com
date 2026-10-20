@@ -9,7 +9,7 @@
 
 ## ✅ Đã xong
 
-- T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
+- T-002 `src/lib/env.ts` (Tony code 🔴) + `env.test.ts` 4 case (stubEnv/resetModules) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
 - Brand v3 "Nhẫn Tim" (ADR-003), favicon / apple-icon
 - Trang chủ đủ section + ảnh cưới thật (`public/images/wedding/`, Unsplash License)
 - Sổ SEO `src/lib/seo/pages.ts`: metadata, canonical, breadcrumb, related links, sitemap, robots, test (docs/08-SEO.md)
@@ -29,9 +29,11 @@
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
-- 🔴 T-002 `lib/env.ts` · 🔴 T-003 Prisma + Neon · 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS)
+- 🔴 T-003 Prisma + Neon · 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS)
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
+
+- **Phải xử lý trước T-003:** `env.ts` bị kéo vào client bundle (`mobile-nav.tsx` "use client" → `site.ts` → `env.ts`). Hiện vô hại (DATABASE_URL không được inline), nhưng khi DATABASE_URL bắt buộc sẽ throw trên trình duyệt. Sửa: tách `env.client.ts` / `env.server.ts` (+ `server-only`, cần duyệt dep), đưa `mainNav` ra file không import env. Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`.
 
 - Chưa launch → `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
