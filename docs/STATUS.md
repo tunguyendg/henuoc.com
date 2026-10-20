@@ -15,6 +15,7 @@
 - Sổ SEO `src/lib/seo/pages.ts`: metadata, canonical, breadcrumb, related links, sitemap, robots, test (docs/08-SEO.md)
 - Trang Mẫu thiệp: `/mau-thiep-cuoi`, `/mau-thiep-cuoi/phong-cach/[style]`, `/mau-thiep-cuoi/[slug]`
 - Đội agent Claude Code: `.claude/agents/`, `.claude/skills/` (docs/09-AGENTS.md)
+- T-012 (một phần) `src/lib/vietqr.ts`: payload VietQR EMVCo + CRC16, 16 test. Còn thiếu: bank list JSON
 
 ## 🔨 Đang làm
 
@@ -35,6 +36,7 @@
 
 - Chưa launch → `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
+- VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex.
 - Chưa có backend → chưa có bề mặt tấn công dữ liệu. Khi làm M3/M4: IDOR, token khách, rate limit RSVP là ưu tiên.
 
 ## 🧭 Quyết định chờ Tony
