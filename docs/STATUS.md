@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-20
+> Cập nhật lần cuối: 2026-10-20 (/bao-cao: typecheck ✅ · lint ✅ · test 87/87)
 
 ## Đang ở đâu
 
