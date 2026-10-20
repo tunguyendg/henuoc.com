@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 /**
  * Biểu tượng Hẹn Ước — "Nhẫn Tim": nhẫn cưới đội trái tim vàng (ADR-003).
  * Nhìn là biết đám cưới; nhẫn = lời hẹn ước.
- * - `ringClassName` đổi màu vành nhẫn qua `currentColor` (trắng trên ô hồng, hồng trên nền sáng).
+ * - Vành nhẫn lấy màu chữ của thẻ cha qua `currentColor` (trắng trên ô hồng, hồng trên nền sáng).
  * - Trái tim luôn là Vàng Nhẫn #F6C76B — màu nhận diện, không đổi theo nền.
  */
 export function LogoMark({ className }: { className?: string }) {
