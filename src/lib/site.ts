@@ -1,9 +1,9 @@
-import { env } from "@/lib/env";
+import { clientEnv } from "@/lib/env.client";
 
 export const site = {
   name: "Hẹn Ước",
   domain: "henuoc.com",
-  url: env.NEXT_PUBLIC_SITE_URL,
+  url: clientEnv.NEXT_PUBLIC_SITE_URL,
   tagline: "Thiệp cưới online đẹp, gửi đúng tên từng khách",
   description:
     "Tạo thiệp cưới online đẹp trong vài phút, gửi lời mời mang tên từng khách qua Zalo và quản lý khách mời, RSVP dễ dàng.",
@@ -39,9 +39,9 @@ export const footerNav = [
   {
     title: "Cẩm nang",
     links: [
-      { href: "/cam-nang", label: "Cách ghi thiệp cưới" },
-      { href: "/cam-nang", label: "Lời mời đám cưới hay" },
-      { href: "/cam-nang", label: "Checklist chuẩn bị đám cưới" },
+      { href: "/cam-nang/cach-ghi-thiep-cuoi", label: "Cách ghi thiệp cưới" },
+      { href: "/cam-nang/loi-moi-dam-cuoi-hay", label: "Lời mời đám cưới hay" },
+      { href: "/tinh-nang/checklist-dam-cuoi", label: "Checklist chuẩn bị đám cưới" },
     ],
   },
   {
