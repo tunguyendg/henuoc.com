@@ -63,7 +63,7 @@
 | T-032 | Better Auth: Google + Email OTP (Resend), trang đăng nhập, `proxy.ts`, `getSession()` | 🔴 (cùng Claude) | T-030 |
 | T-033 | `claimDraft` + wedding actions (CRUD, ownership) + test IDOR | 🔴 | T-030, T-032 |
 | T-034 | Upload ảnh R2 presigned + resize client | 🟢 | T-033 |
-| T-035 | Publish + `/w/[slug]` với cache tag | 🟢 | T-033 |
+| T-035 | Publish + `/thiepcuoi/[slug]` với cache tag | 🟢 | T-033 |
 
 **Done khi:** AT-02, AT-06, AT-10 pass. Tạo đám cưới thật của chính Tony (dữ liệu mẫu) trên production.
 📘 `M3-auth-data.md`: session cookie, OAuth flow, Server Actions bảo mật, ownership, presigned URL, revalidateTag.
@@ -76,7 +76,7 @@
 | T-041 | Dashboard Khách mời: bảng, thêm/sửa inline, nhóm, bên, mẫu danh xưng | 🟢 | T-040 |
 | T-042 | Import CSV có preview lỗi từng dòng | 🟢 ⚡ | T-040 |
 | T-043 | Copy link / tin nhắn mẫu / Zalo / đánh dấu đã gửi / thu hồi link | 🟢 ⚡ | T-041 |
-| T-044 | `/i/[token]` + tracking mở link (`after()`) | 🟢 | T-040 |
+| T-044 | `/thiepcuoi/[slug]/[token]` + tracking mở link (`after()`) | 🟢 | T-040 |
 | T-045 | `POST /api/rsvp` + rate limit Postgres + history | 🔴 | T-040 |
 | T-046 | Dashboard RSVP: tổng theo sự kiện, ≈ số bàn, lọc, xuất CSV | 🟢 | T-045 |
 | T-047 | Email thông báo RSVP gom ngày (cron) | 🟢 ⚡ | T-045 |

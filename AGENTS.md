@@ -17,7 +17,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 1. Đọc `docs/00-PROJECT_CONTEXT.md` và spec task được giao trong `docs/tasks/T-xxx-*.md`.
 2. Chỉ làm đúng scope trong spec. Thấy việc khác cần làm → ghi vào mục "Ghi chú cho reviewer" của PR, **không tự làm**.
 3. Nếu spec mâu thuẫn với docs → dừng, báo lại. Không tự đoán.
-4. Không đọc / dùng hướng thiết kế cũ (tím `#6255E8`, burgundy `#9B5C64`, coral `#E3707C`). Brand duy nhất: **Rose `#BD6477`** (xem `docs/02-DESIGN_SYSTEM.md`).
+4. Không đọc / dùng hướng thiết kế cũ (tím `#6255E8`, burgundy `#9B5C64`, coral `#E3707C`, rose trầm `#BD6477`, logo chữ Ư). Brand hiện hành: **Hồng Cưới `#E8436A` + Vàng Nhẫn `#F6C76B`, logo Nhẫn Tim** (xem `docs/02-DESIGN_SYSTEM.md`, ADR-003).
 
 ## 1. Stack — không tự thêm thư viện
 
@@ -31,7 +31,7 @@ Next.js 16 App Router · React 19 · TypeScript strict · Tailwind 4 · Prisma 7
 ```
 src/
   app/                     # chỉ routing + composition; không đặt business logic
-    (marketing)/  (auth)/  (app)/dashboard/  (public)/w/[slug]  (public)/i/[token]
+    (marketing)/  (auth)/  (app)/dashboard/  (public)/thiepcuoi/[slug]  (public)/thiepcuoi/[slug]/[token]
     api/                   # chỉ: RSVP public, auth handler, webhook, /go redirect
   components/ui/           # primitive (Button, Input, Card…) — không biết domain
   components/<feature>/    # component theo feature
@@ -55,7 +55,7 @@ tests/  e2e/
 ## 4. Bảo mật & riêng tư — không thương lượng
 
 - Token thiệp riêng: `crypto.randomBytes(24).toString("base64url")`. DB lưu `tokenHash` (SHA-256, để tra cứu) + `tokenCipher` (AES-256-GCM, để dashboard hiện lại link). Không bao giờ lưu token thô, không log token. Dùng helper trong `src/lib/crypto.ts`.
-- `/i/*`, `/dashboard/*`, trang draft: `robots: { index: false, follow: false }` + **không có trong sitemap**.
+- `/thiepcuoi/*`, `/dashboard/*`, trang draft: `robots: { index: false, follow: false }` + **không có trong sitemap**.
 - Không đưa tên khách, SĐT, token vào: analytics, OG image, `<title>`, URL query, log.
 - RSVP endpoint có rate limit + validate `attendeeCount <= invitation.maxAttendees`.
 - Không bao giờ commit `.env*` (trừ `.env.example`), file build, `*.tar.gz`, `*.zip`.

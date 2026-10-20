@@ -72,7 +72,7 @@ enum UserRole {
 // ───────── Wedding ─────────
 model Wedding {
   id              String        @id @default(cuid())
-  slug            String        @unique              // /w/[slug], vd "minh-anh-hoang-nam-2026"
+  slug            String        @unique              // /thiepcuoi/[slug], vd "minhanh-hoangnam" — tên cặp đôi viết liền, không dấu
   status          WeddingStatus @default(DRAFT)
   plan            Plan          @default(FREE)        // MVP: admin set tay
   themeSlug       String
@@ -257,7 +257,7 @@ model InvitationEvent {
 model Rsvp {
   id            String     @id @default(cuid())
   weddingId     String
-  invitationId  String?    @unique              // null = khách vãng lai từ /w/[slug]
+  invitationId  String?    @unique              // null = khách vãng lai từ /thiepcuoi/[slug]
   source        RsvpSource
   status        RsvpStatus
   attendeeCount Int        @default(0)

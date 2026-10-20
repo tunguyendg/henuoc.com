@@ -43,9 +43,9 @@ Next.js cho **HTML render sẵn**, metadata từng trang, sitemap, OG image, t�
 ### 2.3 Technical SEO checklist
 
 - `metadataBase: new URL("https://henuoc.com")`; `generateMetadata` từng trang, `alternates.canonical` duy nhất.
-- `sitemap.ts`: marketing + theme `published` + trang phong cách đủ ≥ 3 theme + bài cẩm nang. **Không** `/w/`, `/i/`, `/dashboard`, `/demo`.
-- `robots.ts`: cho phép tất cả trừ `/api/`, `/dashboard`, `/admin`. **Không chặn `/i/`** bằng robots (để Google đọc được `noindex`).
-- `/w/[slug]`: mặc định `noindex` (đời tư cặp đôi). Cho cặp đôi bật "cho phép Google tìm thấy" ở v2.
+- `sitemap.ts`: marketing + theme `published` + trang phong cách đủ ≥ 3 theme + bài cẩm nang. **Không** `/thiepcuoi/`, `/thiepcuoi/…/[token]`, `/dashboard`, `/demo`.
+- `robots.ts`: cho phép tất cả trừ `/api/`, `/dashboard`, `/admin`. **Không chặn `/thiepcuoi/…/[token]`** bằng robots (để Google đọc được `noindex`).
+- `/thiepcuoi/[slug]`: mặc định `noindex` (đời tư cặp đôi). Cho cặp đôi bật "cho phép Google tìm thấy" ở v2.
 - JSON-LD: `Organization` (home), `FAQPage` (FAQ thật), `BreadcrumbList`, `Article` (cẩm nang). **Không** `AggregateRating` giả.
 - OG image động `opengraph-image.tsx` cho theme + cẩm nang. Test bằng Zalo + Facebook Debugger.
 - Core Web Vitals p75: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1.
@@ -66,7 +66,7 @@ Sự kiện (server-side log hoặc Umami v2): `theme_view`, `theme_demo_open`, 
 | Quyền lợi (đề xuất — sẽ test) | Free | Wedding **199.000đ** | Signature **349.000đ** |
 |---|---|---|---|
 | Theme | Theme `free` | Tất cả theme `free` + 50% premium | **Tất cả** theme |
-| Trang cưới `/w/` | ✓ | ✓ | ✓ |
+| Trang cưới `/thiepcuoi/` | ✓ | ✓ | ✓ |
 | Lời mời riêng có tên | 30 | Không giới hạn | Không giới hạn |
 | RSVP + dashboard | ✓ | ✓ | ✓ |
 | Ảnh album | 12 | 40 | 80 |
@@ -74,7 +74,7 @@ Sự kiện (server-side log hoặc Umami v2): `theme_view`, `theme_demo_open`, 
 | QR mừng cưới | ✓ | ✓ | ✓ |
 | Watermark "Tạo bởi Hẹn Ước" | Có | Không | Không |
 | Xuất CSV khách / RSVP | — | ✓ | ✓ |
-| Slug tuỳ chọn `/w/ten-dep` | — | — | ✓ |
+| Slug tuỳ chọn `/thiepcuoi/ten-dep` | — | — | ✓ |
 | Thiệp online sau ngày cưới | 30 ngày | 6 tháng | 12 tháng |
 | Hỗ trợ | Cẩm nang | Zalo | Zalo ưu tiên + nhập khách hộ |
 

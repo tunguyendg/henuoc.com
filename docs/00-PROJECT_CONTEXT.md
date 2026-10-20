@@ -18,9 +18,9 @@
 
 | # | Chủ đề | Quyết định |
 |---|---|---|
-| D1 | Thương hiệu | Tên **Hẹn Ước**, domain `henuoc.com`. Primary **Rose `#BD6477`**. Logo hiện tại (`public/brand/logo.svg`) là **tạm**, chưa phải logo chính thức |
+| D1 | Thương hiệu | Tên **Hẹn Ước**, domain `henuoc.com`. Định vị **trẻ, hiện đại, nhìn là biết đám cưới**. Logo **Nhẫn Tim** (nhẫn cưới đội trái tim vàng), màu **Hồng Cưới `#E8436A` + Vàng Nhẫn `#F6C76B`**, chữ Be Vietnam Pro đậm. Xem ADR-003 |
 | D2 | Tham chiếu UI | **sayi.do** về cấu trúc, khoảng trắng, giọng văn. Không copy code, ảnh, logo, review của họ |
-| D3 | Mô hình | **Hybrid**: `/w/[slug]` trang cưới chung (gửi group, đăng MXH) + `/i/[token]` thiệp riêng có tên khách, RSVP |
+| D3 | Mô hình | **Hybrid** (URL có chữ "thiepcuoi" + tên cặp đôi để nhìn link là biết đám cưới): `/thiepcuoi/[slug]` trang cưới chung (gửi group, đăng MXH) + `/thiepcuoi/[slug]/[token]` thiệp riêng có tên khách, RSVP |
 | D4 | Tính năng Việt trong MVP | Lễ **vu quy / thành hôn / tân hôn**, **nhà trai / nhà gái**, **lịch âm**, **QR mừng cưới (VietQR)**, mẫu xưng hô |
 | D5 | Stack | Next 16 · TS · Tailwind 4 · Prisma 7 · **Neon Postgres (Singapore)** · Better Auth · R2 · Resend |
 | D6 | Hosting | **AZDIGI DirectAdmin Node.js App (Passenger, Node 22)**, `output: "standalone"`, build trên GitHub Actions. VPS + Docker là đường nâng cấp khi cần |
@@ -31,7 +31,7 @@
 | D11 | Ảnh marketing | Chỉ ảnh **miễn phí dùng thương mại** (Unsplash, Pexels) — ghi nguồn vào `public/brand/CREDITS.md` |
 | D12 | Cách làm | Claude = kiến trúc sư/reviewer · Codex/Claude Code = implement · Tony = owner + tự code task 🔴 |
 | D13 | Khách mời | Không cần tài khoản để xem thiệp và RSVP |
-| D14 | SEO | Trang marketing, gallery, cẩm nang: SSR/SSG, index. `/i/*`, `/dashboard/*`: noindex, không sitemap |
+| D14 | SEO | Trang marketing, gallery, cẩm nang: SSR/SSG, index. `/thiepcuoi/*`, `/dashboard/*`: noindex, không sitemap |
 
 ## 4. Để dành v2+ (đã quyết KHÔNG làm ở MVP)
 
