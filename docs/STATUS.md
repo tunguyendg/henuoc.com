@@ -9,7 +9,7 @@
 
 ## ✅ Đã xong
 
-- T-002 `env.client.ts` / `env.server.ts` + `server-only` (Tony code 🔴) · test `env.client.test.ts` (4) + `env.server.test.ts` (3) · T-003 Prisma + Neon (Tony code 🔴): `prisma.config.ts`, schema auth + migration `init_auth`, `src/lib/db.ts`, `/api/health`, DATABASE_URL bắt buộc (`startsWith("postgres")`) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
+- T-002 `env.client.ts` / `env.server.ts` + `server-only` (Tony code 🔴) · test `env.client.test.ts` (4) + `env.server.test.ts` (3) · T-003 Prisma 7 + Supabase (Tony code 🔴): `prisma.config.ts`, schema auth + migration `init_auth`, `src/lib/db.ts`, `/api/health`, DATABASE_URL bắt buộc (`startsWith("postgres")`) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
 - Brand v3 "Nhẫn Tim" (ADR-003), favicon / apple-icon
 - Trang chủ đủ section + ảnh cưới thật (`public/images/wedding/`, Unsplash License)
 - Sổ SEO `src/lib/seo/pages.ts`: metadata, canonical, breadcrumb, related links, sitemap, robots, test (docs/08-SEO.md)
