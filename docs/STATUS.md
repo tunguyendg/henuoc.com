@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-20 (T-002 test tách client/server: typecheck ✅ · lint ✅ · test 178/178 · format ❌ 2 file env thiếu newline cuối)
+> Cập nhật lần cuối: 2026-10-22 (/bao-cao: typecheck ✅ · lint ✅ · test 178/178 · build ✅ 2026-10-20 · T-003 đang làm, chưa commit)
 
 ## Đang ở đâu
 
@@ -22,7 +22,7 @@
 
 ## 🔨 Đang làm
 
-- (trống)
+- 🔴 T-003 (Tony): schema auth + migration `init_auth` + `prisma.config.ts` đã có (chưa commit, security-reviewer: CHO COMMIT). Còn thiếu `src/lib/db.ts` (server-only, singleton) + `/api/health` check DB.
 
 ## ⏭️ Tiếp theo (frontend)
 
