@@ -54,8 +54,8 @@ Google / Zalo / bạn bè
 ### F3. Thiệp & trang cưới (khách xem)
 - `/thiepcuoi/[slug]`: trang chung, lời mời chung ("Trân trọng kính mời quý khách").
 - `/thiepcuoi/[slug]/[token]`: như trên + **danh xưng riêng** ("Kính mời Anh Minh & Gia đình"), chỉ hiện sự kiện khách được mời, form RSVP gắn với lời mời.
-- Mở phong bì → nhạc phát **sau khi chạm**; nút tắt nhạc luôn hiện; tôn trọng `prefers-reduced-motion`.
-- Section chuẩn (mỗi theme vẽ theo cách riêng): Bìa · Lời mời · Cặp đôi · Sự kiện (dương + âm lịch, đếm ngược, thêm vào lịch `.ics`, chỉ đường) · Album · Mừng cưới QR · RSVP · Lời cảm ơn.
+- Mở phong bì → nhạc phát **sau khi chạm**; nút ♪ luôn hiện, tự dừng khi chuyển tab; tôn trọng `prefers-reduced-motion` (chi tiết `07-THEMES.md §10`).
+- Section chuẩn (mỗi theme vẽ theo cách riêng): Bìa & phong bì · Lời mời (kèm cặp đôi) · Sự kiện (dương + âm lịch, thêm vào lịch `.ics`, chỉ đường) · Đếm ngược · Album · RSVP · Mừng cưới (STK/QR trong bottom sheet) · Lời cảm ơn.
 - Free: watermark nhỏ "Tạo bởi Hẹn Ước" ở cuối thiệp.
 - OG image: **ảnh bìa + tên cặp đôi + ngày**. Không bao giờ chứa tên khách.
 

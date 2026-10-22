@@ -31,7 +31,7 @@
 | T-010 | `themes/types.ts`, `registry.ts`, demo content, route `/demo/[slug]` | 🟢 | M0 |
 | T-011 | `lib/lunar.ts` dương → âm (Hồ Ngọc Đức, UTC+7) + unit test ≥ 20 ngày đã biết | 🔴 | M0 |
 | T-012 | `lib/vietqr.ts` EMVCo payload + CRC16 + unit test, bank list JSON | 🟢 ⚡ | M0 |
-| T-013 | Primitives `_shared/`: useEnvelope, useMusic, useCountdown, AddToCalendar, MapButton, GiftQR, Reveal, Watermark | 🟢 | T-010 |
+| T-013 | Primitives `_shared/` theo hành trình khách `07-THEMES.md §10`: useEnvelope (mở nắp = mở khoá nhạc), useMusic (dừng khi ẩn tab, nhớ tắt) + MusicToggle ♪ nổi, useCountdown, AddToCalendar, MapButton, GiftButton + GiftSheet (bottom sheet, QR, sao chép STK), Reveal, Watermark | 🟢 | T-010 |
 | T-014 | Spec + code theme `hong-pastel` | 🟢 ⚡ | T-013 |
 | T-015 | Spec + code theme `song-hy` | 🟢 ⚡ | T-013 |
 | T-016 | Spec + code theme `ban-tin` | 🟢 ⚡ | T-013 |

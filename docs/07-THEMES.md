@@ -1,6 +1,6 @@
 # 07 — Theme Engine & Quy trình sản xuất theme
 
-**Version:** 2.0 · 2026-10-19 · Theme là **sản phẩm chính**. File này quan trọng ngang Architecture.
+**Version:** 2.1 · 2026-10-22 · Hành trình khách: §10 · Theme là **sản phẩm chính**. File này quan trọng ngang Architecture.
 
 ## 1. Nguyên tắc
 
@@ -74,13 +74,13 @@ export interface ThemeProps<TOptions = unknown> {
 
 | Primitive | Loại | Theme tuỳ biến bằng |
 |---|---|---|
-| `useEnvelope()` | hook | trạng thái `closed → opening → open`, theme tự vẽ phong bì/màn mở |
-| `useMusic(src)` | hook | play/pause, chỉ play sau user gesture, nhớ trạng thái tắt |
-| `<MusicToggle>` | component | `className`, icon slot |
+| `useEnvelope()` | hook | trạng thái `closed → opening → open`, theme tự vẽ phong bì/màn mở. Hàm `open()` gọi `music.unlock()` **trong cùng handler chạm** (§10) |
+| `useMusic(src)` | hook | `unlock()` / `toggle()`; chỉ play sau user gesture; tự dừng khi tab ẩn (`visibilitychange`), quay lại thì phát tiếp nếu khách chưa tắt; nhớ trạng thái tắt |
+| `<MusicToggle>` | component | nút ♪ nổi (fixed, safe-area), `aria-pressed`, `className`, icon slot |
 | `useCountdown(date)` | hook | trả `{ days, hours, minutes, seconds, isPast }` |
 | `<AddToCalendar event>` | component | tạo `.ics` + link Google Calendar |
 | `<MapButton url>` | component | |
-| `<GiftQR gift>` | component | render SVG có sẵn, nút copy STK |
+| `<GiftButton>` + `<GiftSheet gifts>` | component | nút "Gửi quà mừng" mở bottom sheet: QR (SVG có sẵn), ngân hàng, tên, STK + nút sao chép. Theme vẽ nút, sheet dùng chung |
 | `useRsvpForm(guest)` | hook | state, validate (zod chung), submit `/api/rsvp`, trạng thái success/error |
 | `<Reveal>` | component | fade/slide khi vào viewport, tự tắt khi `prefers-reduced-motion` |
 | `<Watermark>` | component | Free plan |
@@ -147,14 +147,13 @@ Options: palette variants (nếu có)
 Mô tả trạng thái closed / animation opening (thời lượng) / open. Reduced-motion: thay bằng fade 200ms.
 
 ## Sections (theo thứ tự)
-### cover — bố cục, ảnh (tỉ lệ, crop), chữ, trang trí
-### invitation — vị trí lời mời; với guest: dòng danh xưng hiển thị thế nào
-### couple — …
+### cover — bố cục, ảnh (tỉ lệ, crop), chữ, trang trí, phong bì đóng (xem "Mở thiệp")
+### invitation — vị trí lời mời; với guest: dòng danh xưng hiển thị thế nào; cặp đôi + bố mẹ hai bên
 ### events — card / timeline; hiển thị âm lịch; nút chỉ đường, thêm lịch
 ### countdown — …
 ### album — grid / masonry / carousel; lightbox
-### gift — 1 hoặc 2 QR; nhãn nhà trai / nhà gái
 ### rsvp — form style; trạng thái đã trả lời
+### gift — kiểu nút "Gửi quà mừng"; nhãn nhà trai / nhà gái trong sheet
 ### thanks — …
 
 ## Motion
@@ -188,7 +187,9 @@ Ví dụ: không dùng chữ trắng trên ảnh sáng không overlay; không ho
 - [ ] Font chỉ load weight cần dùng
 
 **Trải nghiệm**
-- [ ] Nhạc không tự phát; phát sau chạm "Mở thiệp"; nút tắt luôn thấy được
+- [ ] Nhạc không tự phát; phát ngay khi chạm mở phong bì (test cả trình duyệt Zalo iOS); nút ♪ luôn thấy được
+- [ ] Chuyển tab / khoá màn hình → nhạc dừng; quay lại → phát tiếp, trừ khi khách đã tắt
+- [ ] Không thấy STK/QR trên trang cho tới khi bấm "Gửi quà mừng"; nút sao chép báo "Đã sao chép"
 - [ ] `prefers-reduced-motion`: không animation lớn
 - [ ] Contrast chữ nội dung chính ≥ 4.5 (trên ảnh phải có overlay)
 - [ ] RSVP: gửi, sửa, lỗi mạng, vượt số người — đều có phản hồi rõ
@@ -199,6 +200,52 @@ Ví dụ: không dùng chữ trắng trên ảnh sáng không overlay; không ho
 
 ## 9. Nhạc nền
 
-- Thư viện nhạc trong `src/lib/music.ts` (id, tên, nguồn, giấy phép, URL R2). MVP 6–8 bài không lời (piano, acoustic) từ **Pixabay Music** hoặc nguồn có giấy phép thương mại rõ ràng.
+- Thư viện nhạc trong `src/lib/music.ts` (id, tên, nguồn, giấy phép, URL R2). MVP **~10 bài** không lời (piano, acoustic) từ **Pixabay Music** hoặc nguồn có giấy phép thương mại rõ ràng.
+- Mỗi bài ghi tác giả + link nguồn + loại giấy phép trong `CREDITS.md` (mục "Nhạc nền"). Bài nào không ghi được giấy phép → không đưa vào.
+- **Không cho người dùng upload nhạc** (rủi ro bản quyền, bị gỡ thiệp). Chỉ chọn từ thư viện.
 - File MP3 128kbps, ≤ 3MB, host trên R2. `preload="none"`.
 - **Không** dùng nhạc trending TikTok/YouTube.
+
+## 10. Trải nghiệm khách
+
+Quyết định của Tony (2026-10-22). Mọi theme đi đúng hành trình này; theme chỉ khác phần nhìn và motion.
+
+### Hành trình 8 phần
+
+| # | Phần | Khách làm gì | Ghi chú |
+|---|---|---|---|
+| 1 | **Bìa → mở phong bì** | Thấy tên cặp đôi, ngày cưới (và danh xưng nếu có token), chạm để mở nắp | Cú chạm này là **user gesture mở khoá nhạc** |
+| 2 | **Lời mời** | Đọc lời mời, danh xưng riêng, cặp đôi + bố mẹ hai bên | Không có token → lời mời chung |
+| 3 | **Sự kiện** | Xem giờ, địa điểm, âm lịch; chỉ đường; thêm vào lịch | Có token → chỉ sự kiện khách được mời |
+| 4 | **Đếm ngược** | Thấy còn bao lâu | Qua ngày cưới → ẩn hoặc đổi thành "Đã diễn ra" |
+| 5 | **Album** | Lướt ảnh, mở lightbox | Không có ảnh → bỏ phần này |
+| 6 | **RSVP** | Xác nhận đi / không đi, số người, lời nhắn | Chỉ khi có token |
+| 7 | **Mừng cưới** | Bấm "Gửi quà mừng" → bottom sheet | Xem dưới |
+| 8 | **Cảm ơn** | Lời cảm ơn khép thiệp | Free: watermark ở đây |
+
+Phần bị tắt trong `sections` hoặc thiếu dữ liệu thì bỏ qua; thứ tự không đổi.
+
+### Phong bì & nhạc
+
+- Trình duyệt (Safari, Chrome, webview Zalo) **chặn autoplay có tiếng**. Nhạc chỉ phát được khi `audio.play()` được gọi
+  **đồng bộ trong handler của cú chạm**, không qua `setTimeout`, `await` hay sau animation.
+- Vì vậy `useEnvelope().open()` gọi `music.unlock()` ngay đầu handler, rồi mới chạy animation mở nắp. `play()` bị từ chối
+  (trình duyệt lạ) → nuốt lỗi, nút ♪ hiện trạng thái tắt, thiệp vẫn mở bình thường.
+- **Nút ♪ nổi**: luôn thấy (fixed, tránh safe-area), bấm để bật/tắt, có `aria-label`. Khách tắt → nhớ trong
+  `sessionStorage` (bọc try/catch), không tự bật lại.
+- **Tự dừng khi chuyển tab** (`visibilitychange` → hidden): pause. Quay lại → phát tiếp chỉ khi khách chưa tắt.
+- `prefers-reduced-motion`: bỏ animation mở nắp (fade 200ms), **vẫn cần chạm** để mở — cú chạm vẫn là gesture cho nhạc.
+- `mode="preview"`: phong bì mở được nhưng không phát nhạc. Không có nhạc (`music` undefined) → không render nút ♪.
+- Nhạc chỉ từ thư viện có giấy phép (§9), không upload.
+
+### Mừng cưới
+
+- Nút **"Gửi quà mừng"** hiện cho **mọi khách**, kể cả trang chung `/thiepcuoi/[slug]` không có token.
+- **STK và QR không hiện trên trang.** Chỉ hiện trong bottom sheet khi khách bấm nút: tối đa 2 thẻ (nhà trai / nhà gái),
+  mỗi thẻ có QR VietQR, ngân hàng, tên chủ tài khoản, STK + nút **Sao chép** (báo "Đã sao chép", fallback chọn chữ nếu
+  Clipboard API không có).
+- Sheet: đóng bằng nút ×, vuốt xuống hoặc chạm nền; khoá cuộn nền; focus trap; `Esc` đóng.
+- Không có tài khoản nào → không render nút.
+- ⚠️ Đây là **ẩn trên giao diện, không phải bảo mật**: nếu `gifts` nằm sẵn trong props thì STK vẫn có trong payload trang.
+  STK là thông tin cặp đôi chủ động đưa cho khách nên chấp nhận được. Muốn chặn bot cào STK → tải `gifts` khi bấm
+  (route riêng, có rate limit), làm sau nếu cần.
