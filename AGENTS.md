@@ -36,6 +36,8 @@ src/
   components/ui/           # primitive (Button, Input, Card…) — không biết domain
   components/<feature>/    # component theo feature
   features/<feature>/      # actions.ts, queries.ts, schema.ts (zod), service.ts
+                           # + types.ts (DTO rời server), repo.ts (interface), mock-repo.ts / prisma-repo.ts (bản cài)
+  features/repos.ts        # nơi DUY NHẤT chọn bản cài (mock ↔ prisma), server-only
   themes/<theme-slug>/     # mỗi theme 1 folder, xem docs/07-THEMES.md
   data/                    # dữ liệu tĩnh có type (themes, features, faq, articles, banks) — nguồn cho trang + sổ SEO
   content/<section>/       # MDX chỉ chứa thân bài; metadata nằm ở data/
@@ -50,6 +52,7 @@ tests/  e2e/
 - **Server Component mặc định.** Chỉ thêm `"use client"` cho component cần state/event/browser API. Đẩy `"use client"` xuống lá thấp nhất có thể.
 - **Mutation = Server Action** trong `features/*/actions.ts`. Mỗi action: (1) parse input bằng Zod, (2) lấy session, (3) **kiểm tra ownership** (`wedding.ownerId === session.user.id`), (4) gọi service, (5) `updateTag()` (Server Action) — `revalidateTag(tag, "max")` chỉ dùng trong Route Handler/cron.
 - **Không truy vấn Prisma trực tiếp trong component.** Đi qua `features/*/queries.ts`, mọi query owner-side phải lọc theo `ownerId`.
+- **Repository:** UI/queries chỉ gọi `repos.*` từ `features/repos.ts`, không import `*-repo.ts` trực tiếp. DTO trong `types.ts` map từng field (không `...row`), không bao giờ có token/tokenHash/tokenCipher/phone/email khách. Kiểm ownership (session ↔ `WeddingMember`) là bắt buộc trước khi dùng bản Prisma.
 - Không `any`. Không `// @ts-ignore`. Không tắt rule ESLint.
 - Tên file kebab-case; component PascalCase; hàm camelCase. UI text tiếng Việt, code + comment tiếng Anh.
 - Ngày giờ lưu UTC trong DB, hiển thị `Asia/Ho_Chi_Minh`.

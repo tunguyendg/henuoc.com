@@ -54,5 +54,7 @@
 
 ## 🧭 Quyết định chờ Tony
 
+- Chống IDOR khi thay mock bằng Prisma: (A) `service.ts` có `requireWeddingAccess(session, weddingId)` trả kiểu branded `AuthorizedWeddingId`, repo chỉ lọc weddingId (khuyên dùng) hay (B) mọi method repo nhận `ctx: { userId }` và tự lọc `members.some.userId`? Phải chốt trước khi viết `prisma-repo.ts`.
+
 - Gói Supabase cho production: Free (auto-pause 7 ngày, không backup) hay Pro? Quyết trước launch (ADR-004).
 - Thêm mục menu "Công cụ" (checklist public) khi có `/checklist-dam-cuoi`? (mặc định: có)
