@@ -25,7 +25,7 @@
 | D5 | Stack | Next 16 · TS · Tailwind 4 · Prisma 7 · **Neon Postgres (Singapore)** · Better Auth · R2 · Resend |
 | D6 | Hosting | **AZDIGI DirectAdmin Node.js App (Passenger, Node 22)**, `output: "standalone"`, build trên GitHub Actions. VPS + Docker là đường nâng cấp khi cần |
 | D7 | Repo | Repo mới `tunguyendg/henuoc.com`. Repo cũ `henuoc.com` archive, chỉ mang sang `public/brand/*` |
-| D8 | Monetization | Free-first. Trả **một lần / đám cưới**: Wedding **199.000đ**, Signature **349.000đ** (quyền lợi = đề xuất, xem `04-GROWTH.md`). **Thanh toán làm ở v2** |
+| D8 | Monetization | Free-first. **2 gói: Miễn phí / Cao cấp**, Cao cấp trả **một lần / đám cưới**, giá **chưa công bố** (quyền lợi = đề xuất, xem `04-GROWTH.md`). MVP: nâng cấp qua email `hotro@henuoc.com`. **Thanh toán làm ở v2** (Tony chốt 2026-10-22, thay phương án 3 gói Wedding 199k / Signature 349k) |
 | D9 | Affiliate | ACCESSTRADE (đã có tài khoản + API token). Gợi ý Shopee **gắn theo việc trong checklist**, chỉ trong dashboard. **Không bao giờ** trên thiệp gửi khách |
 | D10 | Theme | Tony chọn reference → Claude viết theme spec → Codex code. Mỗi theme là React component riêng, **layout khác nhau thật**, không chỉ đổi màu |
 | D11 | Ảnh marketing | Chỉ ảnh **miễn phí dùng thương mại** (Unsplash, Pexels) — ghi nguồn vào `public/brand/CREDITS.md` |

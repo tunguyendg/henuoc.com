@@ -10,7 +10,7 @@ Zalo (thiệp khách nhận, watermark Free) ─┼─▶ Gallery / Tool ─▶ 
 TikTok/FB (demo theme) ─┘                                                        │
                                        ┌──────────────────────────────────────────┤
                                        ▼                                          ▼
-                              Nâng cấp 199k / 349k (v2: payOS)        Checklist ─▶ Shopee (affiliate)
+                              Nâng cấp Cao cấp (v2: payOS)            Checklist ─▶ Shopee (affiliate)
 ```
 
 **Vòng lặp lan truyền:** mỗi đám cưới gửi 100–300 link → khách là người sắp cưới tương lai → watermark "Tạo bởi Hẹn Ước" dẫn về `/?ref=thiep`.
@@ -61,24 +61,25 @@ Sự kiện (server-side log hoặc Umami v2): `theme_view`, `theme_demo_open`, 
 ## 3. Pricing
 
 **Mô hình:** trả **một lần / đám cưới**. Không subscription.
-**MVP:** chưa có thanh toán online. Nút nâng cấp → nhắn Zalo OA → Tony chuyển khoản tay → set `plan` trong `/admin`. Mục đích: **đo nhu cầu trả tiền thật** trước khi tích hợp payOS (v2).
+**Gói:** Miễn phí / Cao cấp (Tony chốt 2026-10-22). Giá Cao cấp chưa công bố — từng cân nhắc 199k–349k.
+**MVP:** chưa có thanh toán online. Nút nâng cấp → email `hotro@henuoc.com` → Tony chuyển khoản tay → set `plan` trong `/admin`. Mục đích: **đo nhu cầu trả tiền thật** trước khi tích hợp payOS (v2).
 
-| Quyền lợi (đề xuất — sẽ test) | Free | Wedding **199.000đ** | Signature **349.000đ** |
-|---|---|---|---|
-| Theme | Theme `free` | Tất cả theme `free` + 50% premium | **Tất cả** theme |
-| Trang cưới `/thiepcuoi/` | ✓ | ✓ | ✓ |
-| Lời mời riêng có tên | 30 | Không giới hạn | Không giới hạn |
-| RSVP + dashboard | ✓ | ✓ | ✓ |
-| Ảnh album | 12 | 40 | 80 |
-| Nhạc nền | — | ✓ | ✓ |
-| QR mừng cưới | ✓ | ✓ | ✓ |
-| Watermark "Tạo bởi Hẹn Ước" | Có | Không | Không |
-| Xuất CSV khách / RSVP | — | ✓ | ✓ |
-| Slug tuỳ chọn `/thiepcuoi/ten-dep` | — | — | ✓ |
-| Thiệp online sau ngày cưới | 30 ngày | 6 tháng | 12 tháng |
-| Hỗ trợ | Cẩm nang | Zalo | Zalo ưu tiên + nhập khách hộ |
+| Quyền lợi (đề xuất — sẽ test) | Miễn phí | Cao cấp (giá chưa công bố) |
+|---|---|---|
+| Theme | Theme `free` | **Tất cả** theme |
+| Trang cưới `/thiepcuoi/` | ✓ | ✓ |
+| Lời mời riêng có tên | 30 | Không giới hạn |
+| RSVP + dashboard | ✓ | ✓ |
+| Ảnh album | 12 | Nhiều hơn (chưa chốt số) |
+| Nhạc nền | — | ✓ |
+| QR mừng cưới | ✓ | ✓ |
+| Watermark "Tạo bởi Hẹn Ước" | Có | Không |
+| Xuất CSV khách / RSVP | — | ✓ |
+| Slug tuỳ chọn `/thiepcuoi/ten-dep` | — | ✓ |
+| Thiệp online sau ngày cưới | 30 ngày | Lâu hơn (chưa chốt) |
+| Hỗ trợ | Cẩm nang | Email `hotro@henuoc.com` |
 
-- Giá early-adopter **149.000đ** cho 50 cặp đầu tiên = phương án thử, chưa chốt.
+- Giá early-adopter cho nhóm cặp đôi đầu tiên = phương án thử, chưa chốt.
 - QR mừng cưới để Free: đó là tính năng người Việt cần nhất, đưa vào Free tăng lan truyền.
 - Trước khi thu tiền thật: điều khoản, chính sách hoàn tiền, xuất hoá đơn (nếu cần).
 

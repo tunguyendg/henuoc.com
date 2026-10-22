@@ -1,5 +1,7 @@
 import { LegalLink, LegalList, LegalPage, LegalSection } from "@/components/legal/legal-page";
+import { SupportEmailLink } from "@/components/site/support-email-link";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { site } from "@/lib/site";
 
 const PATH = "/dieu-khoan";
 
@@ -69,7 +71,7 @@ export default function Page() {
               <LegalLink href="/bang-gia">Bảng giá</LegalLink>. Quyền lợi có thể điều chỉnh trước
               khi ra mắt.
             </>,
-            "Hiện Hẹn Ước chưa nhận thanh toán. Điều khoản chính thức và chính sách hoàn tiền sẽ được công bố trước khi mở gói trả phí.",
+            `Hiện Hẹn Ước chưa nhận thanh toán online. Muốn nâng cấp, bạn gửi email tới ${site.supportEmail} để được báo giá và hướng dẫn. Điều khoản chính thức và chính sách hoàn tiền sẽ được công bố trước khi Hẹn Ước nhận thanh toán.`,
           ]}
         />
       </LegalSection>
@@ -114,7 +116,9 @@ export default function Page() {
         <p>
           Bạn có thể ngừng dùng và xoá tài khoản bất cứ lúc nào. Khi tài khoản bị xoá, thiệp và các
           link đã gửi sẽ ngừng hoạt động. Cách dữ liệu được xoá, kể cả bản sao lưu, được mô tả trong{" "}
-          <LegalLink href="/chinh-sach-bao-mat">Chính sách bảo mật</LegalLink>.
+          <LegalLink href="/chinh-sach-bao-mat">Chính sách bảo mật</LegalLink>. Yêu cầu xoá tài
+          khoản gửi qua email chỉ được xử lý sau khi xác minh đúng chủ tài khoản, như mô tả trong
+          chính sách đó.
         </p>
       </LegalSection>
 
@@ -127,8 +131,8 @@ export default function Page() {
 
       <LegalSection title="10. Liên hệ">
         <p>
-          Kênh hỗ trợ chính thức sẽ được công bố tại trang{" "}
-          <LegalLink href="/lien-he">Liên hệ</LegalLink> khi ra mắt.
+          Cần hỗ trợ, có câu hỏi về điều khoản hoặc muốn yêu cầu xoá dữ liệu, hãy gửi email tới{" "}
+          <SupportEmailLink />. Xem thêm trang <LegalLink href="/lien-he">Liên hệ</LegalLink>.
         </p>
       </LegalSection>
     </LegalPage>

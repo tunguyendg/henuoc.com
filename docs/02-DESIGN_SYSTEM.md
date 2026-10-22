@@ -97,7 +97,7 @@ Sticky, nền trắng mờ khi cuộn. Mobile: logo + nút CTA nhỏ + menu shee
 **Không có:** số liệu "10.000+ cặp đôi", rating, logo đối tác, review — cho đến khi có data thật.
 
 ### Footer
-4 cột: **Sản phẩm** (Mẫu thiệp, Tính năng, Bảng giá) · **Mẫu theo phong cách** (link SEO) · **Cẩm nang** (5 bài nổi bật) · **Hẹn Ước** (Giới thiệu, Liên hệ, Điều khoản, Quyền riêng tư). Dòng cuối: © 2026 Hẹn Ước · Facebook · TikTok · Zalo OA.
+4 cột: **Sản phẩm** (Mẫu thiệp, Tính năng, Bảng giá) · **Mẫu theo phong cách** (link SEO) · **Cẩm nang** (5 bài nổi bật) · **Hẹn Ước** (Giới thiệu, Liên hệ, Điều khoản, Quyền riêng tư). Dòng cuối: © 2026 Hẹn Ước · Chính sách bảo mật · Điều khoản. Kênh liên hệ chính thức duy nhất: email `hotro@henuoc.com` (mạng xã hội thêm khi có).
 
 ### Gallery `/mau-thiep-cuoi`
 - H1 + đoạn mô tả ngắn (SEO).
@@ -111,7 +111,7 @@ Sticky, nền trắng mờ khi cuộn. Mobile: logo + nút CTA nhỏ + menu shee
 - Dưới: "Mẫu tương tự".
 
 ### Bảng giá `/bang-gia`
-3 cột Free / Wedding / Signature. Ở MVP nút paid = "Liên hệ nâng cấp" (Zalo) vì chưa có payment. Bảng so sánh chi tiết + FAQ.
+2 cột Miễn phí / Cao cấp (giá "Sắp công bố"). Ở MVP nút Cao cấp = "Liên hệ nâng cấp qua email" (`mailto:hotro@henuoc.com`) vì chưa có payment. Bảng so sánh chi tiết + FAQ.
 
 ## 6. Builder `/tao-thiep`
 

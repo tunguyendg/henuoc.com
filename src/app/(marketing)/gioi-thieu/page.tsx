@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { FinalCta } from "@/components/home/final-cta";
 import { Photo } from "@/components/home/photo";
 import { SectionHeading } from "@/components/home/section-heading";
+import { SupportEmailLink } from "@/components/site/support-email-link";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -162,11 +163,12 @@ export default function Page() {
             ))}
           </ul>
           <p className="mt-8 text-muted">
-            Kênh liên hệ chính thức sẽ được công bố tại trang{" "}
+            Muốn góp ý hay cần hỗ trợ? Gửi email tới <SupportEmailLink className="font-semibold" />{" "}
+            hoặc xem trang{" "}
             <Link href="/lien-he" className="font-semibold text-rose-700 hover:underline">
               Liên hệ
-            </Link>{" "}
-            khi ra mắt.
+            </Link>
+            .
           </p>
         </Container>
       </section>

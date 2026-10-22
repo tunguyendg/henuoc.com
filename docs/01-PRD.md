@@ -44,7 +44,7 @@ Google / Zalo / bạn bè
   1. **Cặp đôi**: tên cô dâu, chú rể, tên gọi hiển thị, thứ tự hiển thị (nữ trước / nam trước).
   2. **Gia đình**: tên bố mẹ hai bên (tuỳ chọn), địa chỉ nhà trai / nhà gái.
   3. **Sự kiện**: 1–4 sự kiện, mỗi sự kiện: loại (`VU_QUY | THANH_HON | TAN_HON | AN_HOI | TIEC`), bên (`NHA_TRAI | NHA_GAI | CHUNG`), ngày giờ, địa điểm, link Google Maps. Tự hiển thị **ngày âm lịch**.
-  4. **Ảnh**: ảnh bìa + album tối đa 12 ảnh (Free) / 40 (Wedding) / 80 (Signature). Crop ảnh bìa.
+  4. **Ảnh**: ảnh bìa + album tối đa 12 ảnh (Free) / nhiều hơn ở Cao cấp (số chưa chốt, xem `04-GROWTH.md`). Crop ảnh bìa.
   5. **Lời mời**: chọn mẫu lời mời có sẵn hoặc tự viết.
   6. **Tiện ích**: bật/tắt từng section (countdown, album, map, QR mừng cưới, RSVP, nhạc).
   7. **Mừng cưới**: tối đa 2 tài khoản (nhà trai / nhà gái): ngân hàng, số TK, tên → render **VietQR**.

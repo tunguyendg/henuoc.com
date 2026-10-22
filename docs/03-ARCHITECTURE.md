@@ -229,8 +229,7 @@ enum WeddingStatus {
 }
 enum Plan {
   FREE
-  WEDDING
-  SIGNATURE
+  PREMIUM // gói Cao cấp (2026-10-22: gộp WEDDING/SIGNATURE)
 }
 
 model WeddingMember {

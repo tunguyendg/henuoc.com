@@ -4,10 +4,22 @@ export const site = {
   name: "Hẹn Ước",
   domain: "henuoc.com",
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
+  /** The only official support channel. Always read it from here, never hard-code it. */
+  supportEmail: "hotro@henuoc.com",
   tagline: "Thiệp cưới online đẹp, gửi đúng tên từng khách",
   description:
     "Tạo thiệp cưới online đẹp trong vài phút, gửi lời mời mang tên từng khách qua Zalo và quản lý khách mời, RSVP dễ dàng.",
 } as const;
+
+/** `mailto:` link to the support inbox, with an optional pre-filled subject. */
+export function supportMailto(subject?: string) {
+  const base = `mailto:${site.supportEmail}`;
+  return subject ? `${base}?subject=${encodeURIComponent(subject)}` : base;
+}
+
+/** Anti-impersonation rule for deletion requests sent by email. Shared by /lien-he and the privacy policy. */
+export const dataDeletionVerification =
+  "Để bảo vệ bạn, Hẹn Ước chỉ xử lý yêu cầu xoá tài khoản khi email được gửi từ đúng địa chỉ dùng để đăng nhập; trường hợp khác, chúng mình sẽ gửi một liên kết xác nhận tới email tài khoản trước khi xoá. Với khách mời, chúng mình sẽ xác nhận với cặp đôi quản lý danh sách hoặc qua liên kết thiệp của bạn trước khi gỡ thông tin.";
 
 /** Menu chính — dùng chung cho header desktop và menu mobile. */
 export const mainNav = [

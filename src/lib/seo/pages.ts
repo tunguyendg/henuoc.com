@@ -230,14 +230,14 @@ const staticPages: SeoPage[] = [
     path: "/lien-he",
     title: "Liên hệ · Hẹn Ước",
     description:
-      "Liên hệ đội ngũ Hẹn Ước để được hỗ trợ tạo thiệp cưới online, nâng cấp gói hoặc hợp tác. Chúng mình phản hồi trong giờ làm việc.",
+      "Liên hệ Hẹn Ước qua email hỗ trợ khi cần giúp tạo thiệp cưới online, nâng cấp gói Cao cấp, yêu cầu xoá dữ liệu hoặc bàn chuyện hợp tác.",
     h1: "Liên hệ Hẹn Ước",
     keyword: "liên hệ",
     breadcrumb: "Liên hệ",
     parent: "/",
     schema: "ContactPage",
-    related: ["/", "/gioi-thieu", "/cau-hoi-thuong-gap"],
-    index: false,
+    related: ["/cau-hoi-thuong-gap", "/bang-gia", "/gioi-thieu"],
+    index: true,
   },
   {
     path: "/tao-thiep",

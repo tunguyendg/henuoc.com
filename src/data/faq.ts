@@ -7,6 +7,8 @@
  * never add numbers or promises the product does not have yet.
  */
 
+import { site } from "@/lib/site";
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -100,7 +102,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: "Hiện tại đã nâng cấp lên Cao cấp được chưa?",
-        a: "Gói Cao cấp sẽ mở khi Hẹn Ước ra mắt chính thức. Hiện tại bạn dùng gói Miễn phí đầy đủ để thử. Kênh hỗ trợ chính thức sẽ được công bố tại trang Liên hệ khi ra mắt.",
+        a: `Hẹn Ước chưa có thanh toán online. Hiện tại bạn dùng gói Miễn phí đầy đủ để thử. Nếu muốn nâng cấp, hãy gửi email tới ${site.supportEmail} để được báo giá và hướng dẫn khi gói Cao cấp mở.`,
       },
       {
         q: "Gói Miễn phí bị giới hạn những gì?",

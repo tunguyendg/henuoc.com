@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 import { getSeoPage } from "@/lib/seo/pages";
 
 /** Fixed date: change only when the text actually changes. */
-export const LEGAL_UPDATED_AT = "2026-10-20";
+export const LEGAL_UPDATED_AT = "2026-10-22";
 
 function formatViDate(iso: string) {
   const [y, m, d] = iso.split("-");

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Minus } from "lucide-react";
+import { ArrowRight, Check, Mail, Minus } from "lucide-react";
 import { FeatureJsonLd } from "@/components/feature-pages/feature-page";
 import { FaqAccordion } from "@/components/faq/faq-accordion";
 import { FinalCta } from "@/components/home/final-cta";
@@ -11,6 +11,7 @@ import { Container } from "@/components/ui/container";
 import { getFaqGroup } from "@/data/faq";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getSeoPage } from "@/lib/seo/pages";
+import { supportMailto } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const PATH = "/bang-gia";
@@ -24,13 +25,13 @@ interface Plan {
   priceNote: string;
   summary: string;
   benefits: string[];
-  /** `href: null` = not available yet (rendered as a disabled button, not a link). */
-  cta: { href: string | null; label: string };
+  /** `mailto:` hrefs render as a plain <a>; app routes use Next <Link>. */
+  cta: { href: string; label: string; note?: string };
   highlight: boolean;
 }
 
 // Benefits follow docs/01-PRD.md. No paid price and no paid photo count: both are not final yet.
-// Premium has no CTA link: there is no payment and no official support channel before launch.
+// Premium has no online payment yet: the CTA opens an email to support for a quote.
 const plans: Plan[] = [
   {
     name: "Miễn phí",
@@ -60,7 +61,11 @@ const plans: Plan[] = [
       "Thêm các mẫu thiệp cao cấp",
       "Album nhiều ảnh hơn",
     ],
-    cta: { href: null, label: "Sắp mở" },
+    cta: {
+      href: supportMailto("Nâng cấp gói Cao cấp"),
+      label: "Liên hệ nâng cấp qua email",
+      note: "Hiện chưa có thanh toán online. Gửi email để được báo giá và hướng dẫn khi gói Cao cấp mở.",
+    },
     highlight: true,
   },
 ];
@@ -146,41 +151,37 @@ export default function Page() {
                   </li>
                 ))}
               </ul>
-              {plan.cta.href ? (
+              {plan.cta.href.startsWith("mailto:") ? (
+                <a
+                  href={plan.cta.href}
+                  className={buttonVariants({
+                    size: "lg",
+                    variant: "secondary",
+                    className: "mt-8 w-full",
+                  })}
+                >
+                  <Mail aria-hidden /> {plan.cta.label}
+                </a>
+              ) : (
                 <Link
                   href={plan.cta.href}
                   className={buttonVariants({ size: "lg", className: "mt-8 w-full" })}
                 >
                   {plan.cta.label} <ArrowRight aria-hidden />
                 </Link>
-              ) : (
-                <>
-                  {/* Not a link on purpose: nothing to buy and no support channel before launch. */}
-                  <span
-                    className={buttonVariants({
-                      size: "lg",
-                      variant: "secondary",
-                      className:
-                        "mt-8 w-full cursor-not-allowed text-muted hover:border-border hover:text-muted",
-                    })}
-                  >
-                    {plan.cta.label}
-                  </span>
-                  <p className="mt-3 text-center text-sm text-muted">
-                    Gói Cao cấp mở khi ra mắt, hiện bạn dùng miễn phí đầy đủ để thử.
-                  </p>
-                </>
               )}
+              {plan.cta.note ? (
+                <p className="mt-3 text-center text-sm text-muted">{plan.cta.note}</p>
+              ) : null}
             </li>
           ))}
         </ul>
         <p className="mt-5 text-sm text-muted">
-          Quyền lợi có thể điều chỉnh trước khi ra mắt. Hẹn Ước chưa có thanh toán online; kênh hỗ
-          trợ chính thức sẽ được công bố tại trang{" "}
+          Quyền lợi có thể điều chỉnh trước khi ra mắt. Cần hỏi thêm? Xem trang{" "}
           <Link href="/lien-he" className="font-medium text-rose-700 hover:underline">
             Liên hệ
-          </Link>{" "}
-          khi ra mắt.
+          </Link>
+          .
         </p>
       </Container>
 

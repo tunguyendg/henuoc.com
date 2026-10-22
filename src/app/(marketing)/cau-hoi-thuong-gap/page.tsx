@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FaqAccordion } from "@/components/faq/faq-accordion";
 import { FinalCta } from "@/components/home/final-cta";
+import { SupportEmailLink } from "@/components/site/support-email-link";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -75,14 +76,15 @@ export default function Page() {
         ))}
 
         <p className="mt-14 rounded-(--radius-card) bg-rose-50 p-6 text-ink">
-          Chưa thấy câu trả lời bạn cần? Kênh hỗ trợ chính thức sẽ được công bố tại trang{" "}
+          Chưa thấy câu trả lời bạn cần? Gửi email tới{" "}
+          <SupportEmailLink className="font-semibold" /> hoặc xem trang{" "}
           <Link
             href="/lien-he"
             className="font-semibold text-rose-700 underline-offset-4 hover:underline"
           >
             Liên hệ
-          </Link>{" "}
-          khi ra mắt.
+          </Link>
+          .
         </p>
       </Container>
 

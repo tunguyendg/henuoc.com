@@ -1,5 +1,7 @@
 import { LegalLink, LegalList, LegalPage, LegalSection } from "@/components/legal/legal-page";
+import { SupportEmailLink } from "@/components/site/support-email-link";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { dataDeletionVerification, site } from "@/lib/site";
 
 const PATH = "/chinh-sach-bao-mat";
 
@@ -147,7 +149,7 @@ export default function Page() {
             "Xem và sửa thông tin đám cưới, danh sách khách trong trang quản lý.",
             "Xoá từng khách, từng ảnh, hoặc xoá cả tài khoản.",
             "Khi bạn xoá tài khoản, dữ liệu đám cưới, khách mời và phản hồi được xoá khỏi hệ thống chính; ảnh đã tải lên sẽ được xoá khỏi kho lưu trữ. Bản sao lưu được xoay vòng và tự hết hạn sau một thời gian.",
-            "Nếu bạn là khách mời và muốn gỡ thông tin của mình, hãy báo cho cặp đôi đã mời bạn, vì họ là người quản lý danh sách khách.",
+            `Nếu bạn là khách mời và muốn gỡ thông tin của mình, hãy báo cho cặp đôi đã mời bạn (họ là người quản lý danh sách khách), hoặc gửi email tới ${site.supportEmail}.`,
           ]}
         />
       </LegalSection>
@@ -161,8 +163,11 @@ export default function Page() {
 
       <LegalSection title="10. Liên hệ">
         <p>
-          Kênh hỗ trợ chính thức sẽ được công bố tại trang{" "}
-          <LegalLink href="/lien-he">Liên hệ</LegalLink> khi ra mắt. Xem thêm{" "}
+          Mọi câu hỏi về quyền riêng tư và yêu cầu xoá dữ liệu, hãy gửi email tới{" "}
+          <SupportEmailLink subject="Quyền riêng tư / xoá dữ liệu" />. {dataDeletionVerification}
+        </p>
+        <p>
+          Xem thêm trang <LegalLink href="/lien-he">Liên hệ</LegalLink> và{" "}
           <LegalLink href="/dieu-khoan">Điều khoản sử dụng</LegalLink>.
         </p>
       </LegalSection>
