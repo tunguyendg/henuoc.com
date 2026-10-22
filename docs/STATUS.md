@@ -24,7 +24,7 @@
 
 ## 🔨 Đang làm
 
-- (trống)
+- Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` (sidebar desktop + tab bar mobile, noindex, **`notFound()` ở production tới khi có auth**) · ⏳ trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (link con hiện 404)
 
 ## ⏭️ Tiếp theo (frontend)
 
