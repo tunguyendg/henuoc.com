@@ -27,21 +27,20 @@ describe("serverEnv", () => {
     expect(env.DIRECT_URL).toBe("postgresql://u:p@localhost:5432/henuoc-direct");
   });
 
-  it("thiếu DATABASE_URL vẫn qua (optional tới T-003)", async () => {
-    const env = await loadServerEnv();
-    expect(env.DATABASE_URL).toBeUndefined();
-    expect(env.DIRECT_URL).toBeUndefined();
+  it("thiếu DATABASE_URL → throw (bắt buộc từ T-003)", async () => {
+    const error = await loadServerEnv().catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain("DATABASE_URL");
   });
 
-  it("biến sai → throw, message có tên biến nhưng không lộ secret", async () => {
-    const secret = "postgresql://admin:mat-khau-bi-mat@db.local/henuoc";
-    vi.stubEnv("DATABASE_URL", "");
-    vi.stubEnv("DIRECT_URL", secret);
+  it("DATABASE_URL sai → throw, message có tên biến nhưng không lộ giá trị", async () => {
+    const badValue = "mysql://admin:mat-khau-bi-mat@db.local/henuoc";
+    vi.stubEnv("DATABASE_URL", badValue);
     const error = await loadServerEnv().catch((e: unknown) => e);
     expect(error).toBeInstanceOf(Error);
     const message = (error as Error).message;
     expect(message).toContain("DATABASE_URL");
-    expect(message).not.toContain(secret);
+    expect(message).not.toContain(badValue);
     expect(message).not.toContain("mat-khau-bi-mat");
   });
 });

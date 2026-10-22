@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-22 (test 179/179 · build ✅ 2026-10-20 · T-003 đang làm, chưa commit)
+> Cập nhật lần cuối: 2026-10-22 (T-003 xong: typecheck ✅ · lint ✅ · format ✅ · test 179/179 · build ✅ 2026-10-20)
 
 ## Đang ở đâu
 
@@ -9,7 +9,7 @@
 
 ## ✅ Đã xong
 
-- T-002 `env.client.ts` / `env.server.ts` + `server-only` (Tony code 🔴) · test `env.client.test.ts` (4) + `env.server.test.ts` (3) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
+- T-002 `env.client.ts` / `env.server.ts` + `server-only` (Tony code 🔴) · test `env.client.test.ts` (4) + `env.server.test.ts` (3) · T-003 Prisma + Neon (Tony code 🔴): `prisma.config.ts`, schema auth + migration `init_auth`, `src/lib/db.ts`, `/api/health`, DATABASE_URL bắt buộc (`startsWith("postgres")`) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
 - Brand v3 "Nhẫn Tim" (ADR-003), favicon / apple-icon
 - Trang chủ đủ section + ảnh cưới thật (`public/images/wedding/`, Unsplash License)
 - Sổ SEO `src/lib/seo/pages.ts`: metadata, canonical, breadcrumb, related links, sitemap, robots, test (docs/08-SEO.md)
@@ -23,7 +23,7 @@
 
 ## 🔨 Đang làm
 
-- 🔴 T-003 (Tony): schema auth + migration `init_auth` + `prisma.config.ts` đã có (chưa commit, security-reviewer: CHO COMMIT). Còn thiếu `src/lib/db.ts` (server-only, singleton) + `/api/health` check DB.
+- (trống)
 
 ## ⏭️ Tiếp theo (frontend)
 
@@ -32,11 +32,11 @@
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
-- 🔴 T-003 Prisma + Neon · 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS)
+- 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS)
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
-- T-003: khi bỏ `.optional()` của DATABASE_URL, giữ secret chỉ trong `env.server.ts`. Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`.
+- DATABASE_URL đã bắt buộc: secret chỉ nằm trong `env.server.ts` (server-only). Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`. Build/CI phải có DATABASE_URL.
 
 - `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
