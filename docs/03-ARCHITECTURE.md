@@ -33,7 +33,7 @@ src/app/
 │  ├─ mau-thiep-cuoi/[slug]/page.tsx    # chi tiết theme
 │  ├─ mau-thiep-cuoi/phong-cach/[style]/page.tsx
 │  ├─ thiep-cuoi-online/page.tsx        # landing SEO (+ gui-zalo, co-ten-khach)
-│  ├─ checklist-dam-cuoi/page.tsx       # tool public
+│  ├─ cong-cu/page.tsx                  # hub công cụ public (+ checklist-dam-cuoi/, mau-loi-moi-dam-cuoi/)
 │  ├─ bang-gia/page.tsx
 │  ├─ cau-hoi-thuong-gap/page.tsx
 │  ├─ tinh-nang/page.tsx + tinh-nang/<tinh-nang>/page.tsx

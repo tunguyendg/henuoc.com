@@ -37,6 +37,8 @@ export const articles: Article[] = [
       "/mau-thiep-cuoi",
       "/tinh-nang/loi-moi-rieng",
       articlePath("loi-moi-dam-cuoi-hay"),
+      "/cong-cu/mau-loi-moi-dam-cuoi",
+      "/cong-cu/checklist-dam-cuoi",
       "/tao-thiep",
     ],
   },
@@ -51,6 +53,7 @@ export const articles: Article[] = [
     publishedAt: "2026-10-20",
     related: [
       "/tinh-nang/loi-moi-rieng",
+      "/cong-cu/mau-loi-moi-dam-cuoi",
       "/mau-thiep-cuoi",
       articlePath("cach-ghi-thiep-cuoi"),
       "/tao-thiep",

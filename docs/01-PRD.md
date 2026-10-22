@@ -35,7 +35,7 @@ Google / Zalo / bạn bè
 - Landing từ khoá (sau, nếu cần): `/thiep-cuoi-online`, `/thiep-cuoi-gui-zalo`, `/thiep-cuoi-co-ten-khach` — phải dùng keyword khác trang `/tinh-nang/*` (xem sổ SEO) để không ăn thịt từ khoá.
 - `/bang-gia`, `/cau-hoi-thuong-gap`.
 - `/cam-nang` + `/cam-nang/[slug]` (MDX trong repo, ≥ 5 bài khi launch).
-- `/checklist-dam-cuoi` công cụ public (không cần đăng nhập, SEO) — dùng chung data với checklist dashboard.
+- Công cụ public `/cong-cu` (hub) + `/cong-cu/checklist-dam-cuoi` + `/cong-cu/mau-loi-moi-dam-cuoi` (không cần đăng nhập, SEO, CTA `/tao-thiep`) — checklist dùng chung data `src/data/checklist.ts` với dashboard.
 
 ### F2. Builder (tạo thiệp)
 - Không cần đăng nhập để thử. Nháp lưu `localStorage`, nút "Lưu & chia sẻ" mới yêu cầu đăng nhập.

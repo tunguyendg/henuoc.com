@@ -63,3 +63,21 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Print (checklist tool "In checklist"): drop site chrome, keep the list on white paper.
+   Page-level parts opt out with Tailwind's `print:hidden`. */
+@media print {
+  body > header,
+  body > footer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}

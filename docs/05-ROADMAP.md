@@ -88,7 +88,7 @@
 
 | ID | Task | Loại | Phụ thuộc |
 |---|---|---|---|
-| T-050 | Checklist template (~40 việc) + dashboard checklist + tool public `/checklist-dam-cuoi` | 🟢 | M3 |
+| T-050 | Checklist template (~40 việc) + dashboard checklist + tool public `/cong-cu/checklist-dam-cuoi` | 🟢 | M3 |
 | T-051 | Tổng quan dashboard theo trạng thái + "Việc tuần này" | 🟢 | T-050, M4 |
 | T-052 | `lib/accesstrade.ts` client có type + retry + rate limit 10/phút | 🔴 | M0 |
 | T-053 | Admin: thêm sản phẩm từ URL Shopee, datafeeds/top_products, set plan wedding | 🟢 | T-052 |

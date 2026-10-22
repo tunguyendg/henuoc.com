@@ -49,11 +49,13 @@ export const footerNav = [
     ],
   },
   {
-    title: "Cẩm nang",
+    title: "Cẩm nang & công cụ",
     links: [
       { href: "/cam-nang/cach-ghi-thiep-cuoi", label: "Cách ghi thiệp cưới" },
       { href: "/cam-nang/loi-moi-dam-cuoi-hay", label: "Lời mời đám cưới hay" },
-      { href: "/tinh-nang/checklist-dam-cuoi", label: "Checklist chuẩn bị đám cưới" },
+      { href: "/cong-cu/checklist-dam-cuoi", label: "Checklist đám cưới" },
+      { href: "/cong-cu/mau-loi-moi-dam-cuoi", label: "Mẫu lời mời đám cưới" },
+      { href: "/cong-cu", label: "Công cụ miễn phí" },
     ],
   },
   {

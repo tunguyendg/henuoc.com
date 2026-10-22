@@ -28,7 +28,7 @@ Next.js cho **HTML render sẵn**, metadata từng trang, sitemap, OG image, t�
 | Phong cách | `/mau-thiep-cuoi/phong-cach/truyen-thong` … | "thiệp cưới truyền thống", "thiệp cưới hàn quốc" | ≥ 3 theme thật của phong cách đó (ít hơn → **không** publish trang) |
 | Chi tiết | `/mau-thiep-cuoi/hong-pastel` | long-tail tên/màu | Demo tương tác, mô tả viết tay |
 | Tính năng | `/thiep-cuoi-online` · `/thiep-cuoi-gui-zalo` · `/thiep-cuoi-co-ten-khach` | "thiệp cưới online miễn phí", "thiệp cưới điện tử", "thiệp cưới gửi zalo" | Hướng dẫn từng bước + demo + FAQ |
-| Tool | `/checklist-dam-cuoi` (MVP) · `/xem-ngay-cuoi`, `/tinh-chi-phi-dam-cuoi` (v2) | "checklist đám cưới", "chuẩn bị đám cưới cần những gì" | Tool chạy được không cần login + CTA tạo thiệp |
+| Tool | `/cong-cu/checklist-dam-cuoi`, `/cong-cu/mau-loi-moi-dam-cuoi` (MVP) · `/xem-ngay-cuoi`, `/tinh-chi-phi-dam-cuoi` (v2) | "checklist đám cưới", "chuẩn bị đám cưới cần những gì" | Tool chạy được không cần login + CTA tạo thiệp |
 | Cẩm nang | `/cam-nang/<slug>` | informational | Bài 1.200–2.500 chữ, có ví dụ thật |
 
 **Bài cẩm nang ưu tiên khi launch (≥ 5):**
