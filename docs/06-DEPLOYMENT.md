@@ -10,7 +10,7 @@
  npm run dev ── git push ──▶  PR: CI (typecheck·lint·test·build)
                               merge main ─▶ Deploy workflow (Ubuntu x64):
                                  1. npm ci · test
-                                 2. prisma migrate deploy ───────────▶ Neon (Singapore)
+                                 2. prisma migrate deploy ───────────▶ Supabase (Singapore)
                                  3. next build (standalone)
                                  4. đóng gói release/
                                  5. rsync SSH ─────────────────────▶ ~/deploy/henuoc/<sha>/
@@ -95,7 +95,7 @@ require("./app/server.js");
 |---|---|
 | `SSH_HOST` / `SSH_PORT` / `SSH_USER` | host AZDIGI / port / `yvltjpca` |
 | `SSH_KEY` | nội dung `~/.ssh/henuoc_deploy` (private) |
-| `DATABASE_URL` / `DIRECT_URL` | Neon production |
+| `DATABASE_URL` / `DIRECT_URL` | Supabase production: pooler `:6543` / `:5432` (ADR-004) |
 | `NEXT_PUBLIC_SITE_URL` / `NEXT_PUBLIC_MEDIA_URL` | `https://henuoc.com` / `https://media.henuoc.com` |
 
 > Biến `NEXT_PUBLIC_*` được **nhúng vào JS lúc build** → phải có ở GitHub. Biến bí mật (auth, R2, ACCESSTRADE…) chỉ cần lúc **chạy** → để ở panel AZDIGI.
@@ -245,7 +245,7 @@ Migration chạy **trước** khi code mới lên → trong vài chục giây, *
 | Đổi tên cột | (1) thêm cột mới + code ghi cả 2 → deploy (2) backfill (3) code chỉ đọc cột mới → deploy (4) xoá cột cũ → deploy |
 | Xoá cột | (1) code thôi dùng → deploy (2) migration xoá → deploy |
 
-Không bao giờ sửa file migration đã merge. Dev dùng **Neon branch** riêng (`dev`), production là branch `main`.
+Không bao giờ sửa file migration đã merge. Dev dùng **project Supabase riêng** hoặc Postgres local, không bao giờ trỏ `migrate dev` vào DB production.
 
 ## 7. Cron (DirectAdmin → Cron Jobs)
 
@@ -267,7 +267,7 @@ Route `/api/cron/[job]` so sánh header bằng `timingSafeEqual`.
 | Restart tay | `touch ~/henuoc-app/tmp/restart.txt` hoặc nút Restart trong panel |
 | Cold start | Passenger tắt app khi rảnh → request đầu chậm 2–5s. **UptimeRobot** ping `/api/health` mỗi 5 phút (free) để giữ ấm + báo downtime |
 | Giới hạn tài nguyên | DirectAdmin → Resource Usage (RAM, CPU, entry processes). Vượt thường xuyên → nâng gói hoặc chuyển VPS |
-| Backup DB | Neon PITR (7 ngày, free 24h — kiểm tra gói) + GitHub Action hằng tuần `pg_dump` → R2 (T-064) |
+| Backup DB | GitHub Action hằng tuần `pg_dump` (qua `DIRECT_URL`) → R2 (T-064). Supabase Free không có backup tải về; PITR là add-on trả phí |
 | Backup media | R2 bền vững sẵn; bật Object versioning nếu cần |
 | Secret rotate | Đổi trong panel + GitHub Secrets → restart |
 
@@ -276,7 +276,7 @@ Route `/api/cron/[job]` so sánh header bằng `timingSafeEqual`.
 ```bash
 # 1 lần
 brew install node@22            # hoặc nvm install 22
-cp .env.example .env.local      # DATABASE_URL = Neon branch "dev"
+cp .env.example .env.local      # DATABASE_URL / DIRECT_URL = project Supabase dev
 npm ci
 npx prisma migrate dev
 npm run dev
@@ -293,4 +293,4 @@ Bản standalone chạy y nguyên trong Docker (`node server.js`) → **không s
 - [ ] CloudLinux chấp nhận cấu trúc wrapper + `app/node_modules` (mục §3). Nếu không: thử đặt standalone trực tiếp ở root và báo Claude.
 - [ ] Cổng SSH + rsync có sẵn trên host.
 - [ ] Passenger đọc env từ panel cho process Node (kiểm tra bằng `/api/health` hiển thị `revision`).
-- [ ] Kết nối Neon từ host (outbound 5432 không bị chặn). Nếu bị chặn → dùng Neon serverless driver qua HTTPS/WebSocket (`@prisma/adapter-neon`).
+- [ ] Kết nối Supabase từ host và từ GitHub Actions: outbound 6543 + 5432 không bị chặn, có IPv4 tới pooler (host direct chỉ IPv6). Bị chặn → hỏi AZDIGI mở cổng.

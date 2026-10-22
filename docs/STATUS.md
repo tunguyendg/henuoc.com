@@ -54,4 +54,5 @@
 
 ## 🧭 Quyết định chờ Tony
 
+- Gói Supabase cho production: Free (auto-pause 7 ngày, không backup) hay Pro? Quyết trước launch (ADR-004).
 - Thêm mục menu "Công cụ" (checklist public) khi có `/checklist-dam-cuoi`? (mặc định: có)

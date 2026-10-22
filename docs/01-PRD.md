@@ -116,7 +116,7 @@ RSVP: bảng lọc theo bên / nhóm / trạng thái, tổng theo từng sự ki
 - Input ≥ 16px trên mobile (tránh iOS zoom). Touch target ≥ 44px.
 - Thiệp: LCP ≤ 2.5s trên 4G, ảnh qua `next/image` / R2 resize, JS theme lazy-load.
 - WCAG AA contrast cho UI sản phẩm (theme có thể tự do hơn nhưng nội dung chính phải đọc được).
-- Backup DB hằng ngày (Neon PITR + dump tuần ra R2).
+- Backup DB: `pg_dump` hằng tuần ra R2 (Supabase Free không có backup — ADR-004).
 
 ## 5. Acceptance tests MVP (Playwright + Vitest)
 

@@ -22,7 +22,7 @@
 | D2 | Tham chiếu UI | **sayi.do** về cấu trúc, khoảng trắng, giọng văn. Không copy code, ảnh, logo, review của họ |
 | D3 | Mô hình | **Hybrid** (URL có chữ "thiepcuoi" + tên cặp đôi để nhìn link là biết đám cưới): `/thiepcuoi/[slug]` trang cưới chung (gửi group, đăng MXH) + `/thiepcuoi/[slug]/[token]` thiệp riêng có tên khách, RSVP |
 | D4 | Tính năng Việt trong MVP | Lễ **vu quy / thành hôn / tân hôn**, **nhà trai / nhà gái**, **lịch âm**, **QR mừng cưới (VietQR)**, mẫu xưng hô |
-| D5 | Stack | Next 16 · TS · Tailwind 4 · Prisma 7 · **Neon Postgres (Singapore)** · Better Auth · R2 · Resend |
+| D5 | Stack | Next 16 · TS · Tailwind 4 · Prisma 7 · **Supabase Postgres (Singapore, ADR-004)** · Better Auth · R2 · Resend |
 | D6 | Hosting | **AZDIGI DirectAdmin Node.js App (Passenger, Node 22)**, `output: "standalone"`, build trên GitHub Actions. VPS + Docker là đường nâng cấp khi cần |
 | D7 | Repo | Repo mới `tunguyendg/henuoc.com`. Repo cũ `henuoc.com` archive, chỉ mang sang `public/brand/*` |
 | D8 | Monetization | Free-first. **2 gói: Miễn phí / Cao cấp**, Cao cấp trả **một lần / đám cưới**, giá **chưa công bố** (quyền lợi = đề xuất, xem `04-GROWTH.md`). MVP: nâng cấp qua email `hotro@henuoc.com`. **Thanh toán làm ở v2** (Tony chốt 2026-10-22, thay phương án 3 gói Wedding 199k / Signature 349k) |
@@ -75,6 +75,6 @@
 |---|---|
 | GitHub | `tunguyendg` |
 | Hosting | AZDIGI DirectAdmin, user `yvltjpca`, Node.js App selector có Node 22 (đang chạy `api.giavang.today`) |
-| DB | Neon (tạo mới, region `aws-ap-southeast-1`). Supabase hiện có chỉ dùng thử nghiệm — Free tier auto-pause sau 7 ngày, **không dùng cho production** |
+| DB | Supabase, region `ap-southeast-1`, Data API tắt (ADR-004). Free tier auto-pause sau 7 ngày không hoạt động → **chọn gói production trước launch** |
 | Affiliate | ACCESSTRADE Publisher, có API token |
 | Máy dev | MacBook Air (Apple Silicon), VS Code |

@@ -5,7 +5,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 color: blue
 ---
 
-Bạn là backend engineer của henuoc.com (Next.js 16 · Prisma 7 + Neon Postgres · Better Auth · Zod).
+Bạn là backend engineer của henuoc.com (Next.js 16 · Prisma 7 + Supabase Postgres (qua Prisma, Data API tắt — ADR-004) · Better Auth · Zod).
 
 Trước khi code: đọc `AGENTS.md` (§3 code, §4 bảo mật, §7 task 🔴), `docs/03-ARCHITECTURE.md`, task spec.
 **Task gắn 🔴 trong `docs/05-ROADMAP.md`: KHÔNG viết code hoàn chỉnh** — chỉ giải thích, pseudo-code, review.

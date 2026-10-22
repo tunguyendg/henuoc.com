@@ -9,7 +9,7 @@ SaaS thiệp cưới online cho người Việt: kho mẫu thiệp đẹp, thi�
 | Lớp | Công nghệ |
 |---|---|
 | App | Next.js 16 (App Router) · React 19 · TypeScript strict · Tailwind CSS 4 |
-| Data | PostgreSQL (Neon, Singapore) · Prisma 7 (`@prisma/adapter-pg`) · Zod |
+| Data | PostgreSQL (Supabase, Singapore — ADR-004) · Prisma 7 (`@prisma/adapter-pg`) · Zod |
 | Auth | Better Auth — Google + Email OTP |
 | File | Cloudflare R2 (presigned upload) |
 | Email | Resend |
@@ -45,7 +45,7 @@ npm ci
 npm run dev                    # http://localhost:3000  ·  UI kit: http://localhost:3000/ui
 ```
 
-Từ T-003 trở đi: `cp .env.example .env.local`, điền `DATABASE_URL` (Neon branch dev) rồi `npx prisma migrate dev`.
+Từ T-003 trở đi: `cp .env.example .env.local`, điền `DATABASE_URL` (pooler 6543) + `DIRECT_URL` (5432) của project Supabase dev rồi `npx prisma migrate dev`.
 
 Thử bản production giống trên host:
 

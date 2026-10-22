@@ -14,7 +14,7 @@
                     │   └─ Route Handlers: /api/auth/*, /api/rsvp, /go/[id], /api/cron/*          │
                     └────────┬───────────────┬───────────────┬──────────────┬─────────────────────┘
                              │               │               │              │
-                       Neon Postgres    Cloudflare R2     Resend      ACCESSTRADE API
+                    Supabase Postgres   Cloudflare R2     Resend      ACCESSTRADE API
                        (Singapore)      media.henuoc.com  (email)     (tạo link, đơn hàng)
 ```
 
@@ -542,9 +542,11 @@ Tự sinh payload EMVCo (Napas 247) trong `lib/vietqr.ts`: TLV tag `00, 01, 38 (
 NEXT_PUBLIC_SITE_URL=https://henuoc.com
 NEXT_PUBLIC_MEDIA_URL=https://media.henuoc.com
 
-# Database (Neon — dùng pooled URL cho app, direct URL cho migrate)
-DATABASE_URL=postgresql://...-pooler.ap-southeast-1.aws.neon.tech/henuoc?sslmode=require
-DIRECT_URL=postgresql://....ap-southeast-1.aws.neon.tech/henuoc?sslmode=require
+# Database (Supabase, ap-southeast-1 — ADR-004). Data API tắt, chỉ truy cập qua Prisma trên server.
+# App: pooler cổng 6543 (transaction mode)
+DATABASE_URL=postgresql://postgres.<ref>:<password>@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require
+# Migrate (Prisma CLI): cổng 5432. Host direct db.<ref>.supabase.co chỉ có IPv6 → máy không có IPv6 dùng session pooler như dưới
+DIRECT_URL=postgresql://postgres.<ref>:<password>@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require
 
 # Auth
 BETTER_AUTH_SECRET=        # openssl rand -base64 32
@@ -580,11 +582,11 @@ Validate env lúc khởi động bằng Zod trong `src/lib/env.ts` — thiếu b
 | Lớp | Công cụ | Phạm vi |
 |---|---|---|
 | Unit | Vitest | `service.ts`, `lunar.ts`, `vietqr.ts` (CRC), `crypto.ts`, zod schema, tính số bàn/quà |
-| Integration | Vitest + Neon branch test | actions/queries với DB thật (ownership!) |
+| Integration | Vitest + Postgres service container | actions/queries với DB thật (ownership!) |
 | E2E | Playwright (mobile viewport 390×844) | AT-01 → AT-13 trong PRD |
 | Visual | Playwright screenshot | 3 theme × 2 viewport |
 
-CI chạy unit + e2e trên Neon branch tạm (tạo/xoá qua Neon API) hoặc Postgres service container của GitHub Actions.
+CI chạy unit + e2e trên Postgres service container của GitHub Actions (Supabase Free không có branching — ADR-004).
 
 ## 10. Analytics
 

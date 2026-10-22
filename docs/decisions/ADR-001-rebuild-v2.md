@@ -12,7 +12,7 @@ Từ 15–16/10/2026, docs bị viết qua 4 lần đổi hướng (Modern Roman
 4. Bỏ toàn bộ số liệu giả trong visual-reference (10.000+, 98%, 4.9/5).
 5. Mô hình hybrid `/w/[slug]` + `/i/[token]`.
 6. MVP thêm: lịch âm, VietQR mừng cưới, vu quy/thành hôn, nhà trai/nhà gái, checklist có affiliate.
-7. Stack: Next 16, Prisma 7, Neon Postgres Singapore, Better Auth, R2, Resend.
+7. Stack: Next 16, Prisma 7, Neon Postgres Singapore (→ Supabase, xem ADR-004), Better Auth, R2, Resend.
 8. Hosting: AZDIGI Passenger (thay cho đề xuất VPS + Docker ban đầu), build trên GitHub Actions.
 9. Cách làm: từ "một bước nhỏ, đợi user báo" → **task spec + branch + PR + review theo milestone**, agent song song.
 10. v2: payOS, sổ mừng cưới, xem ngày cưới.

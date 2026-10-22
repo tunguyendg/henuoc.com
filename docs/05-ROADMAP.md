@@ -15,7 +15,7 @@
 |---|---|---|---|
 | T-001 | Scaffold repo mới: Next 16, TS strict, Tailwind 4, ESLint, Prettier, cấu trúc thư mục theo AGENTS.md, script `typecheck/lint/test` | 🟢 | — |
 | T-002 | `src/lib/env.ts` validate env bằng Zod + `.env.example` | 🔴 | T-001 |
-| T-003 | Prisma 7 + Neon: `prisma.config.ts`, `lib/db.ts` singleton, `prisma/schema.prisma` chỉ gồm 4 bảng auth (copy từ `docs/reference/schema.prisma`), migration đầu | 🔴 | T-002 |
+| T-003 | Prisma 7 + Supabase (ADR-004): `prisma.config.ts`, `lib/db.ts` singleton, `prisma/schema.prisma` chỉ gồm 4 bảng auth (copy từ `docs/reference/schema.prisma`), migration đầu | 🔴 | T-002 |
 | T-004 | Design tokens (`globals.css`), font, UI primitives: Button, Input, Card, Badge, Container | 🟢 ⚡ | T-001 |
 | T-005 | GitHub Actions CI: typecheck, lint, test, build trên PR | 🟢 ⚡ | T-001 |
 | T-006 | **Deploy lần đầu** lên AZDIGI: `output: standalone`, workflow deploy rsync SSH, restart Passenger, SSL | 🔴 (cùng Claude) | T-005 |
@@ -107,7 +107,7 @@
 | T-061 | Thêm 7 theme (tổng 10) | 🟢 ⚡ |
 | T-062 | 3 bài cẩm nang còn lại (tổng 5) | 🟢 ⚡ |
 | T-063 | Điều khoản, Quyền riêng tư, Liên hệ | 🟢 ⚡ |
-| T-064 | Backup (Neon PITR + dump tuần R2), UptimeRobot, log lỗi | 🔴 (cùng Claude) |
+| T-064 | Backup (`pg_dump` tuần → R2, bắt buộc vì Supabase Free không có backup — ADR-004), UptimeRobot, log lỗi | 🔴 (cùng Claude) |
 | T-065 | Beta 20 cặp đôi, thu feedback, fix batch | Tony |
 
 **Done khi:** thước đo thành công MVP trong `00-PROJECT_CONTEXT §7` đạt.
