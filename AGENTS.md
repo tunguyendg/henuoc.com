@@ -31,7 +31,7 @@ Next.js 16 App Router · React 19 · TypeScript strict · Tailwind 4 · Prisma 7
 ```
 src/
   app/                     # chỉ routing + composition; không đặt business logic
-    (marketing)/  (auth)/  (app)/dashboard/  (public)/thiepcuoi/[slug]  (public)/thiepcuoi/[slug]/[token]
+    (marketing)/  (auth)/  (app)/dashboard/  (public)/thiepcuoi/[slug]  (public)/thiepcuoi/[slug]/[token]  (thiep)/demo/[slug]
     api/                   # chỉ: RSVP public, auth handler, webhook, /go redirect
   components/ui/           # primitive (Button, Input, Card…) — không biết domain
   components/<feature>/    # component theo feature

@@ -1,0 +1,23 @@
+import { z } from "zod";
+import type { ThemeManifest } from "../types";
+
+export const optionsSchema = z.object({});
+
+export type PlaceholderOptions = z.infer<typeof optionsSchema>;
+
+export const manifest: ThemeManifest<PlaceholderOptions> = {
+  slug: "placeholder",
+  version: 1,
+  name: "Khung kiểm tra",
+  styles: ["toi-gian"],
+  tier: "free",
+  status: "draft",
+  description:
+    "Theme khung để kiểm tra route demo và hợp đồng dữ liệu của theme engine. Chỉ hiển thị nội dung thô, không có hiệu ứng, không dành cho khách thật.",
+  thumbnail: "/themes/placeholder/thumb.webp",
+  ogImage: "/themes/placeholder/og.webp",
+  supportedSections: ["cover", "invitation", "couple", "events", "album", "gift", "thanks"],
+  optionsSchema,
+  defaultOptions: {},
+  assets: [],
+};

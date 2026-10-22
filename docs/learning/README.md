@@ -18,7 +18,7 @@ Mục tiêu: Tony hiểu được **vì sao** code chạy như vậy, đủ đ�
 | File | Chủ đề |
 |---|---|
 | `M0-foundation.md` | App Router, Server/Client Component, env, Prisma client, standalone, Passenger, CI/CD |
-| `M1-themes.md` | Composition, custom hook, dynamic import, CSS scoping, next/font, a11y motion, thuật toán âm lịch |
+| `M1-themes.md` | Composition, custom hook, dynamic import, CSS scoping, next/font, a11y motion, thuật toán âm lịch. **Đã viết:** Phần 1 — khung theme engine (T-010): hợp đồng `ThemeProps`, registry + `import()`, `defineTheme` và chiều gán tham số hàm, memo Promise, `safeParse`, `params` Promise + 404 tĩnh, `Object.hasOwn` |
 | `M2-seo.md` | SSG/dynamic, Cache Components, metadata, sitemap, OG, Core Web Vitals |
 | `M3-auth-data.md` | Cookie/session, OAuth, Server Actions an toàn, ownership/IDOR, presigned URL, revalidate |
 | `M4-rsvp.md` | Route Handler, transaction, upsert idempotent, rate limit, hash vs encrypt |

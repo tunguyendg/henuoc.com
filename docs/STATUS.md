@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-22 (T-003 xong: typecheck ✅ · lint ✅ · format ✅ · test 179/179 · build ✅ 2026-10-20)
+> Cập nhật lần cuối: 2026-10-22 (T-010 xong: typecheck ✅ · lint ✅ · format ✅ · test 190/190 · build ✅)
 
 ## Đang ở đâu
 
@@ -20,6 +20,7 @@
 - T-025 Cẩm nang: `@next/mdx` (Tony duyệt), `/cam-nang` + `/cam-nang/[slug]`, 2 bài (cách ghi thiệp cưới, lời mời đám cưới hay), JSON-LD Article; MDX ở `src/content/cam-nang`, metadata ở `src/data/articles.ts`
 - Liên hệ = email `hotro@henuoc.com` (Tony chốt 2026-10-22): `/lien-he` thật, nút Cao cấp → mailto, trang pháp lý/FAQ ghi email. Giá: 2 gói Miễn phí / Cao cấp (docs D8, GROWTH, PRD, DESIGN_SYSTEM, enum `Plan` FREE/PREMIUM)
 - T-012 VietQR: `src/lib/vietqr.ts` (payload EMVCo + CRC16) + `src/data/banks.{json,ts}` (23 ngân hàng NAPAS, freeze), 26 test
+- T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
 
 ## 🔨 Đang làm
 
@@ -27,8 +28,9 @@
 
 ## ⏭️ Tiếp theo (frontend)
 
-1. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
-2. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
+1. T-013 primitives `src/themes/_shared/` → T-015/T-016 theme thật (hong-pastel, song-hy)
+2. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
+3. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
@@ -39,6 +41,8 @@
 - DATABASE_URL đã bắt buộc: secret chỉ nằm trong `env.server.ts` (server-only). Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`. Build/CI phải có DATABASE_URL.
 
 - `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
+- Contract theme (`src/themes/types.ts`): `qrSvg` chỉ sinh ở server, không lưu DB, render bằng `<img data:…>`; URL (map/ảnh/nhạc) zod ép https + allowlist; không truyền cả object `guest` (có token) xuống Client Component; cấm `dangerouslySetInnerHTML` trong `src/themes/**`.
+- Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
 - VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex. Server Action nhận `bankBin` phải check `findBankByBin` (đừng tin dropdown).
 - `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới" để chừa "checklist đám cưới" cho công cụ `/checklist-dam-cuoi` (PRD F1).

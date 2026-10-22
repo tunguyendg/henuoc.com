@@ -52,7 +52,7 @@ src/app/
 ├─ (admin)/admin/…                      # role ADMIN
 ├─ (public)/thiepcuoi/[slug]/page.tsx           # trang cưới chung
 ├─ (public)/thiepcuoi/[slug]/[token]/page.tsx          # thiệp riêng
-├─ demo/[themeSlug]/page.tsx            # demo theme với dữ liệu mẫu (noindex, dùng cho iframe)
+├─ (thiep)/demo/[slug]/page.tsx         # demo theme với dữ liệu mẫu (noindex, dùng cho iframe)
 ├─ go/[productId]/route.ts              # redirect affiliate + log click
 ├─ api/auth/[...all]/route.ts           # Better Auth
 ├─ api/rsvp/route.ts                    # POST RSVP từ khách
