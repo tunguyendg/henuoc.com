@@ -1,12 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { connection } from "next/server";
+import { db } from "@/lib/db";
 
 /**
  * Health check cho deploy smoke test + UptimeRobot.
- * Cache Components: GET handler mặc định được prerender lúc build →
- * `await connection()` bắt nó chạy mỗi request.
- * T-003 sẽ thêm kiểm tra DB (`SELECT 1`).
+ * `await connection()`: bắt chạy mỗi request (không prerender lúc build).
  */
 export async function GET() {
   await connection();
@@ -18,8 +17,16 @@ export async function GET() {
     // Local dev không có file REVISION — bình thường.
   }
 
+  // Hỏi DB một câu đơn giản nhất. Lỗi thì chỉ báo "error", KHÔNG trả chi tiết (có thể chứa host/user).
+  let database: "ok" | "error" = "ok";
+  try {
+    await db.$queryRaw`SELECT 1`;
+  } catch {
+    database = "error";
+  }
+
   return Response.json(
-    { ok: true, revision, time: new Date().toISOString() },
-    { headers: { "Cache-Control": "no-store" } },
+    { ok: database === "ok", database, revision, time: new Date().toISOString() },
+    { status: database === "ok" ? 200 : 503, headers: { "Cache-Control": "no-store" } },
   );
 }

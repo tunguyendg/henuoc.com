@@ -3,7 +3,7 @@ import { z } from "zod";
 
 // Biến BÍ MẬT: chỉ tồn tại trên server, không bao giờ xuống trình duyệt.
 const schema = z.object({
-  DATABASE_URL: z.string().min(1).optional(), // T-003 sẽ bỏ .optional()
+  DATABASE_URL: z.string().startsWith("postgres"),
   DIRECT_URL: z.string().min(1).optional(),
 });
 

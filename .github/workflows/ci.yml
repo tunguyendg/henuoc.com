@@ -17,7 +17,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      # T-003: thêm `npx prisma generate` trước typecheck
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
@@ -25,5 +24,6 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://henuoc.com
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
       - name: Standalone output tồn tại
         run: test -f .next/standalone/server.js
