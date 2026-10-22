@@ -75,13 +75,14 @@ export interface ThemeProps<TOptions = unknown> {
 | Primitive | Loại | Theme tuỳ biến bằng |
 |---|---|---|
 | `useEnvelope()` | hook | trạng thái `closed → opening → open`, theme tự vẽ phong bì/màn mở. Hàm `open()` gọi `music.unlock()` **trong cùng handler chạm** (§10) |
-| `useMusic(src)` | hook | `unlock()` / `toggle()`; chỉ play sau user gesture; tự dừng khi tab ẩn (`visibilitychange`), quay lại thì phát tiếp nếu khách chưa tắt; nhớ trạng thái tắt |
+| `useMusic(src)` 🔴 | hook | **Tony tự code** (T-013 chỉ tạo interface + hàm rỗng). `unlock()` / `toggle()`; chỉ play sau user gesture; tự dừng khi tab ẩn (`visibilitychange`), quay lại thì phát tiếp nếu khách chưa tắt; nhớ trạng thái tắt |
 | `<MusicToggle>` | component | nút ♪ nổi (fixed, safe-area), `aria-pressed`, `className`, icon slot |
 | `useCountdown(date)` | hook | trả `{ days, hours, minutes, seconds, isPast }` |
 | `<AddToCalendar event>` | component | tạo `.ics` + link Google Calendar |
 | `<MapButton url>` | component | |
 | `<GiftButton>` + `<GiftSheet gifts>` | component | nút "Gửi quà mừng" mở bottom sheet: QR (SVG có sẵn), ngân hàng, tên, STK + nút sao chép. Theme vẽ nút, sheet dùng chung |
 | `useRsvpForm(guest)` | hook | state, validate (zod chung), submit `/api/rsvp`, trạng thái success/error |
+| `<RsvpForm>` | component | giao diện form RSVP dùng `useRsvpForm`; T-013 submit giả (chưa có `/api/rsvp`) |
 | `<Reveal>` | component | fade/slide khi vào viewport, tự tắt khi `prefers-reduced-motion` |
 | `<Watermark>` | component | Free plan |
 
