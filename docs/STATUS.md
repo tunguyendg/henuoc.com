@@ -21,6 +21,8 @@
 - Liên hệ = email `hotro@henuoc.com` (Tony chốt 2026-10-22): `/lien-he` thật, nút Cao cấp → mailto, trang pháp lý/FAQ ghi email. Giá: 2 gói Miễn phí / Cao cấp (docs D8, GROWTH, PRD, DESIGN_SYSTEM, enum `Plan` FREE/PREMIUM)
 - T-012 VietQR: `src/lib/vietqr.ts` (payload EMVCo + CRC16) + `src/data/banks.{json,ts}` (23 ngân hàng NAPAS, freeze), 26 test
 - Chuẩn bị T-006: `.github/workflows/release.yml` (chạy tay → artifact zip `henuoc-release`, 7 ngày), `scripts/deploy/host/{server.js,package.json}` (wrapper Passenger), docs/06 §4b "Deploy tay lần đầu". Chưa có rsync SSH tự động
+- T-050 (phần data + tool public): `src/data/checklist.ts` 42 việc theo 10 mốc (id khoá bằng snapshot test) + `src/lib/checklist-schedule.ts` (tính hạn theo ngày, giờ VN). Công cụ miễn phí: `/cong-cu` (hub), `/cong-cu/checklist-dam-cuoi` (chọn ngày → tự xếp lịch, tick lưu localStorage `henuoc:checklist:v1`, in được), `/cong-cu/mau-loi-moi-dam-cuoi` (5 kiểu · 13 mẫu, sao chép). Có trong sổ SEO, footer "Cẩm nang & công cụ", link từ 2 bài cẩm nang, CTA `/tao-thiep`
+- Admin mock `/admin` (Tổng quan · Người dùng · Đám cưới · Mẫu thiệp): `src/features/admin/*` qua `repos.admin`, email luôn che (`mask.ts`), nút nâng gói / công tắc mẫu là nút giả phía client, noindex + robots disallow, **`notFound()` ở production** (`features/admin/guard.ts`)
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
 
 ## 🔨 Đang làm
@@ -47,7 +49,9 @@
 - Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
 - VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex. Server Action nhận `bankBin` phải check `findBankByBin` (đừng tin dropdown).
-- `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới" để chừa "checklist đám cưới" cho công cụ `/checklist-dam-cuoi` (PRD F1).
+- `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới"; "checklist đám cưới" thuộc `/cong-cu/checklist-dam-cuoi`, "mẫu lời mời đám cưới" thuộc tool lời mời (bài cẩm nang giữ "lời mời đám cưới hay").
+- Admin thật: thay guard production bằng `requireAdmin()` kiểm `session.user.role === "ADMIN"` ở server, đặt trong mọi page (layout chỉ là lớp thêm); mọi Server Action ghi (đổi gói, bật/tắt mẫu) tự kiểm role lại + Zod. Không tin role từ cookie/JWT phía client.
+- Description `/cong-cu/checklist-dam-cuoi` ghi "hơn 40 việc": bớt việc xuống dưới 40 thì sửa câu này.
 - Trang pháp lý là dự thảo, `index: false` — Tony duyệt nội dung trước launch; khi đổi kiến trúc dữ liệu phải sửa chính sách cho khớp.
 - Nâng cấp Cao cấp qua email + chuyển khoản tay: PHẢI công bố điều khoản chính thức + chính sách hoàn tiền trước khi nhận tiền.
 - Xoá dữ liệu qua email: chỉ xoá sau khi chủ tài khoản bấm xác nhận qua email đăng nhập (header From giả được).
@@ -59,4 +63,4 @@
 - Chống IDOR khi thay mock bằng Prisma: (A) `service.ts` có `requireWeddingAccess(session, weddingId)` trả kiểu branded `AuthorizedWeddingId`, repo chỉ lọc weddingId (khuyên dùng) hay (B) mọi method repo nhận `ctx: { userId }` và tự lọc `members.some.userId`? Phải chốt trước khi viết `prisma-repo.ts`.
 
 - Gói Supabase cho production: Free (auto-pause 7 ngày, không backup) hay Pro? Quyết trước launch (ADR-004).
-- Thêm mục menu "Công cụ" (checklist public) khi có `/checklist-dam-cuoi`? (mặc định: có)
+- Thêm mục "Công cụ" (`/cong-cu`) vào menu chính? Đã có trang; hiện mới link từ footer + bài cẩm nang. (mặc định: có)
