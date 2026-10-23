@@ -88,5 +88,25 @@
     "photographerUrl": "https://unsplash.com/@jkalen71",
     "unsplashUrl": "https://unsplash.com/photos/Rkj0ms67lio",
     "alt": "Phòng tiệc với bàn dài, ghế vàng, cây xanh trên bàn và đèn chùm dưới trần gỗ"
+  },
+  {
+    "slug": "cach-ghi-thiep-cuoi",
+    "role": "cover",
+    "file": "cam-nang/cach-ghi-thiep-cuoi/cover.webp",
+    "cdnPath": "photo-1632610992723-82d7c212f6d7",
+    "photographer": "Fiona Murray-deGraaff",
+    "photographerUrl": "https://unsplash.com/@fionamurrayphoto",
+    "unsplashUrl": "https://unsplash.com/photos/a0BlHWem6l0",
+    "alt": "Thiệp cưới trắng chữ in đặt trên phong bì lót đen, giữa khay mạ vàng có tem cũ, ruy băng lụa và hoa trắng"
+  },
+  {
+    "slug": "loi-moi-dam-cuoi-hay",
+    "role": "cover",
+    "file": "cam-nang/loi-moi-dam-cuoi-hay/cover.webp",
+    "cdnPath": "photo-1633037773384-27d7ac0491e7",
+    "photographer": "Pau Patterson Photography",
+    "photographerUrl": "https://unsplash.com/@paupattersonphotography_",
+    "unsplashUrl": "https://unsplash.com/photos/lxHHTpPfA4w",
+    "alt": "Thiệp mời cưới vẽ hoa dại màu nước, đặt cạnh hoa hồng kem, mao lương cam và dải ruy băng hồng"
   }
 ]
