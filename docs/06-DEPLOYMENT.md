@@ -1,21 +1,23 @@
 # 06 — Deployment: Local → AZDIGI → CI/CD
 
-**Version:** 2.1 · 2026-10-23 · Hosting: **AZDIGI DirectAdmin + CloudLinux "Setup Node.js App" (Passenger), Node 22**
+**Version:** 2.2 · 2026-10-23 · Hosting: **AZDIGI DirectAdmin + CloudLinux "Setup Node.js App" (Passenger), Node 22**
 
 ## 1. Bức tranh
 
 ```
  Mac (dev)                      GitHub                                   AZDIGI (user yvltjpca)
  ─────────                      ──────                                   ─────────────────────
- npm run dev ── git push ──▶  PR: CI (typecheck·lint·test·build)
-                              merge main ─▶ Deploy workflow (Ubuntu x64):
-                                 1. npm ci · test
-                                 2. prisma migrate deploy ───────────▶ Supabase (Singapore)
-                                 3. next build (standalone)
-                                 4. đóng gói release/
-                                 5. rsync SSH ─────────────────────▶ ~/deploy/henuoc/<sha>/
-                                 6. ssh activate.sh ───────────────▶ ~/henuoc-app/ + restart Passenger
-                                 7. curl /api/health  ◀────────────── https://henuoc.com
+ npm run dev ── git push main ─▶ Deploy (khi DEPLOY_ENABLED=true):
+                                 1. _build.yml: npm ci · kiểm tra · next build
+                                 2. đóng gói zip → artifact henuoc-release
+                                 3. tải artifact · giải nén release/
+                                 4. rsync SSH cổng 2210 ──────────▶ ~/deploy/henuoc/<sha>/
+                                 5. activate.sh ─────────────────▶ ~/henuoc-app/app/ + restart Passenger
+                                 6. curl /api/health ◀───────────── https://henuoc.com
+                                 7. sai ok/revision sau 10 lần → rollback.sh → job fail
+
+ GitHub → Run Release (build tay) → cùng _build.yml → tải zip để deploy tay
+ Chưa có prisma migrate trong deploy; bổ sung sau khi chốt quy trình migration.
 ```
 
 **Vì sao build trên GitHub, không build trên host hay trên Mac (để học):**
@@ -51,7 +53,8 @@ export default config;
 │  └─ app/                     ← bản standalone (server.js thật, node_modules, .next, public)
 ├─ deploy/henuoc/
 │  ├─ <sha1>/  <sha2>/  <sha3>/   ← giữ 3 release gần nhất để rollback
-│  └─ CURRENT                     ← sha đang chạy
+│  ├─ CURRENT                     ← sha đang chạy
+│  └─ PREVIOUS                    ← sha dùng khi rollback
 └─ nodevenv/henuoc-app/22/     ← do CloudLinux tạo, không đụng
 ```
 
@@ -88,20 +91,24 @@ Hai file này có sẵn trong repo: `scripts/deploy/host/server.js` + `scripts/d
    ```bash
    ssh-keygen -t ed25519 -C "github-deploy-henuoc" -f ~/.ssh/henuoc_deploy -N ""
    cat ~/.ssh/henuoc_deploy.pub   # dán vào DirectAdmin → SSH Keys → Authorize
-   ssh -i ~/.ssh/henuoc_deploy -p <PORT> yvltjpca@<HOST> 'node -v; echo ok'
+   ssh -i ~/.ssh/henuoc_deploy -p 2210 -o StrictHostKeyChecking=yes yvltjpca@<HOST> 'node -v; echo ok'
    ```
-   Cần biết từ AZDIGI: **SSH host + port** (hỏi support nếu panel không hiện).
+   Cổng SSH: **2210**. Xác nhận fingerprint host key với AZDIGI trước khi tin cậy. Lưu dòng known_hosts tương ứng `[<HOST>]:2210` vào secret `SSH_KNOWN_HOSTS`; workflow không tự lấy host key từ mạng.
+   Có thể lấy ứng viên bằng `ssh-keyscan -p 2210 <HOST> > azdigi-known-hosts`, xem fingerprint bằng `ssh-keygen -lf azdigi-known-hosts`, rồi đối chiếu qua kênh AZDIGI đã tin cậy trước khi lưu secret.
 5. Tạo thư mục: `mkdir -p ~/henuoc-app/tmp ~/deploy/henuoc` + upload `scripts/deploy/activate.sh`, `rollback.sh` vào `~/deploy/`.
 6. **GitHub → repo → Settings → Environments → `production`** → secrets:
 
 | Secret | Giá trị |
 |---|---|
-| `SSH_HOST` / `SSH_PORT` / `SSH_USER` | host AZDIGI / port / `yvltjpca` |
-| `SSH_KEY` | nội dung `~/.ssh/henuoc_deploy` (private) |
-| `DATABASE_URL` / `DIRECT_URL` | Supabase production: pooler `:6543` / `:5432` — chỉ để bước migrate dùng (ADR-004) |
-| `NEXT_PUBLIC_SITE_URL` / `NEXT_PUBLIC_MEDIA_URL` | `https://henuoc.com` / `https://media.henuoc.com` |
+| `SSH_HOST` | hostname / IP SSH của AZDIGI |
+| `SSH_PORT` | `2210` |
+| `SSH_USER` | `yvltjpca` |
+| `SSH_KEY` | toàn bộ private key deploy, gồm header/footer và xuống dòng |
+| `SSH_KNOWN_HOSTS` | dòng host key đã xác minh cho `[SSH_HOST]:2210` |
 
-> Biến `NEXT_PUBLIC_*` được **nhúng vào JS lúc build** → phải có ở GitHub. Biến bí mật (auth, R2, ACCESSTRADE…) chỉ cần lúc **chạy** → để ở panel AZDIGI.
+GitHub → Settings → Secrets and variables → Actions → **Variables**: đặt repository variable `DEPLOY_ENABLED=true` để bật cả job build và deploy. Để trống hoặc `false` sẽ bỏ qua deploy tự động, kể cả khi bấm workflow_dispatch. Không đặt biến này chỉ trong environment `production`, vì job gọi reusable build chưa vào environment đó.
+
+Giữ `DEPLOY_ENABLED=false` trong lúc cấu hình SSH, chép script host và chuẩn bị bản rollback. Build dùng URL công khai `https://henuoc.com` trong `_build.yml`; không cần SSH secret cho job build. Biến bí mật runtime (DB, auth, R2…) giữ ở panel AZDIGI. Chưa dùng `DATABASE_URL` / `DIRECT_URL` production trong deploy; migration là chặng sau.
 
 ## 4b. Deploy tay lần đầu (chưa có rsync SSH)
 
@@ -120,148 +127,65 @@ Dùng workflow `.github/workflows/release.yml` (chạy tay): build trên Ubuntu 
 6. **Restart**: nút Restart trong Setup Node.js App (hoặc tạo/sửa `henuoc-app/tmp/restart.txt`).
 7. **Kiểm tra**: mở `https://henuoc.com/api/health` → `"ok":true` và `revision` đúng sha.
 
-> `NEXT_PUBLIC_*` được gán cứng trong `release.yml` (không lấy từ Secrets) và chưa có `NEXT_PUBLIC_ALLOW_INDEXING` → bản build luôn noindex. **Ngày launch**: thêm `NEXT_PUBLIC_ALLOW_INDEXING: "true"` vào bước Build rồi build lại.
+> `NEXT_PUBLIC_*` được gán cứng trong `_build.yml` (không lấy từ Secrets) và chưa có `NEXT_PUBLIC_ALLOW_INDEXING` → bản build luôn noindex. **Ngày launch**: thêm `NEXT_PUBLIC_ALLOW_INDEXING: "true"` vào bước Build rồi build lại.
 
-> Không chạy `prisma migrate deploy` trong luồng này. Có migration mới → chạy tay từ Mac với `DIRECT_URL` production trước khi upload (§6), hoặc đợi bật bước migrate trong `deploy.yml`.
+> Không chạy `prisma migrate deploy` trong luồng này. Có migration mới → chạy tay từ Mac với `DIRECT_URL` production trước khi upload (§6), hoặc đợi bổ sung quy trình migrate sau. Cả release tay và deploy tự động hiện đều không chạy migrate.
 
 ## 5. Workflow
 
-### 5.1 CI — `.github/workflows/ci.yml`
-```yaml
-name: CI
-on:
-  pull_request:
-  push: { branches-ignore: [main] }
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
-      - run: npx prisma generate
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
-        env:
-          SKIP_ENV_VALIDATION: "1"
-          NEXT_PUBLIC_SITE_URL: https://henuoc.com
-          NEXT_PUBLIC_MEDIA_URL: https://media.henuoc.com
-```
+### 5.1 Build dùng chung — `_build.yml`
 
-### 5.2 Deploy — `.github/workflows/deploy.yml`
-```yaml
-name: Deploy production
-on:
-  push: { branches: [main] }
-  workflow_dispatch:
-concurrency: { group: deploy-production, cancel-in-progress: false }
+Reusable workflow `on: workflow_call`, được gọi ở cấp job ([tài liệu GitHub](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)). Checkout → Node 22 theo `.nvmrc` → `npm ci` → typecheck/lint/format/test → build standalone. Giữ nguyên env build của release tay: URL công khai và DATABASE_URL giả để validate, không dùng DB production.
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
+Đóng gói standalone + `.next/static` + `public`, bỏ các gói sharp không dùng, ghi `REVISION=$GITHUB_SHA`, zip thành `henuoc-release.zip`. Upload artifact `henuoc-release`, giữ 7 ngày; reusable workflow xuất output `artifact-name`. `release.yml` vẫn chỉ chạy tay, giữ concurrency `release` và tải zip như §4b. CI riêng không đổi.
 
-      - run: npm ci
-      - run: npx prisma generate
-      - run: npm run typecheck && npm run lint && npm run test
+### 5.2 Deploy — `deploy.yml`
 
-      - name: Migrate database
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+1. Push `main` hoặc chạy tay, chỉ khi repository variable `DEPLOY_ENABLED == 'true'`. Quyền `contents: read`; concurrency `deploy-production`, không huỷ job đang deploy.
+2. Job `build` gọi `_build.yml`. Job `deploy` chờ build, dùng environment `production` để nhận SSH secrets.
+3. Tải artifact của cùng workflow run, giải zip vào `release/`, kiểm tra `server.js` và `REVISION` khớp SHA.
+4. Ghi private key vào `~/.ssh/deploy_key` với quyền `600`, ghi host key đã xác minh vào `~/.ssh/known_hosts`. Secret đi qua env, không được in ra log. Mọi SSH/rsync dùng key này, port secret (`2210`) và `StrictHostKeyChecking=yes`.
+5. `rsync -az --delete release/` tới `~/deploy/henuoc/<sha>/`, rồi SSH chạy `bash ~/deploy/activate.sh <sha>`.
+6. Smoke test `https://henuoc.com/api/health`: tối đa 10 lần, cách nhau 6 giây. Chỉ pass khi JSON có `ok: true` **và** `revision` đúng SHA của lần chạy. HTTP lỗi, JSON sai hoặc revision cũ đều phải thử lại.
+7. Hết 10 lần: SSH chạy `bash ~/deploy/rollback.sh`, job vẫn fail để báo bản mới không đạt. Nếu rollback cũng lỗi, kiểm tra host ngay; không coi đó là rollback thành công.
+8. Bước cuối `if: always()` xoá private key trên runner, kể cả khi upload, activate hoặc smoke test lỗi.
 
-      - name: Build
-        run: npm run build
-        env:
-          SKIP_ENV_VALIDATION: "1"
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-          NEXT_PUBLIC_MEDIA_URL: ${{ secrets.NEXT_PUBLIC_MEDIA_URL }}
+Chặng tự động đang thử, chưa xác nhận production end-to-end. **Không có bước prisma migrate.**
 
-      - name: Assemble release
-        run: |
-          mkdir -p release
-          cp -r .next/standalone/. release/
-          mkdir -p release/.next
-          cp -r .next/static release/.next/static
-          cp -r public release/public
-          # images.unoptimized → không cần sharp (~46MB): 68MB → 22MB (đã test T-001)
-          rm -rf release/node_modules/sharp release/node_modules/@img release/node_modules/@emnapi release/node_modules/detect-libc
-          echo "${{ github.sha }}" > release/REVISION
+### 5.3 Script host và chuẩn bị rollback lần đầu
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+**Chép lại cả `scripts/deploy/activate.sh` và `scripts/deploy/rollback.sh` lên `~/deploy/` trước khi bật deploy tự động.** Có thể upload bằng File Manager. Khi gọi qua SSH, workflow dùng `bash`, không phụ thuộc executable bit.
 
-      - name: Upload release
-        run: |
-          rsync -az --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
-            release/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:deploy/henuoc/${{ github.sha }}/
+`activate.sh` kiểm tra SHA và REVISION, rsync vào `~/henuoc-app/app/`, giữ wrapper/package.json/tmp ngoài app, cập nhật CURRENT/PREVIOUS và restart bằng `touch ~/henuoc-app/tmp/restart.txt`. Kích hoạt lại cùng SHA giữ nguyên PREVIOUS. Chỉ giữ 3 release; CURRENT và PREVIOUS luôn được bảo vệ khi dọn.
 
-      - name: Activate
-        run: |
-          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash ~/deploy/activate.sh ${{ github.sha }}"
+Nếu bản đang chạy được upload tay thẳng vào `henuoc-app/app/`, nó chưa có CURRENT/release để rollback. Trước lần deploy tự động đầu tiên, SSH vào host và lưu bản đang chạy:
 
-      - name: Smoke test
-        run: |
-          sleep 10
-          curl -fsS --retry 6 --retry-delay 10 --retry-all-errors \
-            "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/health" | grep -q '"ok":true'
-```
-
-### 5.3 Script trên host — `scripts/deploy/activate.sh`
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-SHA="${1:?usage: activate.sh <sha>}"
-APP="$HOME/henuoc-app"
-REL="$HOME/deploy/henuoc"
-
-[ -d "$REL/$SHA" ] || { echo "release $SHA not found"; exit 1; }
-
-# Đồng bộ release vào app/ (giữ nguyên server.js wrapper, package.json, tmp/ ở app root)
-mkdir -p "$APP/app" "$APP/tmp"
-rsync -a --delete "$REL/$SHA/" "$APP/app/"
-
-# Passenger restart
-touch "$APP/tmp/restart.txt"
-
-# Ghi lại release hiện tại, giữ 3 bản gần nhất
-[ -f "$REL/CURRENT" ] && cp "$REL/CURRENT" "$REL/PREVIOUS"
-echo "$SHA" > "$REL/CURRENT"
-ls -1dt "$REL"/*/ | tail -n +4 | xargs -r rm -rf
-echo "activated $SHA"
+release_sha="$(cat ~/henuoc-app/app/REVISION)"
+[[ "$release_sha" =~ ^[0-9a-f]{40}$ ]] || exit 1
+mkdir -p "$HOME/deploy/henuoc/$release_sha"
+rsync -a "$HOME/henuoc-app/app/" "$HOME/deploy/henuoc/$release_sha/"
+printf '%s\n' "$release_sha" > "$HOME/deploy/henuoc/CURRENT"
 ```
 
-### 5.4 Rollback — `scripts/deploy/rollback.sh`
+Khi kích hoạt bản mới, CURRENT cũ sẽ thành PREVIOUS. Nếu chưa có PREVIOUS, rollback báo rõ và fail.
+
+### 5.4 Rollback tay
+
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-REL="$HOME/deploy/henuoc"
-SHA="${1:-$(cat "$REL/PREVIOUS")}"
-bash "$HOME/deploy/activate.sh" "$SHA"
+ssh -i ~/.ssh/henuoc_deploy -p 2210 -o StrictHostKeyChecking=yes \
+  yvltjpca@<HOST> 'bash ~/deploy/rollback.sh'
 ```
-Chạy: `ssh ... 'bash ~/deploy/rollback.sh'`. **Lưu ý:** rollback code không rollback DB → xem §6.
+
+Script mặc định đọc `~/deploy/henuoc/PREVIOUS`, rồi gọi activate để phục hồi code và restart Passenger. Có thể chọn một release vẫn còn bằng `bash ~/deploy/rollback.sh <sha>`. Sau đó kiểm tra `/api/health` có `ok=true`, revision đúng bản vừa phục hồi. Rollback code không rollback DB.
 
 ### 5.5 Health check — `src/app/api/health/route.ts`
-Trả `{ ok: true, revision, db: "up" }` sau `SELECT 1`. Không lộ thông tin nhạy cảm.
+
+Trả `{ ok, database, revision, time }`; `ok=true` khi truy vấn DB thành công. Có `Cache-Control: no-store`. Smoke test kiểm cả ok và revision để không nhầm một process Passenger cũ vẫn còn sống với bản mới.
 
 ## 6. Database migration an toàn
 
-Migration chạy **trước** khi code mới lên → trong vài chục giây, **code cũ chạy trên schema mới**. Quy tắc **expand → contract**:
+**Hiện chưa tích hợp migration trong deploy.** Khi bổ sung, migration chạy **trước** khi code mới lên → trong vài chục giây, **code cũ chạy trên schema mới**. Quy tắc **expand → contract**:
 
 | Muốn | Làm đúng |
 |---|---|
@@ -315,6 +239,6 @@ Bản standalone chạy y nguyên trong Docker (`node server.js`) → **không s
 ## 11. Rủi ro cần kiểm chứng ở T-006
 
 - [ ] CloudLinux chấp nhận cấu trúc wrapper + `app/node_modules` (mục §3). Nếu không: thử đặt standalone trực tiếp ở root và báo Claude.
-- [ ] Cổng SSH + rsync có sẵn trên host.
+- [ ] Xác minh rsync qua SSH cổng **2210** và host key cho workflow tự động.
 - [ ] Passenger đọc env từ panel cho process Node (kiểm tra bằng `/api/health` hiển thị `revision`).
 - [ ] Kết nối Supabase từ host và từ GitHub Actions: outbound 6543 + 5432 không bị chặn, có IPv4 tới pooler (host direct chỉ IPv6). Bị chặn → hỏi AZDIGI mở cổng.

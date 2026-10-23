@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-23 (T-013 xong: typecheck ✅ · lint ✅ · format ✅ · test 412/412 · build ✅)
+> Cập nhật lần cuối: 2026-10-23 (T-006 deploy tay chạy được; chặng deploy tự động đang thử)
 
 ## Đang ở đâu
 
@@ -20,13 +20,15 @@
 - T-025 Cẩm nang: `@next/mdx` (Tony duyệt), `/cam-nang` + `/cam-nang/[slug]`, 2 bài (cách ghi thiệp cưới, lời mời đám cưới hay), JSON-LD Article; MDX ở `src/content/cam-nang`, metadata ở `src/data/articles.ts`
 - Liên hệ = email `hotro@henuoc.com` (Tony chốt 2026-10-22): `/lien-he` thật, nút Cao cấp → mailto, trang pháp lý/FAQ ghi email. Giá: 2 gói Miễn phí / Cao cấp (docs D8, GROWTH, PRD, DESIGN_SYSTEM, enum `Plan` FREE/PREMIUM)
 - T-012 VietQR: `src/lib/vietqr.ts` (payload EMVCo + CRC16) + `src/data/banks.{json,ts}` (23 ngân hàng NAPAS, freeze), 26 test
-- Chuẩn bị T-006: `.github/workflows/release.yml` (chạy tay → artifact zip `henuoc-release`, 7 ngày), `scripts/deploy/host/{server.js,package.json}` (wrapper Passenger), docs/06 §4b "Deploy tay lần đầu". Chưa có rsync SSH tự động
+- T-006 **xong phần deploy tay ngày 23/10/2026**: release.yml → artifact zip `henuoc-release`, wrapper Passenger trên AZDIGI hoạt động. Build dùng chung đã tách vào `_build.yml`; release tay giữ hành vi cũ.
 - T-050 (phần data + tool public): `src/data/checklist.ts` 42 việc theo 10 mốc (id khoá bằng snapshot test) + `src/lib/checklist-schedule.ts` (tính hạn theo ngày, giờ VN). Công cụ miễn phí: `/cong-cu` (hub), `/cong-cu/checklist-dam-cuoi` (chọn ngày → tự xếp lịch, tick lưu localStorage `henuoc:checklist:v1`, in được), `/cong-cu/mau-loi-moi-dam-cuoi` (5 kiểu · 13 mẫu, sao chép). Có trong sổ SEO, footer "Cẩm nang & công cụ", link từ 2 bài cẩm nang, CTA `/tao-thiep`
 - Admin mock `/admin` (Tổng quan · Người dùng · Đám cưới · Mẫu thiệp): `src/features/admin/*` qua `repos.admin`, email luôn che (`mask.ts`), nút nâng gói / công tắc mẫu là nút giả phía client, noindex + robots disallow, **`notFound()` ở production** (`features/admin/guard.ts`)
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
 - T-013 primitives `src/themes/_shared/` (Envelope, MusicToggle, useCountdown, AddToCalendar, MapButton, Gift + GiftSheet, Reveal, Watermark, RsvpForm submit giả) + `src/lib/url-allowlist.ts` + `src/lib/qr.ts` (dep `qrcode` 1.5.4) + nhạc demo CC0 `public/audio/` — ghép đủ vào `/demo/placeholder`, 412 test
 
 ## 🔨 Đang làm
+
+- T-006 chặng tự động **đang thử**: deploy.yml (push main / chạy tay, bật bằng DEPLOY_ENABLED), SSH 2210 + host key đã ghim, rsync → activate → smoke test đúng revision → rollback qua PREVIOUS nếu không đạt. Cần chép lại cả activate.sh và rollback.sh lên host, chuẩn bị CURRENT từ bản deploy tay và thử end-to-end trước khi coi là xong.
 
 - Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
 
@@ -39,7 +41,7 @@
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
-- 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS) — deploy tay được rồi qua release.yml (docs/06 §4b)
+- T-006 việc sau: bổ sung `prisma migrate deploy` sau khi chốt quyền DB, thứ tự migration và chiến lược expand/contract. **Chưa có migrate trong deploy hiện tại.**
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
@@ -47,7 +49,7 @@
 
 - DATABASE_URL đã bắt buộc: secret chỉ nằm trong `env.server.ts` (server-only). Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`. Build/CI phải có DATABASE_URL.
 
-- `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch. Nhớ thêm vào bước Build của `release.yml` (đang gán cứng env).
+- `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch. Nhớ thêm vào bước Build của `_build.yml` (đang gán cứng env).
 - Zip release phải build bằng workflow, KHÔNG build trên Mac (standalone có thể copy `.env.local` vào bản build).
 - Contract theme (`src/themes/types.ts`): `qrSvg` chỉ sinh ở server, không lưu DB, render bằng `<img data:…>`; URL (map/ảnh/nhạc) zod ép https + allowlist; không truyền cả object `guest` (có token) xuống Client Component; cấm `dangerouslySetInnerHTML` trong `src/themes/**`.
 - `MEDIA_HOSTS = ["media.henuoc.com"]` trong `url-allowlist.ts` là giả định — sửa khi chốt domain R2, KHÔNG nới thành so hậu tố. `maps.app.goo.gl` cho mọi path (link rút gọn Google).

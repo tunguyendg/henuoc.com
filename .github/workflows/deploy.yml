@@ -1,70 +1,91 @@
 name: Deploy production
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main]
   workflow_dispatch:
-concurrency: { group: deploy-production, cancel-in-progress: false }
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
-  deploy:
-    # Bật sau khi xong T-006: GitHub → Settings → Variables → DEPLOY_ENABLED = true
+  build:
     if: vars.DEPLOY_ENABLED == 'true'
+    uses: ./.github/workflows/_build.yml
+
+  deploy:
+    if: vars.DEPLOY_ENABLED == 'true'
+    needs: build
     runs-on: ubuntu-latest
     environment: production
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with: { node-version-file: .nvmrc, cache: npm }
+      - name: Download release
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build.outputs.artifact-name }}
+          path: artifact
 
-      - run: npm ci
-      # T-003: thêm `npx prisma generate`
-      - run: npm run typecheck && npm run lint && npm run test
-
-      # T-003: bật bước migrate
-      # - name: Migrate database
-      #   run: npx prisma migrate deploy
-      #   env:
-      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      #     DIRECT_URL: ${{ secrets.DIRECT_URL }}
-
-      - name: Build
-        run: npm run build
-        env:
-          SKIP_ENV_VALIDATION: "1"
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-          NEXT_PUBLIC_MEDIA_URL: ${{ secrets.NEXT_PUBLIC_MEDIA_URL }}
-
-      - name: Assemble release
+      - name: Extract release
         run: |
           mkdir -p release
-          cp -r .next/standalone/. release/
-          mkdir -p release/.next
-          cp -r .next/static release/.next/static
-          cp -r public release/public
-          # images.unoptimized → không cần sharp (~46MB): 68MB → 22MB
-          rm -rf release/node_modules/sharp release/node_modules/@img release/node_modules/@emnapi release/node_modules/detect-libc
-          echo "${{ github.sha }}" > release/REVISION
+          unzip -q artifact/henuoc-release.zip -d release
+          test -f release/server.js
+          test "$(cat release/REVISION)" = "$GITHUB_SHA"
 
       - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
         run: |
+          : "${SSH_KEY:?Missing SSH_KEY}" "${SSH_KNOWN_HOSTS:?Missing SSH_KNOWN_HOSTS}"
+          : "${SSH_HOST:?Missing SSH_HOST}" "${SSH_PORT:?Missing SSH_PORT}" "${SSH_USER:?Missing SSH_USER}"
+          umask 077
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
       - name: Upload release
         run: |
           rsync -az --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
-            release/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:deploy/henuoc/${{ github.sha }}/
+            -e "ssh -i $HOME/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=15" \
+            release/ "${SSH_USER}@${SSH_HOST}:~/deploy/henuoc/${GITHUB_SHA}/"
 
       - name: Activate
         run: |
-          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash ~/deploy/activate.sh ${{ github.sha }}"
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" \
+            -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=15 \
+            "${SSH_USER}@${SSH_HOST}" "bash ~/deploy/activate.sh $GITHUB_SHA"
 
-      - name: Smoke test
+      - name: Smoke test and rollback on failure
         run: |
-          sleep 10
-          curl -fsS --retry 6 --retry-delay 10 --retry-all-errors \
-            "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/health" | grep -q '"ok":true'
+          for attempt in {1..10}; do
+            if curl --fail --silent --show-error --connect-timeout 5 --max-time 15 \
+              https://henuoc.com/api/health -o health.json \
+              && jq -e --arg revision "$GITHUB_SHA" \
+                '.ok == true and .revision == $revision' health.json >/dev/null; then
+              printf 'Health check passed (attempt %s).\n' "$attempt"
+              exit 0
+            fi
+            if [ "$attempt" -lt 10 ]; then sleep 6; fi
+          done
+          printf 'Health check failed after 10 attempts; rolling back.\n' >&2
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" \
+            -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=15 \
+            "${SSH_USER}@${SSH_HOST}" 'bash ~/deploy/rollback.sh'
+          exit 1
+
+      - name: Remove SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
