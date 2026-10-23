@@ -15,6 +15,7 @@ const unsplashUrl = z.url().refine((value) => {
 });
 const imageSchema = z.object({
   slug: segment,
+  role: z.enum(["cover", "inline"]),
   file: z.string().min(1),
   cdnPath: z.string().regex(/^photo-[a-zA-Z0-9-]+$/),
   photographer: z.string().trim().min(1),
@@ -44,6 +45,12 @@ const articleImages = parseArticleImages(manifest);
 
 export function getArticleImages(): ArticleImageData[] {
   return articleImages;
+}
+
+export function getArticleCover(slug: string): ArticleImageData {
+  const cover = articleImages.find((image) => image.slug === slug && image.role === "cover");
+  if (!cover) throw new Error(`images.json: bài "${slug}" thiếu ảnh role cover.`);
+  return cover;
 }
 
 export function articleImageSrc(image: ArticleImageData) {

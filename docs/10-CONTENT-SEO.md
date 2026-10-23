@@ -58,7 +58,7 @@ viết tay hay dùng AI. Luật:
 - Mỗi bài: **`Article`** (có sẵn ở `/cam-nang/[slug]`) + **`BreadcrumbList`** (tự sinh từ sổ SEO).
 - **Không** dùng `FAQPage` cho bài viết. `FAQPage` chỉ ở `/cau-hoi-thuong-gap` (docs/08 §1). Muốn có phần hỏi–đáp trong bài thì cứ viết H2/H3 bình thường.
 - Không `HowTo`, không `AggregateRating`/`Review` tự chấm.
-- `Article.image` dùng ảnh bìa của bài (§2).
+- `Article.image` dùng URL tuyệt đối ảnh bìa của bài (§2); OG và Twitter dùng cùng ảnh bìa, không dùng ảnh OG chung cho bài cẩm nang.
 
 ### 1.7 Checklist trước khi đăng một bài
 
@@ -71,6 +71,8 @@ viết tay hay dùng AI. Luật:
 - [ ] `npm test` xanh (cảnh sát SEO kiểm title/H1/description/link gãy)
 
 ## 2. Ảnh
+
+- **Mọi bài bắt buộc có ảnh bìa**: đúng một entry `role: "cover"` trong `images.json` và file WebP tương ứng tồn tại trong `public/images/cam-nang/<slug>/`. Test SEO chặn bài thiếu ảnh.
 
 - Định dạng **WebP**, cạnh dài **≤ 1600px**, bìa tỉ lệ 16:9 hoặc 3:2. Mục tiêu ≤ 200KB/ảnh.
 - `alt` **mô tả đúng cái có trong ảnh** (người, trang phục, vật, bối cảnh), tiếng Việt, ≤ 125 ký tự. Không nhồi từ khoá, không "ảnh đẹp đám cưới".

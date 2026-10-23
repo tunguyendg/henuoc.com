@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleCta, ArticleDate } from "@/components/articles/article-meta";
 import { ArticleImage, createArticleImage } from "@/components/articles/article-image";
 import { ArticleCopy } from "@/components/articles/article-copy";
-import { articleImageSrc, getArticleImages } from "@/lib/article-images";
+import { articleImageSrc, getArticleCover, getArticleImages } from "@/lib/article-images";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -22,10 +23,26 @@ export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  if (!getArticle(slug)) return {};
-  return pageMetadata(articlePath(slug));
+  const article = getArticle(slug);
+  if (!article) return {};
+  const metadata = pageMetadata(articlePath(slug));
+  const cover = getArticleCover(slug);
+  const imageUrl = new URL(articleImageSrc(cover), site.url).toString();
+  return {
+    ...metadata,
+    openGraph: {
+      ...metadata.openGraph,
+      images: [{ url: imageUrl, width: 1600, alt: cover.alt }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.description,
+      images: [{ url: imageUrl, alt: cover.alt }],
+    },
+  };
 }
 
 export default async function Page({ params }: Props) {
@@ -33,7 +50,7 @@ export default async function Page({ params }: Props) {
   const article = getArticle(slug);
   if (!article) notFound();
   const images = getArticleImages().filter((image) => image.slug === article.slug);
-  const cover = images[0];
+  const cover = getArticleCover(article.slug);
 
   // Only slugs from articles.ts reach this import, so the path is never user-controlled.
   const { default: Body } = await import(`@/content/cam-nang/${article.slug}.mdx`);
@@ -63,7 +80,7 @@ export default async function Page({ params }: Props) {
               )}
             </p>
           </header>
-          {cover && <ArticleImage image={cover} />}
+          <ArticleImage image={cover} />
 
           <div className="mt-8 text-[17px] text-ink [&>:first-child]:mt-0">
             {/* `ArticleCta` is passed in so the .mdx body can place <ArticleCta /> mid-article without imports. */}
@@ -88,7 +105,7 @@ export default async function Page({ params }: Props) {
           "@type": "Article",
           headline: seo.h1,
           description: seo.description,
-          image: cover ? new URL(articleImageSrc(cover), site.url).toString() : undefined,
+          image: new URL(articleImageSrc(cover), site.url).toString(),
           datePublished: article.publishedAt,
           dateModified: modified,
           author: org,

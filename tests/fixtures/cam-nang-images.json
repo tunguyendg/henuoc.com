@@ -1,6 +1,7 @@
 [
   {
     "slug": "cach-ghi-thiep-cuoi",
+    "role": "cover",
     "file": "anh-bia",
     "cdnPath": "photo-1519741497674-611481863552",
     "photographer": "Nhiếp ảnh gia mẫu",
@@ -10,6 +11,7 @@
   },
   {
     "slug": "cach-ghi-thiep-cuoi",
+    "role": "inline",
     "file": "thiep-moi",
     "cdnPath": "photo-1511285560929-80b456fea0bc",
     "photographer": "Tác giả mẫu",

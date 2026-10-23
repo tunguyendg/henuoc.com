@@ -17,7 +17,9 @@ export function pageMetadata(path: string): Metadata {
     title: { absolute: p.title }, // absolute: không ghép thêm "· Hẹn Ước" lần nữa
     description: p.description,
     alternates: { canonical: p.path },
-    robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
+    robots: indexable
+      ? { index: true, follow: true, "max-image-preview": "large" }
+      : { index: false, follow: true },
     openGraph: {
       type: "website",
       locale: "vi_VN",

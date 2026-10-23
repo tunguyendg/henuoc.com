@@ -28,3 +28,9 @@ Nguồn: Unsplash · https://unsplash.com/license
 
 <!-- image: cach-tinh-so-luong-khach-moi/sanh-nhieu-ban.webp -->
 - `cach-tinh-so-luong-khach-moi/sanh-nhieu-ban.webp`: Phòng tiệc rộng xếp nhiều bàn ghế, trang trí cây xanh và đèn dây — Ảnh: [Jennifer Kalenberg](<https://unsplash.com/@jkalen71>) / [Unsplash](<https://unsplash.com/photos/Rkj0ms67lio>).
+
+<!-- image: cach-ghi-thiep-cuoi/cover.webp -->
+- `cach-ghi-thiep-cuoi/cover.webp`: Thiệp cưới trắng chữ in đặt trên phong bì lót đen, giữa khay mạ vàng có tem cũ, ruy băng lụa và hoa trắng — Ảnh: [Fiona Murray-deGraaff](<https://unsplash.com/@fionamurrayphoto>) / [Unsplash](<https://unsplash.com/photos/a0BlHWem6l0>).
+
+<!-- image: loi-moi-dam-cuoi-hay/cover.webp -->
+- `loi-moi-dam-cuoi-hay/cover.webp`: Thiệp mời cưới vẽ hoa dại màu nước, đặt cạnh hoa hồng kem, mao lương cam và dải ruy băng hồng — Ảnh: [Pau Patterson Photography](<https://unsplash.com/@paupattersonphotography_>) / [Unsplash](<https://unsplash.com/photos/lxHHTpPfA4w>).
