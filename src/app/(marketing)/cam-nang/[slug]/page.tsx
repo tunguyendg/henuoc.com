@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { ArticleCta, ArticleDate } from "@/components/articles/article-meta";
+import { ArticleImage, createArticleImage } from "@/components/articles/article-image";
+import { getArticleImages } from "@/lib/article-images";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -29,6 +31,8 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const article = getArticle(slug);
   if (!article) notFound();
+  const images = (await getArticleImages()).filter((image) => image.slug === article.slug);
+  const cover = images[0];
 
   // Only slugs from articles.ts reach this import, so the path is never user-controlled.
   const { default: Body } = await import(`@/content/cam-nang/${article.slug}.mdx`);
@@ -58,10 +62,11 @@ export default async function Page({ params }: Props) {
               )}
             </p>
           </header>
+          {cover && <ArticleImage image={cover} />}
 
           <div className="mt-8 text-[17px] text-ink [&>:first-child]:mt-0">
             {/* `ArticleCta` is passed in so the .mdx body can place <ArticleCta /> mid-article without imports. */}
-            <Body components={{ ArticleCta }} />
+            <Body components={{ ArticleCta, ArticleImage: createArticleImage(images) }} />
           </div>
 
           <ArticleCta

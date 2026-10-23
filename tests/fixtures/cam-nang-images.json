@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "cach-ghi-thiep-cuoi",
+    "file": "anh-bia",
+    "cdnPath": "photo-1519741497674-611481863552",
+    "photographer": "Nhiếp ảnh gia mẫu",
+    "photographerUrl": "https://unsplash.com/@fixture",
+    "unsplashUrl": "https://unsplash.com/photos/fixture-cover",
+    "alt": "Ảnh bìa dùng riêng cho kiểm thử"
+  },
+  {
+    "slug": "cach-ghi-thiep-cuoi",
+    "file": "thiep-moi",
+    "cdnPath": "photo-1511285560929-80b456fea0bc",
+    "photographer": "Tác giả mẫu",
+    "photographerUrl": "https://unsplash.com/@fixture-inline",
+    "unsplashUrl": "https://unsplash.com/photos/fixture-inline",
+    "alt": "Ảnh trong bài dùng riêng cho kiểm thử"
+  }
+]
