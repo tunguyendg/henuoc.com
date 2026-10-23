@@ -1,6 +1,8 @@
 import "server-only";
 import { mockAdminRepo } from "./admin/mock-repo";
 import type { AdminRepo } from "./admin/repo";
+import { mockChecklistRepo } from "./checklist/mock-repo";
+import type { ChecklistRepo } from "./checklist/repo";
 import { mockGuestRepo } from "./guest/mock-repo";
 import type { GuestRepo } from "./guest/repo";
 import { mockRsvpRepo } from "./rsvp/mock-repo";
@@ -30,10 +32,12 @@ export const repos = {
   rsvp: mockRsvpRepo,
   shopping: mockShoppingRepo,
   admin: mockAdminRepo,
+  checklist: mockChecklistRepo,
 } satisfies {
   wedding: WeddingRepo;
   guest: GuestRepo;
   rsvp: RsvpRepo;
   shopping: ShoppingRepo;
   admin: AdminRepo;
+  checklist: ChecklistRepo;
 };
