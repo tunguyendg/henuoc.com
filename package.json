@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "music:fetch": "node scripts/fetch-music.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "3.1.1",
