@@ -27,7 +27,7 @@
 
 ## 🔨 Đang làm
 
-- Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` (sidebar desktop + tab bar mobile, noindex, **`notFound()` ở production tới khi có auth**) · ⏳ trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (link con hiện 404)
+- Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 5 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm · ⏳ Checklist. Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
 
 ## ⏭️ Tiếp theo (frontend)
 
@@ -40,6 +40,8 @@
 - 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS) — deploy tay được rồi qua release.yml (docs/06 §4b)
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
+
+- `getInviteLinkAction` (Server Action = endpoint công khai) đang chỉ chặn bằng NODE_ENV. Trước khi mở production: session + ownership, nếu không đoán guestId là lấy được link (có token) của nhà khác.
 
 - DATABASE_URL đã bắt buộc: secret chỉ nằm trong `env.server.ts` (server-only). Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`. Build/CI phải có DATABASE_URL.
 

@@ -1,3 +1,4 @@
+import { assertDashboardPreview } from "./preview-guard";
 import { connection } from "next/server";
 import { cache } from "react";
 import { repos } from "@/features/repos";
@@ -9,6 +10,7 @@ import { countdownLabel, daysUntil } from "./days-until";
  * but the repo is hit once.
  */
 const getWeddingHeading = cache(async () => {
+  assertDashboardPreview();
   // Dashboard data is per-user and per-request (session later); also lets us read the clock below.
   await connection();
   const wedding = await repos.wedding.getCurrentWedding();

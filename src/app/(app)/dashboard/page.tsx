@@ -1,18 +1,24 @@
+import { assertDashboardPreview } from "@/components/dashboard/preview-guard";
+import { PageTitle } from "@/components/dashboard/page-title";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import {
+  OverviewContent,
+  OverviewFallback,
+} from "@/components/dashboard/overview/overview-content";
 
-// Placeholder overview — replaced by the real "Tổng quan" page in the next step.
+// `robots` is inherited from the dashboard layout (metadata merges per key).
 export const metadata: Metadata = { title: "Tổng quan" };
 
+// The page is static; only <OverviewContent> reads request-time data (clock, per-user repo).
 export default function DashboardPage() {
+  assertDashboardPreview();
   return (
-    <section className="flex flex-col gap-3">
-      <h1 className="font-display text-[1.75rem] leading-tight font-extrabold tracking-[-0.03em] md:text-4xl">
-        Tổng quan
-      </h1>
-      <p className="max-w-prose text-muted">
-        Nơi hai bạn theo dõi thiệp, khách mời, RSVP và checklist. Trang tổng quan đầy đủ sẽ có ở
-        bước tiếp theo.
-      </p>
-    </section>
+    <>
+      <PageTitle>Tổng quan</PageTitle>
+      <Suspense fallback={<OverviewFallback />}>
+        <OverviewContent />
+      </Suspense>
+    </>
   );
 }
