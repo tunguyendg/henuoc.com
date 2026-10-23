@@ -31,7 +31,7 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const article = getArticle(slug);
   if (!article) notFound();
-  const images = (await getArticleImages()).filter((image) => image.slug === article.slug);
+  const images = getArticleImages().filter((image) => image.slug === article.slug);
   const cover = images[0];
 
   // Only slugs from articles.ts reach this import, so the path is never user-controlled.

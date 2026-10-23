@@ -1,6 +1,5 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { z } from "zod";
+import manifest from "@/content/cam-nang/images.json";
 
 const segment = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export function articleImageFile(slug: string, file: string) {
@@ -39,16 +38,12 @@ export function parseArticleImages(value: unknown): ArticleImageData[] {
   return images;
 }
 
-/** A missing manifest keeps existing articles usable until editorial assets are added. */
-export async function getArticleImages(): Promise<ArticleImageData[]> {
-  let raw: string;
-  try {
-    raw = await readFile(join(process.cwd(), "src/content/cam-nang/images.json"), "utf8");
-  } catch (error) {
-    if (error instanceof Error && "code" in error && error.code === "ENOENT") return [];
-    throw error;
-  }
-  return parseArticleImages(JSON.parse(raw));
+// Static import bundles the manifest at build time; a runtime `await readFile()` would count as
+// uncached data under Cache Components and block the article pages from prerendering.
+const articleImages = parseArticleImages(manifest);
+
+export function getArticleImages(): ArticleImageData[] {
+  return articleImages;
 }
 
 export function articleImageSrc(image: ArticleImageData) {

@@ -21,7 +21,7 @@ const list = [...articles].sort((a, b) => b.publishedAt.localeCompare(a.publishe
 export const metadata = pageMetadata(PATH);
 
 export default async function Page() {
-  const images = await getArticleImages();
+  const images = getArticleImages();
   return (
     <>
       <Container className="pt-8 pb-20 md:pt-10 md:pb-28">
