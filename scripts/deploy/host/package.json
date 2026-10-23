@@ -1,0 +1,5 @@
+{
+  "name": "henuoc-app",
+  "private": true,
+  "main": "server.js"
+}

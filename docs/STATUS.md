@@ -20,6 +20,7 @@
 - T-025 Cẩm nang: `@next/mdx` (Tony duyệt), `/cam-nang` + `/cam-nang/[slug]`, 2 bài (cách ghi thiệp cưới, lời mời đám cưới hay), JSON-LD Article; MDX ở `src/content/cam-nang`, metadata ở `src/data/articles.ts`
 - Liên hệ = email `hotro@henuoc.com` (Tony chốt 2026-10-22): `/lien-he` thật, nút Cao cấp → mailto, trang pháp lý/FAQ ghi email. Giá: 2 gói Miễn phí / Cao cấp (docs D8, GROWTH, PRD, DESIGN_SYSTEM, enum `Plan` FREE/PREMIUM)
 - T-012 VietQR: `src/lib/vietqr.ts` (payload EMVCo + CRC16) + `src/data/banks.{json,ts}` (23 ngân hàng NAPAS, freeze), 26 test
+- Chuẩn bị T-006: `.github/workflows/release.yml` (chạy tay → artifact zip `henuoc-release`, 7 ngày), `scripts/deploy/host/{server.js,package.json}` (wrapper Passenger), docs/06 §4b "Deploy tay lần đầu". Chưa có rsync SSH tự động
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
 
 ## 🔨 Đang làm
@@ -34,13 +35,14 @@
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
-- 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS)
+- 🔴 T-006 deploy AZDIGI (cần SSH host/port + DNS) — deploy tay được rồi qua release.yml (docs/06 §4b)
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
 - DATABASE_URL đã bắt buộc: secret chỉ nằm trong `env.server.ts` (server-only). Tuyệt đối không đặt tên `NEXT_PUBLIC_DATABASE_URL`. Client Component chỉ được import `env.client.ts`. Build/CI phải có DATABASE_URL.
 
-- `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch.
+- `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch. Nhớ thêm vào bước Build của `release.yml` (đang gán cứng env).
+- Zip release phải build bằng workflow, KHÔNG build trên Mac (standalone có thể copy `.env.local` vào bản build).
 - Contract theme (`src/themes/types.ts`): `qrSvg` chỉ sinh ở server, không lưu DB, render bằng `<img data:…>`; URL (map/ảnh/nhạc) zod ép https + allowlist; không truyền cả object `guest` (có token) xuống Client Component; cấm `dangerouslySetInnerHTML` trong `src/themes/**`.
 - Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.

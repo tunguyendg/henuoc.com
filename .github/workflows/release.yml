@@ -1,0 +1,55 @@
+name: Release (build tay)
+# Build bản standalone trên Linux x64 rồi để lại file zip → Tony tải về, upload lên AZDIGI bằng File Manager.
+# Chưa rsync SSH tự động (xem deploy.yml, bật sau T-006).
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://henuoc.com
+          # Giả: build chỉ cần qua validate env, không kết nối DB. URL thật đặt ở panel AZDIGI.
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+
+      - name: Assemble release
+        run: |
+          test -f .next/standalone/server.js
+          mkdir -p release/.next
+          cp -r .next/standalone/. release/
+          cp -r .next/static release/.next/static
+          cp -r public release/public
+          # images.unoptimized → không cần sharp (~46MB)
+          rm -rf release/node_modules/sharp release/node_modules/@img release/node_modules/@emnapi release/node_modules/detect-libc
+          echo "$GITHUB_SHA" > release/REVISION
+
+      - name: Zip
+        run: cd release && zip -qr ../henuoc-release.zip .
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: henuoc-release
+          path: henuoc-release.zip
+          retention-days: 7
+          if-no-files-found: error

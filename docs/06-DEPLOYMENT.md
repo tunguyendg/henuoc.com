@@ -1,6 +1,6 @@
 # 06 — Deployment: Local → AZDIGI → CI/CD
 
-**Version:** 2.0 · 2026-10-19 · Hosting: **AZDIGI DirectAdmin + CloudLinux "Setup Node.js App" (Passenger), Node 22**
+**Version:** 2.1 · 2026-10-23 · Hosting: **AZDIGI DirectAdmin + CloudLinux "Setup Node.js App" (Passenger), Node 22**
 
 ## 1. Bức tranh
 
@@ -60,13 +60,15 @@ export default config;
 ```js
 // henuoc-app/server.js — Passenger entry
 process.env.NODE_ENV = "production";
-require("./app/server.js");
+import("./app/server.js"); // import() thay require để qua lint, vẫn nạp được file CJS
 ```
 
 ```json
 // henuoc-app/package.json
 { "name": "henuoc-app", "private": true, "main": "server.js" }
 ```
+
+Hai file này có sẵn trong repo: `scripts/deploy/host/server.js` + `scripts/deploy/host/package.json` → upload thẳng vào `henuoc-app/`.
 
 > Passenger tự gán cổng cho app (nó chặn lệnh `listen()`), nên **không** cần set `PORT`. Không bấm "Run NPM Install" trong panel.
 
@@ -81,6 +83,7 @@ require("./app/server.js");
    - Node.js version: **22.x** · Mode: **Production**
    - Application root: `henuoc-app` · URL: `henuoc.com` · Startup file: `server.js`
    - **Environment variables**: thêm toàn bộ biến trong `03-ARCHITECTURE §8` (giá trị production). Đổi env → phải Restart.
+   - **Database ở runtime chỉ cần `DATABASE_URL`** = Supabase **pooler cổng 6543** (transaction mode, ADR-004). `DIRECT_URL` (5432) chỉ dùng cho `prisma migrate deploy` → để ở GitHub Secrets, **không** đặt trên host.
 4. **SSH Keys**: tạo cặp key riêng cho deploy trên Mac:
    ```bash
    ssh-keygen -t ed25519 -C "github-deploy-henuoc" -f ~/.ssh/henuoc_deploy -N ""
@@ -95,10 +98,31 @@ require("./app/server.js");
 |---|---|
 | `SSH_HOST` / `SSH_PORT` / `SSH_USER` | host AZDIGI / port / `yvltjpca` |
 | `SSH_KEY` | nội dung `~/.ssh/henuoc_deploy` (private) |
-| `DATABASE_URL` / `DIRECT_URL` | Supabase production: pooler `:6543` / `:5432` (ADR-004) |
+| `DATABASE_URL` / `DIRECT_URL` | Supabase production: pooler `:6543` / `:5432` — chỉ để bước migrate dùng (ADR-004) |
 | `NEXT_PUBLIC_SITE_URL` / `NEXT_PUBLIC_MEDIA_URL` | `https://henuoc.com` / `https://media.henuoc.com` |
 
 > Biến `NEXT_PUBLIC_*` được **nhúng vào JS lúc build** → phải có ở GitHub. Biến bí mật (auth, R2, ACCESSTRADE…) chỉ cần lúc **chạy** → để ở panel AZDIGI.
+
+## 4b. Deploy tay lần đầu (chưa có rsync SSH)
+
+Dùng workflow `.github/workflows/release.yml` (chạy tay): build trên Ubuntu x64 → zip `release/` → artifact `henuoc-release` (giữ 7 ngày).
+
+1. **Build**: GitHub → Actions → *Release (build tay)* → Run workflow (nhánh `main`). Hoặc: `gh workflow run release.yml`.
+2. **Tải về Mac**:
+   ```bash
+   gh run list --workflow release.yml --status success -L 1   # lấy <run-id> của bản build THÀNH CÔNG
+   gh run download <run-id> -n henuoc-release -D ~/Downloads/henuoc-release
+   # → ~/Downloads/henuoc-release/henuoc-release.zip (trong zip có REVISION = git sha)
+   ```
+3. **Lần đầu**: DirectAdmin → File Manager → tạo `henuoc-app/app/` và `henuoc-app/tmp/`; upload `scripts/deploy/host/server.js` + `package.json` vào `henuoc-app/`.
+4. **Xoá bản cũ** (từ lần 2): bật hiện file ẩn trong File Manager, xoá sạch nội dung `henuoc-app/app/` (kể cả `.next/`). **Không** đụng `henuoc-app/server.js`, `package.json`, `tmp/`.
+5. **Upload + giải nén**: upload `henuoc-release.zip` vào `henuoc-app/app/` → Extract ngay tại đó → xoá file zip. Kiểm tra có `app/server.js`, `app/.next/static/`, `app/public/`, `app/REVISION`.
+6. **Restart**: nút Restart trong Setup Node.js App (hoặc tạo/sửa `henuoc-app/tmp/restart.txt`).
+7. **Kiểm tra**: mở `https://henuoc.com/api/health` → `"ok":true` và `revision` đúng sha.
+
+> `NEXT_PUBLIC_*` được gán cứng trong `release.yml` (không lấy từ Secrets) và chưa có `NEXT_PUBLIC_ALLOW_INDEXING` → bản build luôn noindex. **Ngày launch**: thêm `NEXT_PUBLIC_ALLOW_INDEXING: "true"` vào bước Build rồi build lại.
+
+> Không chạy `prisma migrate deploy` trong luồng này. Có migration mới → chạy tay từ Mac với `DIRECT_URL` production trước khi upload (§6), hoặc đợi bật bước migrate trong `deploy.yml`.
 
 ## 5. Workflow
 
