@@ -1,50 +1,127 @@
-// 🔴 TONY TỰ CODE (docs/07-THEMES.md §3, §10; AGENTS.md §7). T-013 only ships the contract + a silent
-// stub so themes can be wired up. Do not let an agent fill this in.
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface MusicController {
   isPlaying: boolean;
   isMuted: boolean;
-  /**
-   * Must be called SYNCHRONOUSLY inside the tap handler (useEnvelope().open does this first thing).
-   * Browsers only allow audio.play() with sound while the user gesture is still "active".
-   */
   unlock: () => void;
   toggle: () => void;
 }
 
 const noop = () => {};
-
 const SILENT: MusicController = { isPlaying: false, isMuted: false, unlock: noop, toggle: noop };
 
-/*
- * TODO(Tony, T-013 🔴) — implement useMusic:
- *
- * 1. src undefined or opts.disabled (theme passes `mode === "preview"`) → return a silent controller
- *    (like SILENT). Never create an Audio element in that case.
- * 2. Create ONE `new Audio(src)` lazily on the client (useRef; not during SSR, not in render),
- *    `preload = "none"`, `loop = true`. Do not download the MP3 before the guest taps.
- * 3. unlock(): called synchronously in the tap handler. If the guest has not muted, call
- *    `audio.play()` RIGHT THERE — no await before it, no setTimeout, no "after animation".
- *    play() returns a Promise: `.then(() => setPlaying(true)).catch(() => setPlaying(false))`.
- *    Swallow the error (Zalo/odd browsers refuse) → ♪ button just shows "off", invitation still opens.
- *    unlock() twice must not restart the song.
- * 4. toggle(): playing → pause + remember muted; not playing → play (it is itself a tap, so it is a
- *    valid gesture) + clear muted.
- * 5. Remember "muted" in sessionStorage (e.g. key "henuoc:music-muted"), wrapped in try/catch
- *    (Safari private mode / some webviews throw). Muted → unlock() must not start the music again.
- * 6. document "visibilitychange": hidden → pause (remember it was playing); visible → resume ONLY if
- *    it was playing before and the guest has not muted.
- * 7. Keep isPlaying in sync with the element: listen to "play"/"pause"/"ended" events instead of
- *    trusting your own flags.
- * 8. Cleanup on unmount / src change: remove listeners, `audio.pause()`, `audio.src = ""`.
- * 9. Return a stable object (useMemo/useCallback) so <MusicToggle> and useEnvelope({ onOpen }) do
- *    not re-render needlessly.
- *
- * QA (docs/07 §8): no autoplay; plays right on the envelope tap (test Zalo iOS); ♪ always visible;
- * switching tab / locking screen pauses, coming back resumes unless muted; preview never plays.
- */
+// ── Phần 1: nhớ "khách đã tắt nhạc" trong phiên (sessionStorage) ──
+const MUTED_KEY = "henuoc:music-muted";
+
+function readMuted(): boolean {
+  try {
+    return sessionStorage.getItem(MUTED_KEY) === "1";
+  } catch {
+    return false; // Safari ẩn danh / webview chặn storage → coi như chưa tắt
+  }
+}
+
+function writeMuted(muted: boolean) {
+  try {
+    if (muted) sessionStorage.setItem(MUTED_KEY, "1");
+    else sessionStorage.removeItem(MUTED_KEY);
+  } catch {
+    // không lưu được thì thôi, nhạc vẫn chạy bình thường
+  }
+}
+
 export function useMusic(src: string | undefined, opts?: { disabled?: boolean }): MusicController {
-  void src;
-  void opts;
-  return SILENT;
+  const disabled = !src || opts?.disabled === true;
+
+  // ── Phần 2: trạng thái ──
+  const audioRef = useRef<HTMLAudioElement | null>(null); // MỘT thẻ audio duy nhất
+  const mutedRef = useRef<boolean | null>(null); // null = chưa đọc sessionStorage
+  const wasPlayingRef = useRef(false); // trước khi ẩn tab có đang phát không
+  const [isPlaying, setPlaying] = useState(false);
+  const [isMuted, setMuted] = useState(false);
+
+  const isMutedNow = useCallback(() => {
+    if (mutedRef.current === null) mutedRef.current = readMuted();
+    return mutedRef.current;
+  }, []);
+
+  // ── Phần 3: tạo audio LƯỜI — chỉ khi khách chạm lần đầu ──
+  const getAudio = useCallback(() => {
+    if (disabled || !src) return null;
+    if (!audioRef.current) {
+      const audio = new Audio(src);
+      audio.preload = "none";
+      audio.loop = true;
+      // isPlaying lấy theo sự kiện thật của thẻ audio, không tự đoán
+      audio.onplay = () => setPlaying(true);
+      audio.onpause = () => setPlaying(false);
+      audio.onended = () => setPlaying(false);
+      audioRef.current = audio;
+    }
+    return audioRef.current;
+  }, [disabled, src]);
+
+  // ── Phần 4: unlock — gọi NGAY trong cú chạm mở phong bì ──
+  const unlock = useCallback(() => {
+    if (isMutedNow()) {
+      setMuted(true);
+      return;
+    }
+    const audio = getAudio();
+    if (!audio || !audio.paused) return; // gọi 2 lần không phát lại từ đầu
+    audio.play().catch(() => setPlaying(false)); // trình duyệt từ chối → im lặng, thiệp vẫn mở
+  }, [getAudio, isMutedNow]);
+
+  // ── Phần 5: toggle — nút ♪ ──
+  const toggle = useCallback(() => {
+    const audio = getAudio();
+    if (!audio) return;
+    if (!audio.paused) {
+      audio.pause();
+      mutedRef.current = true;
+      writeMuted(true);
+      setMuted(true);
+    } else {
+      mutedRef.current = false;
+      writeMuted(false);
+      setMuted(false);
+      audio.play().catch(() => setPlaying(false));
+    }
+  }, [getAudio]);
+
+  // ── Phần 6: chuyển tab / khoá màn hình ──
+  useEffect(() => {
+    if (disabled) return;
+    const onVisibility = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      if (document.hidden) {
+        wasPlayingRef.current = !audio.paused;
+        audio.pause();
+      } else if (wasPlayingRef.current && !isMutedNow()) {
+        audio.play().catch(() => setPlaying(false));
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [disabled, isMutedNow]);
+
+  // ── Phần 7: dọn dẹp khi rời trang hoặc đổi bài nhạc ──
+  useEffect(() => {
+    return () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.onplay = audio.onpause = audio.onended = null;
+        audio.pause();
+        audio.src = "";
+      }
+      audioRef.current = null;
+    };
+  }, [src]);
+
+  // ── Phần 8: trả về object ổn định ──
+  return useMemo<MusicController>(
+    () => (disabled ? SILENT : { isPlaying, isMuted, unlock, toggle }),
+    [disabled, isPlaying, isMuted, unlock, toggle],
+  );
 }
