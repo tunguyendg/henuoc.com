@@ -220,9 +220,9 @@ Quyết định của Tony (2026-10-22). Mọi theme đi đúng hành trình nà
 | 3 | **Sự kiện** | Xem giờ, địa điểm, âm lịch; chỉ đường; thêm vào lịch | Có token → chỉ sự kiện khách được mời |
 | 4 | **Đếm ngược** | Thấy còn bao lâu | Qua ngày cưới → ẩn hoặc đổi thành "Đã diễn ra" |
 | 5 | **Album** | Lướt ảnh, mở lightbox | Không có ảnh → bỏ phần này |
-| 6 | **RSVP** | Xác nhận đi / không đi, số người, lời nhắn | Chỉ khi có token |
+| 6 | **RSVP** | Xác nhận đi / không đi, số người, lời nhắn | Chỉ khi có token. Ngoại lệ: `mode="demo"` hiện form với submit giả để khách xem mẫu |
 | 7 | **Mừng cưới** | Bấm "Gửi quà mừng" → bottom sheet | Xem dưới |
-| 8 | **Cảm ơn** | Lời cảm ơn khép thiệp | Free: watermark ở đây |
+| 8 | **Cảm ơn** | Lời cảm ơn khép thiệp | Free: watermark ở cuối thiệp, **luôn hiện kể cả khi tắt phần Cảm ơn** |
 
 Phần bị tắt trong `sections` hoặc thiếu dữ liệu thì bỏ qua; thứ tự không đổi.
 

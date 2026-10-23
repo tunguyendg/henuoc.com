@@ -51,8 +51,9 @@ export interface GiftView {
   accountNumber: string;
   accountName: string;
   qrPayload: string; // EMVCo/VietQR payload; never render as text
-  // Generated ONLY on the server from `qrPayload` by our own code; never stored in DB, never accepted
-  // from input. Render as <img src="data:image/svg+xml;base64,…">, not dangerouslySetInnerHTML.
+  // Data URI `data:image/svg+xml;base64,…` produced ONLY on the server by `qrSvgDataUri(qrPayload)`
+  // (src/lib/qr.ts); never stored in DB, never accepted from input. Render as <img src>, never as
+  // inline SVG / dangerouslySetInnerHTML.
   qrSvg?: string;
 }
 

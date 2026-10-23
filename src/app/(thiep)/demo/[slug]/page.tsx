@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { demoContent } from "@/themes/_demo/content";
+import { getDemoContent } from "@/themes/_demo/content";
 import { getThemeEntry, themeSlugs } from "@/themes/registry";
 
 // Demo pages are never indexed and not listed in the SEO registry or sitemap.
@@ -26,7 +26,7 @@ export default async function Page({ params }: PageProps<"/demo/[slug]">) {
   // cacheComponents needs at least one param, so production simply prerenders a 404 for them.
   if (process.env.NODE_ENV === "production" && manifest.status !== "published") notFound();
 
-  const { default: Theme } = await entry.load();
+  const [{ default: Theme }, content] = await Promise.all([entry.load(), getDemoContent()]);
   // The registry wrapper validates options (falls back to defaults), so no parse here.
-  return <Theme content={demoContent} options={manifest.defaultOptions} mode="demo" />;
+  return <Theme content={content} options={manifest.defaultOptions} mode="demo" />;
 }

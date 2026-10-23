@@ -1,7 +1,7 @@
 # M1 — Themes
 
-> Bài này viết dần theo task. **Phần 1 (T-010): khung theme engine.** Các phần sau (hook dùng chung,
-> CSS scoping, next/font, motion, âm lịch) thêm khi làm tới.
+> Bài này viết dần theo task. **Phần 1 (T-010): khung theme engine.** **Phần 2 (T-013): primitive trải
+> nghiệm khách** (nằm cuối file). Các phần sau (CSS scoping, next/font, motion, âm lịch) thêm khi làm tới.
 
 ---
 
@@ -269,5 +269,292 @@ Dòng cuối là việc còn nợ, nhớ nó khi tới M3.
 
 5. Theme `placeholder` đang `status: "draft"`. Mô tả chuyện xảy ra từ lúc `next build` tới lúc có người gõ
    `/demo/placeholder` trên production. Nếu bỏ hẳn `generateStaticParams` thì sao (gợi ý: `cacheComponents`)?
+
+   > Trả lời:
+
+---
+
+## Phần 2 — Primitive trải nghiệm khách (T-013)
+
+Code cần mở song song:
+
+- `src/themes/_shared/`: `use-envelope.ts`, `Envelope.tsx`, `use-music.ts`, `use-client-env.ts`,
+  `use-countdown.ts`, `Gift.tsx`, `gift-cards.ts`, `GiftSheet.tsx`, `calendar.ts`, `scroll-lock.ts`, `Reveal.tsx`
+- `src/themes/placeholder/index.tsx` + `Experience.tsx`
+- `src/lib/url-allowlist.ts`, `src/lib/qr.ts`
+- `docs/07-THEMES.md` §3 (bảng primitive), §10 (hành trình khách)
+
+### 1. Sơ đồ luồng
+
+```mermaid
+sequenceDiagram
+  participant B as Browser (Zalo/Safari)
+  participant S as Next server (RSC)
+  participant D as Data (demoContent / sau này Prisma)
+  B->>S: GET /thiepcuoi/slug (hoặc /demo/placeholder)
+  S->>D: lấy content (+ guest nếu có token)
+  S->>S: Theme (Server Component): lọc event theo guest,<br/>isAllowedMusicUrl, <Gift> → toGiftCards (bỏ qrPayload)
+  S-->>B: HTML đầy đủ + RSC payload (chỉ props đã lọc cho client leaf)
+  Note over B: Chưa hydrate: khách đọc được cả thiệp (không có overlay)
+  B->>B: Hydrate: useHydrated false→true → Envelope hiện, focus nút "Mở thiệp"
+  B->>B: Khách CHẠM "Mở thiệp" → open(): music.unlock() ĐỒNG BỘ → dispatch OPEN
+  B->>B: animation → timer 'opening'→'open' → overlay biến mất, focus về <main>
+  B->>B: Khách bấm "Gửi quà mừng" → GiftSheet mount (portal), lúc này STK mới vào DOM
+```
+
+Chưa có DB thật: bước "lấy content" vẫn là `demoContent`. Điểm quan trọng của sơ đồ: **mọi quyết định bảo mật
+(lọc event, lọc QR, check URL) xảy ra ở bước Server trước khi serialize**; browser chỉ nhận cái đã lọc.
+
+### 2. Tám khái niệm
+
+#### 2.1. User activation và autoplay: `onOpen()` phải chạy đồng bộ đầu handler
+
+**Là gì.** Trình duyệt chỉ cho `audio.play()` có tiếng khi trang đang có *user activation*: một cú chạm/click
+thật vừa xảy ra và "còn hạn" (Safari/webview Zalo khắt khe nhất: phải gọi `play()` ngay trong call stack của
+event handler). Qua `await`, `setTimeout` hay sau animation là hết hạn, `play()` bị từ chối.
+
+```ts
+// src/themes/_shared/use-envelope.ts:38-43
+const open = useCallback(() => {
+  // FIRST and synchronous: audio.play() is only allowed while the tap is still the "active user gesture"...
+  onOpen?.();
+  dispatch({ type: "OPEN" });
+}, [onOpen]);
+```
+
+`onOpen` chính là `music.unlock` do `Experience.tsx:27` truyền xuống `<Envelope onOpen={music.unlock}>`. Thứ tự
+trong `open()` không phải sở thích: gọi `unlock()` **trước** `dispatch`. `dispatch` chỉ xếp hàng update, nhưng
+nếu mày chèn `await` hay `setTimeout(unlock, 600)` ("đợi animation xong rồi phát cho mượt") thì nhạc câm trên
+iPhone.
+
+**Sai thì hỏng gì.** Trên Chrome desktop test vẫn nghe nhạc (autoplay policy dễ hơn, hoặc đã tương tác trước đó),
+lên Zalo iOS thì im lặng, và `play()` reject âm thầm. Lỗi chỉ lộ trên máy thật: QA §8 bắt buộc test Zalo iOS.
+
+#### 2.2. `useSyncExternalStore` với server snapshot khác client
+
+**Vấn đề.** Cần giá trị chỉ có ở browser (đã hydrate chưa, giờ hiện tại, `prefers-reduced-motion`). Cách quen
+tay: `useState(false)` + `useEffect(() => setX(true), [])`. Nó chạy, nhưng render thêm một lần và lint
+`react-hooks/set-state-in-effect` kêu. Còn nếu đọc thẳng `Date.now()`/`window.matchMedia` trong render thì
+HTML server khác HTML client → **hydration mismatch**.
+
+**Cách mình làm.** `useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot)`: React dùng
+`getServerSnapshot` khi SSR **và cả lúc hydrate**, rồi mới đổi sang client snapshot và render lại.
+
+```ts
+// src/themes/_shared/use-client-env.ts:9-15
+export function useHydrated(): boolean {
+  return useSyncExternalStore(noopSubscribe, () => true, () => false);
+}
+// src/themes/_shared/use-countdown.ts:27-29, 36
+const getNowSeconds = () => Math.floor(Date.now() / 1000);
+const getServerNow = () => null;
+const nowSeconds = useSyncExternalStore(subscribeClock, getNowSeconds, getServerNow);
+```
+
+Hai chi tiết đáng nhớ trong `use-countdown.ts`:
+
+- Snapshot là **giây nguyên** (dòng 27), không phải `Date.now()` mili-giây. React so snapshot bằng `Object.is`;
+  trả giá trị đổi mỗi lần gọi thì React thấy store "luôn đổi" và render vô hạn.
+- `subscribeClock` (dòng 6-24) chỉ chạy `setInterval` khi tab visible, `visibilitychange` quay lại thì tick
+  ngay. Tab nền trong Zalo không đốt timer.
+
+**Sai thì hỏng gì.** Đọc `Date.now()` trong render: server render "12 ngày 03:00:05", client hydrate ra
+"12 ngày 03:00:06" → cảnh báo mismatch, React bỏ HTML server và dựng lại. Hook trả `null` ở server nên theme phải
+render chỗ giữ chỗ khi `null`.
+
+#### 2.3. Ranh giới Server/Client là ranh giới serialize
+
+Mọi props đi từ Server Component sang Client Component đều bị **serialize vào RSC payload**, tức nằm trong
+HTML gửi cho khách (xem được bằng View Source). Hệ quả ba tầng:
+
+**(a) Lọc ở server, trước ranh giới.** `Gift.tsx` là Server Component, map `GiftView → GiftCard` rồi mới đưa
+cho client leaf:
+
+```ts
+// src/themes/_shared/gift-cards.ts:3-4, 35-42
+// ...Deliberately drops `qrPayload` (never rendered) so it is not serialized into the RSC payload.
+{ id, side, bankName, accountName, accountNumber, qrSvg: isQrDataUri(gift.qrSvg) ? gift.qrSvg : undefined }
+// src/themes/_shared/Gift.tsx:19  const cards = toGiftCards(gifts);
+```
+
+Nếu mày đưa thẳng `gifts` vào `GiftButton` (`"use client"`), chuỗi VietQR (`qrPayload`, có STK) nằm trong
+payload dù UI không vẽ nó. `"use client"` không phải hàng rào bảo mật; chỉ có *không đưa field xuống* mới là hàng rào.
+
+**(b) Hàm không đi qua ranh giới.** `music.unlock` là hàm, Server Component không thể truyền hàm vào Client
+Component. Nên mới có `Experience.tsx` (dòng 22-31): một client leaf chứa **cả** `useMusic`, `<Envelope>`,
+`<MusicToggle>` để hook và các nút dùng chung một cây client. Phần bìa (tên + ngày) vẫn render ở server và vào
+leaf qua `children` (`index.tsx:58-65`). Pattern: *client leaf nhỏ, nhận server content qua children*.
+
+**(c) Token khách không xuống client.** `index.tsx:52-53` ghi rõ: truyền từng field (`maxAttendees`,
+`rsvp`, `invitedEventIds`) vào `RsvpForm`, không truyền cả `guest` vì `guest.token` nằm trong đó.
+
+**Sai thì hỏng gì.** Lộ STK/QR cho bot cào, lộ token khách = ai có token đều RSVP thay được. Chú ý
+`docs/07-THEMES.md` §10: tự `gifts` nằm trong props server là chấp nhận được (STK cặp đôi chủ động đưa), nhưng
+`qrPayload` thì không cần thiết nên cắt.
+
+#### 2.4. Progressive enhancement: Envelope và Reveal chỉ ẩn nội dung sau hydrate
+
+Nguyên tắc: HTML từ server phải **đọc được khi không có JS**. Phần "trang trí" (overlay phong bì, hiệu ứng
+fade) chỉ được che nội dung *sau khi* JS chắc chắn chạy.
+
+- `Envelope.tsx:69`: `if (!hydrated || envelope.isOpen) return null;` → server không render overlay. JS lỗi/tắt
+  thì khách đọc thẳng thiệp. Đổi lại: màn hình chậm sẽ thấy nội dung nháy một lúc trước khi overlay hiện
+  (trade-off ghi ở comment dòng 24-27).
+- `Reveal.tsx:29`: HTML server luôn hiện đủ; chỉ trong `useEffect`, và chỉ với phần tử còn dưới màn hình
+  (dòng 27), mới gán `el.dataset.reveal = "hidden"` thẳng lên DOM. Không dùng state → không render thừa, và
+  không dùng IntersectionObserver / bật reduced-motion thì nội dung cứ hiện (dòng 25). Cleanup (dòng 42) trả
+  về `"shown"` để không bỏ phần tử kẹt ở trạng thái ẩn.
+
+**Sai thì hỏng gì.** Nếu `Reveal` render `opacity-0` từ server: JS fail → cả album vô hình vĩnh viễn, Google
+cũng thấy trang rỗng-ish. Nếu overlay phong bì render từ server mà JS không chạy: khách bị chặn ngoài thiệp,
+không có nút nào bấm được.
+
+#### 2.5. Validate URL an toàn: `new URL()` tự "sửa" input
+
+Đây là chỗ trả nợ dòng cuối bảng bảo mật Phần 1 (URL user nhập). `src/lib/url-allowlist.ts` chặn theo 3 nguyên tắc:
+
+1. **Kiểm chuỗi gốc *trước* khi parse.** `new URL("https://goo\tgl.com")` âm thầm bỏ tab/newline, và coi `\`
+   như `/`. Nếu chỉ kiểm `url.hostname` sau parse thì chuỗi bẩn vẫn "sạch". Vì vậy dòng 48 chạy
+   `SAFE_CHARS` (ASCII in được, không khoảng trắng, không `\`) trên **chuỗi gốc**, và dòng 49 yêu cầu đúng
+   `https://` ở đầu.
+2. **So host chính xác, không `endsWith/includes`.** `(MAP_HOSTS as readonly string[]).includes(url.hostname)`
+   (dòng 82): so với danh sách cố định. `endsWith("google.com")` sẽ cho qua `evilgoogle.com`. Parser đã hạ chữ
+   thường hostname nên `GOOGLE.com` vẫn khớp, còn `user:pass@` (dòng 57) và port lạ (dòng 58) bị loại.
+3. **Open redirect trên host đáng tin.** `maps.google.com/url?q=https://evil.com` là link *của Google* nhưng
+   Google chuyển tiếp khách sang evil.com. Host trong allowlist chưa đủ, phải ép pathname:
+
+```ts
+// src/lib/url-allowlist.ts:83-85
+if (url.hostname === "maps.app.goo.gl") return true;
+if (url.pathname === "/maps" || url.pathname.startsWith("/maps/")) return true;
+return url.pathname === "/" && MAP_HOSTS_ROOT_ALLOWED.includes(url.hostname);
+```
+
+Kết hợp `.transform((v) => new URL(v).href)` (dòng 109): sau khi *đã validate bằng chuỗi gốc*, mới lưu dạng đã
+chuẩn hoá. Thứ tự "kiểm chuỗi gốc → parse → so sánh → lưu dạng chuẩn" là mấu chốt.
+
+Dùng ở đâu: `index.tsx:41-42` (`isAllowedMusicUrl` → không hợp lệ thì không có `musicSrc`, ♪ biến mất),
+`MapButton` cho `mapUrl`. `isInternalPath` (dòng 33-39) chặn `//host`, `..`, `%2e`.
+
+**Sai thì hỏng gì.** `javascript:` / link phishing trong nút "Chỉ đường", khách bấm từ thiệp của mình → mất uy tín
+cả nền tảng.
+
+#### 2.6. SVG trong `<img>` vs inline: vì sao `qrSvg` là data URI
+
+`src/lib/qr.ts:20-21` sinh SVG bằng thư viện `qrcode` rồi trả `data:image/svg+xml;base64,...`. Comment dòng 9-11
+nói lý do: SVG nạp qua `<img>` **không bao giờ chạy script** (và không tải tài nguyên ngoài), còn SVG inline /
+`dangerouslySetInnerHTML` thì `<script>`, `onload=` chạy với quyền của trang.
+
+Phòng thủ thành hai lớp:
+
+- Sinh: `qr.ts` có `import "server-only"` (dòng 1, import từ client là build fail) và giới hạn
+  `MAX_QR_PAYLOAD_LENGTH` 512 (dòng 17).
+- Dùng: `isQrDataUri` (`gift-cards.ts:25-27`) chỉ nhận đúng mẫu `data:image/svg+xml;base64,[A-Za-z0-9+/=]+`.
+  Giá trị khác (url lạ, SVG thô) bị `toGiftCards` bỏ, sheet hiện chữ "Chưa có mã QR".
+
+`GiftSheet.tsx:231-238` render bằng `<Image ... unoptimized>`: `unoptimized` vì data URI không đi qua optimizer
+của Next, và vì vậy cũng không phình cache trên host.
+
+**Sai thì hỏng gì.** Nếu cho SVG từ input user vào inline = XSS lưu vĩnh viễn trên thiệp thật, chạy trên máy mọi
+khách. Đó là lý do comment cấm "accept it from input".
+
+#### 2.7. Bài học: test xanh mà code sai (`"\;"` trong calendar.ts)
+
+Escape TEXT của iCalendar (RFC 5545) cần chèn **dấu `\` thật** trước `;` và `,`. Trong string JS:
+
+```ts
+// src/themes/_shared/calendar.ts:30-33
+.replace(/\\/g, "\\\\")   // \ → \\
+.replace(/;/g, "\\;")     // ; → \;   (đúng)
+// SAI kiểu hay gặp:  "\;"  — trong JS `"\;"` CHÍNH LÀ ";" (escape lạ bị bỏ dấu \)
+```
+
+`"\;"` không báo lỗi, không cảnh báo, nó chỉ là `";"`. Hàm "replace `;` bằng `;`" không làm gì cả. Nguy hiểm
+nhất là test cũng viết `toBe("a\;b")` bằng chính cú pháp sai đó: **hai vế sai giống nhau nên test xanh**. File
+`.ics` thật bị dính `LOCATION:Sảnh A; Tầng 2` → Apple/Google Calendar cắt địa chỉ tại dấu `;`.
+
+Cách mình khoá: test viết kỳ vọng ở dạng **dữ liệu cuối** (output mà RFC yêu cầu), nhìn thấy `\\;` rõ ràng:
+`calendar.test.ts:33` (`"a\\\\b\\;c\\,d\\ne\\nf"`) và `:66` (`"LOCATION:Sảnh A\\; Tầng 2\\, 12 Lê Lợi\\, Q1\r\n"`).
+Quy tắc rút ra: *test cần ví dụ viết độc lập với cách code sinh ra; chỗ có escape thì in output ra mắt nhìn,
+hoặc test round-trip bằng parser thật.* Test xanh chỉ chứng minh code khớp test, không chứng minh khớp thế giới thật.
+
+#### 2.8. Bài tập của Tony: `useMusic` (🔴 tự code)
+
+`src/themes/_shared/use-music.ts` hiện là hàm rỗng trả `SILENT`; Tony tự viết (AGENTS.md §7, agent không viết
+hộ). Interface đã cố định (`MusicController`: `isPlaying`, `isMuted`, `unlock`, `toggle`). Checklist rút từ TODO
+dòng 19-45:
+
+1. `src` rỗng hoặc `opts.disabled` (preview) → trả controller câm, **không tạo `Audio`**.
+2. Một `new Audio(src)` duy nhất, tạo lười trên client (`useRef`, không trong render/SSR), `preload="none"`,
+   `loop = true`.
+3. `unlock()`: nếu chưa mute thì gọi `audio.play()` **ngay**, trước mọi `await`/`setTimeout`. Bắt reject của
+   Promise → `isPlaying=false`, không ném lỗi. Gọi 2 lần không phát lại từ đầu.
+4. `toggle()`: đang phát → pause + nhớ muted; đang tắt → play (cú bấm này cũng là gesture) + xoá muted.
+5. Nhớ muted trong `sessionStorage` (key `henuoc:music-muted`), bọc `try/catch` (Safari private mode ném lỗi).
+   Muted thì `unlock()` không phát.
+6. `visibilitychange`: hidden → pause (nhớ đang phát); visible → phát tiếp **chỉ khi** trước đó đang phát và chưa mute.
+7. `isPlaying` đồng bộ qua event `play`/`pause`/`ended` của chính element, không tin cờ tự giữ.
+8. Cleanup khi unmount / đổi `src`: gỡ listener, `pause()`, `audio.src = ""`.
+9. Trả object ổn định (`useMemo`/`useCallback`) để `Envelope` (`onOpen`) và `MusicToggle` không render thừa. Đặc
+   biệt: `useEnvelope.open` có `onOpen` trong deps (`use-envelope.ts:43`).
+
+Gợi ý tự kiểm: ý 9 liên quan thẳng bài 2.1 (hàm `unlock` đổi tham chiếu mỗi render thì `open` cũng đổi). Kẹt thì
+dán code + lỗi cho Claude, đừng xin viết hộ. QA bắt buộc: Zalo iOS nghe được ngay khi chạm; khoá màn hình rồi
+mở lại; preview không phát.
+
+### 3. Production khác bài học
+
+- **Cache/CDN:** HTML thiệp có `guest` (token) phải **không** bị cache dùng chung; trang chung `/thiepcuoi/[slug]`
+  thì cache được. Khi làm routing M3, đừng để bản có salutation của khách A lọt vào cache phục vụ khách B.
+- **Webview Zalo/Facebook** khác Safari/Chrome: autoplay chặt, `navigator.clipboard` có thể thiếu (đó là lý do
+  `GiftSheet.tsx:212-219` có fallback chọn chữ), `sessionStorage` có thể ném lỗi.
+- **Nhạc nằm ngoài host AZDIGI:** MP3 ≤ 3MB trên R2 (`media.henuoc.com`, `MEDIA_HOSTS`), `preload="none"` để
+  không tốn băng thông chưa chạm. Domain R2 chưa chốt, đổi ở một chỗ (`url-allowlist.ts:7`).
+- **Allowlist là nguồn sự thật ở server.** Trong dev dùng `/audio/...` nội bộ, production dùng R2: hai nhánh
+  đều qua `isAllowedMediaUrl`, đừng mở thêm host "tạm" rồi quên.
+- **Cạm bẫy `sessionStorage`:** "đã tắt nhạc" chỉ nhớ trong phiên tab. Khách đóng mở lại là nhạc có thể phát
+  lại khi chạm mở phong bì, đúng thiết kế (§10).
+- **RAM host:** các primitive đều nhẹ (không thư viện animation), `qrSvgDataUri` sinh lúc lấy dữ liệu, không
+  tạo mỗi request trên client.
+
+### 4. Bảo mật
+
+| Lỗ hổng có thể xảy ra | Code mình chặn ở đâu |
+|---|---|
+| Lộ `qrPayload` (chứa STK) và field thừa khác qua RSC payload | `toGiftCards` chỉ copy field cần (`gift-cards.ts:30-45`), `Gift.tsx:19` chạy ở server |
+| Lộ `guest.token` vì đưa cả `guest` vào client | `index.tsx:52-53,171-182`: truyền từng field; `Experience` không nhận `guest` |
+| `javascript:`/phishing/open redirect qua URL map, nhạc, ảnh | `url-allowlist.ts:26,48-60,83-85`; `index.tsx:41-42` bỏ nhạc không hợp lệ |
+| XSS qua SVG (QR) | `<img>`/`Image` không chạy script (`qr.ts:9-11`), `isQrDataUri` (`gift-cards.ts:25`), `server-only` (`qr.ts:1`) |
+| Chèn dòng lạ vào file `.ics` (`\r\n` trong tên địa điểm → thêm thuộc tính) | `escapeText` đổi newline thành `\n` (`calendar.ts:33`); `icsFileName` lọc ký tự tên file (`:113`) |
+| Tên file `.ics` chứa `../` | `calendar.ts:113` chỉ giữ `[a-zA-Z0-9-_]` |
+| Overlay chặn khách khi JS lỗi (từ chối dịch vụ tự gây) | Overlay chỉ render sau hydrate (`Envelope.tsx:69`), timer fallback kẹt "opening" (`use-envelope.ts:49-53`) |
+| STK bị cào bởi bot | **Chưa chặn hoàn toàn**: sheet chỉ mount STK khi mở (`GiftSheet.tsx:38`), nhưng `gifts` vẫn có trong payload (ghi chú `docs/07` §10). Muốn chặn: tải `gifts` khi bấm + rate limit, làm sau |
+
+### 5. Câu hỏi tự kiểm tra
+
+1. Vì sao `onOpen?.()` đứng trước `dispatch` và cấm bọc trong `setTimeout`/`await`? Kể một tình huống test trên
+   Chrome desktop thấy ổn nhưng khách Zalo iOS thì không nghe nhạc.
+
+   > Trả lời:
+
+2. Server render countdown, client hydrate sau đó 3 giây. Vì sao `useSyncExternalStore(..., getServerNow = () => null)`
+   không bị hydration mismatch, còn `Math.floor(Date.now()/1000)` đặt thẳng trong render thì bị? Vì sao snapshot
+   phải là giây nguyên chứ không phải `Date.now()`?
+
+   > Trả lời:
+
+3. `GiftButton` là `"use client"`. Nếu `Gift.tsx` truyền thẳng `gifts` (có `qrPayload`) xuống, dù UI không vẽ
+   `qrPayload` thì có vấn đề gì? Vì sao cần `Experience.tsx` làm client leaf riêng thay vì để `index.tsx` gọi
+   `useMusic` trực tiếp?
+
+   > Trả lời:
+
+4. Cho `https://maps.google.com/url?q=https://evil.com`. Host nằm trong `MAP_HOSTS`, vậy `isAllowedMapUrl` chặn nó
+   ở dòng nào và vì sao? Rồi giải thích vì sao phải chạy `SAFE_CHARS` trên chuỗi gốc **trước** `new URL()`.
+
+   > Trả lời:
+
+5. `"a\;b"` trong JS bằng gì? Vì sao một test viết `expect(escapeText("a;b")).toBe("a\;b")` sẽ xanh dù hàm
+   escape sai, và mày làm gì để test không bị "xanh giả" kiểu này?
 
    > Trả lời:

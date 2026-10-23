@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-22 (T-010 xong: typecheck ✅ · lint ✅ · format ✅ · test 190/190 · build ✅)
+> Cập nhật lần cuối: 2026-10-23 (T-013 xong: typecheck ✅ · lint ✅ · format ✅ · test 412/412 · build ✅)
 
 ## Đang ở đâu
 
@@ -24,6 +24,7 @@
 - T-050 (phần data + tool public): `src/data/checklist.ts` 42 việc theo 10 mốc (id khoá bằng snapshot test) + `src/lib/checklist-schedule.ts` (tính hạn theo ngày, giờ VN). Công cụ miễn phí: `/cong-cu` (hub), `/cong-cu/checklist-dam-cuoi` (chọn ngày → tự xếp lịch, tick lưu localStorage `henuoc:checklist:v1`, in được), `/cong-cu/mau-loi-moi-dam-cuoi` (5 kiểu · 13 mẫu, sao chép). Có trong sổ SEO, footer "Cẩm nang & công cụ", link từ 2 bài cẩm nang, CTA `/tao-thiep`
 - Admin mock `/admin` (Tổng quan · Người dùng · Đám cưới · Mẫu thiệp): `src/features/admin/*` qua `repos.admin`, email luôn che (`mask.ts`), nút nâng gói / công tắc mẫu là nút giả phía client, noindex + robots disallow, **`notFound()` ở production** (`features/admin/guard.ts`)
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
+- T-013 primitives `src/themes/_shared/` (Envelope, MusicToggle, useCountdown, AddToCalendar, MapButton, Gift + GiftSheet, Reveal, Watermark, RsvpForm submit giả) + `src/lib/url-allowlist.ts` + `src/lib/qr.ts` (dep `qrcode` 1.5.4) + nhạc demo CC0 `public/audio/` — ghép đủ vào `/demo/placeholder`, 412 test
 
 ## 🔨 Đang làm
 
@@ -31,9 +32,10 @@
 
 ## ⏭️ Tiếp theo (frontend)
 
-1. T-013 primitives `src/themes/_shared/` → T-015/T-016 theme thật (hong-pastel, song-hy)
-2. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
-3. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
+1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
+2. T-014/T-015/T-016 theme thật (hong-pastel, song-hy, ban-tin) — chờ spec trải nghiệm Tony chốt
+3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
+4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
 ## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
 
@@ -48,6 +50,10 @@
 - `NEXT_PUBLIC_ALLOW_INDEXING` để trống (noindex toàn site). Chỉ bật ngày launch. Nhớ thêm vào bước Build của `release.yml` (đang gán cứng env).
 - Zip release phải build bằng workflow, KHÔNG build trên Mac (standalone có thể copy `.env.local` vào bản build).
 - Contract theme (`src/themes/types.ts`): `qrSvg` chỉ sinh ở server, không lưu DB, render bằng `<img data:…>`; URL (map/ảnh/nhạc) zod ép https + allowlist; không truyền cả object `guest` (có token) xuống Client Component; cấm `dangerouslySetInnerHTML` trong `src/themes/**`.
+- `MEDIA_HOSTS = ["media.henuoc.com"]` trong `url-allowlist.ts` là giả định — sửa khi chốt domain R2, KHÔNG nới thành so hậu tố. `maps.app.goo.gl` cho mọi path (link rút gọn Google).
+- STK nằm trong RSC payload trang thiệp (sheet chỉ ẩn giao diện, §10) — chấp nhận; muốn chống cào → tải gifts khi bấm + rate limit.
+- `/api/rsvp` chưa có: `use-rsvp-form.ts` submit giả mọi mode. Khi làm: token không qua props client, rate limit, server dựng ctx từ DB.
+- Máy dev đặt `NODE_TLS_REJECT_UNAUTHORIZED=0` (tắt kiểm chứng chỉ cho mọi lệnh Node/npm) → Tony gỡ khỏi shell profile.
 - Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
 - VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex. Server Action nhận `bankBin` phải check `findBankByBin` (đừng tin dropdown).

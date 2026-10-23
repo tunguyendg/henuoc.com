@@ -1,4 +1,7 @@
+import "server-only"; // imports the QR renderer, which must never reach a client bundle
+import { cache } from "react";
 import { findBankByBin } from "@/data/banks";
+import { qrSvgDataUri } from "@/lib/qr";
 import { buildVietQrPayload } from "@/lib/vietqr";
 import type { GiftView, ImageView, WeddingContent } from "../types";
 
@@ -133,6 +136,9 @@ export const demoContent: WeddingContent = {
       lunarLabel: "Ngày 18 tháng 9 năm Đinh Mùi",
       venue: "Trung tâm tiệc cưới Mẫu",
       address: "88 Đại lộ Hạnh Phúc, Phường Thử, TP. Demo",
+      // Fictional address: the search link only exists to show the "Chỉ đường" button.
+      mapUrl:
+        "https://www.google.com/maps/search/?api=1&query=88+%C4%90%E1%BA%A1i+l%E1%BB%99+H%E1%BA%A1nh+Ph%C3%BAc",
       side: "nha-trai",
     },
   ],
@@ -155,6 +161,21 @@ export const demoContent: WeddingContent = {
     rsvp: true,
     thanks: true,
   },
+  music: { src: "/audio/demo-piano.m4a", title: "Demo piano (CC0)" },
   weddingDate: "2027-10-17T11:00:00.000Z",
-  showWatermark: false,
+  showWatermark: true,
 };
+
+/**
+ * Demo content with `qrSvg` filled in from each gift's `qrPayload` (server-side, like production).
+ * `cache` dedupes within one render pass; the QR output is deterministic so it is also safe to reuse.
+ */
+export const getDemoContent = cache(async (): Promise<WeddingContent> => {
+  const gifts = await Promise.all(
+    demoContent.gifts.map(async (gift) => ({
+      ...gift,
+      qrSvg: await qrSvgDataUri(gift.qrPayload),
+    })),
+  );
+  return { ...demoContent, gifts };
+});
