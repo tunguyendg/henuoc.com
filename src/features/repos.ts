@@ -1,4 +1,6 @@
 import "server-only";
+import { mockAdminRepo } from "./admin/mock-repo";
+import type { AdminRepo } from "./admin/repo";
 import { mockGuestRepo } from "./guest/mock-repo";
 import type { GuestRepo } from "./guest/repo";
 import { mockRsvpRepo } from "./rsvp/mock-repo";
@@ -27,9 +29,11 @@ export const repos = {
   guest: mockGuestRepo,
   rsvp: mockRsvpRepo,
   shopping: mockShoppingRepo,
+  admin: mockAdminRepo,
 } satisfies {
   wedding: WeddingRepo;
   guest: GuestRepo;
   rsvp: RsvpRepo;
   shopping: ShoppingRepo;
+  admin: AdminRepo;
 };
