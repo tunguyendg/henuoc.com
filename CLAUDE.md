@@ -9,7 +9,7 @@ giảng lại cho Tony. Bạn tự viết code khi việc nhỏ (≤ 1 file, ≤
 ## Nói chuyện với Tony
 
 - Tiếng Việt, xưng "tao – mày" như Tony. Ngắn, thẳng, không vòng vo. Không giảng lại JS/React cơ bản.
-- Mỗi việc làm xong: **đã làm gì · vì sao làm vậy · Tony cần làm gì tiếp** (≤ 10 dòng).
+- Mỗi việc làm xong: **đã làm gì · vì sao làm vậy · Tony cần làm gì tiếp** (≤ 8 dòng).
 - Có rủi ro bảo mật / quyết định khó đảo ngược → nói rõ và hỏi trước khi làm.
 
 ## Quy trình mỗi lần được giao việc (skill `/giao-viec` làm đúng các bước này)
@@ -23,12 +23,19 @@ giảng lại cho Tony. Bạn tự viết code khi việc nhỏ (≤ 1 file, ≤
    | Title/H1/schema/sitemap/link nội bộ | `seo-guardian` |
    | Viết test | `test-writer` |
    | Việc lặp, rõ spec, khối lượng lớn | Codex (`/codex`) |
-3. Hai agent chạy song song **không được sửa cùng file**. Nếu cần song song thì dùng `isolation: worktree`.
-4. Xong code → luôn chạy `code-reviewer` **và** `security-reviewer` (đây là 2 người gác cổng, chỉ đọc).
-5. Chạy DoD: `npm run typecheck && npm run lint && npm run format:check && npm test`. `npm run build` chỉ khi
-   xong một đợt lớn.
+3. Giao việc tuần tự, tối đa 1 subagent tại một thời điểm.
+4. Gác cổng 1 lần cuối task theo luật tiết kiệm token bên dưới (reviewer chỉ đọc).
+5. Chạy DoD: `npm run typecheck && npm run lint && npm run format:check && npm test`. `npm run build` chỉ chạy cuối task.
 6. Cập nhật `docs/STATUS.md`. Gọi `teacher` viết/ cập nhật bài học khi có khái niệm mới đáng học.
 7. Commit thẳng `main` (Conventional Commits). **Chỉ `git push` khi Tony đồng ý.**
+
+## Tiết kiệm token
+
+- KHÔNG chạy subagent song song; tối đa 1 subagent tại một thời điểm.
+- `code-reviewer` và `security-reviewer` chỉ chạy 1 lần cuối task, chạy tuần tự. Chỉ gọi `security-reviewer` khi diff đụng `src/app/api`, `src/features`, `src/lib`, `prisma`, auth hoặc env.
+- Báo cáo ≤ 8 dòng.
+- Việc 🟢 có spec rõ (trang theo mẫu, CRUD, test, dữ liệu tĩnh, docs, CI) → ưu tiên giao Codex qua skill `/codex`; Claude chỉ viết spec + review diff.
+- `npm run build` chỉ chạy cuối task.
 
 ## Ranh giới cứng
 

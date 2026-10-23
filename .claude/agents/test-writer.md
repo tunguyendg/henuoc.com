@@ -1,5 +1,6 @@
 ---
 name: test-writer
+model: sonnet
 description: Viết test Vitest (unit, logic, bảo mật IDOR) và Playwright e2e cho henuoc.com. Dùng sau khi có code mới chưa có test, hoặc khi cần test chứng minh một lỗ hổng.
 tools: Read, Write, Edit, Glob, Grep, Bash
 color: yellow

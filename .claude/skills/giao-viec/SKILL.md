@@ -16,13 +16,12 @@ Làm đúng thứ tự, mỗi bước báo Tony 1 dòng:
    (> 10 file, đổi schema, thêm dependency, đổi route) → hỏi Tony duyệt kế hoạch trước. Việc rõ ràng → làm luôn.
 3. **Giao việc**: gọi subagent theo bảng trong `CLAUDE.md`. Prompt cho agent phải tự đủ: mục tiêu, file được sửa,
    file cấm đụng, tiêu chí xong. Việc lặp/rõ spec có thể dùng skill `/codex`.
-4. **Gác cổng**: chạy `code-reviewer` và `security-reviewer` trên diff. Có 🔴 hoặc CHẶN COMMIT → giao lại agent
-   sửa, rồi review lại (tối đa 2 vòng, sau đó báo Tony).
+4. Gác cổng 1 lần cuối task theo luật tiết kiệm token trong CLAUDE.md.
 5. **Kiểm tra**: `npm run typecheck && npm run lint && npm run format:check && npm test`.
 6. **Ghi sổ**: cập nhật `docs/STATUS.md` (Đã xong / Đang làm / Tiếp theo / Rủi ro). Có khái niệm mới → gọi `teacher`.
 7. **Commit** thẳng `main` bằng Conventional Commit. **Hỏi Tony trước khi `git push`.**
 
-Báo cáo cuối (≤ 15 dòng):
+Báo cáo cuối (≤ 8 dòng):
 - ✅ Đã làm (file chính)
 - 🔐 Bảo mật: kết quả security-reviewer, giải thích 1 câu
 - 🧱 Cấu trúc: file mới nằm đâu, vì sao ở đó

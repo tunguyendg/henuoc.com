@@ -1,5 +1,6 @@
 ---
 name: backend-builder
+model: sonnet
 description: Viết phần server của henuoc.com — Server Action, Route Handler, Prisma query, lib (auth, crypto, R2, ACCESSTRADE). Dùng khi việc chạm src/features, src/lib, src/app/api, prisma/.
 tools: Read, Write, Edit, Glob, Grep, Bash
 color: blue

@@ -1,5 +1,6 @@
 ---
 name: seo-guardian
+model: sonnet
 description: Chuyên gia SEO của henuoc.com. Dùng khi thêm/sửa trang công khai, đổi title/H1/từ khoá, link nội bộ, schema, sitemap, robots; hoặc để audit SEO trước khi launch.
 tools: Read, Edit, Glob, Grep, Bash
 color: green

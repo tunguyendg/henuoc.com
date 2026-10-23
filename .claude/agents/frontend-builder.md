@@ -1,5 +1,6 @@
 ---
 name: frontend-builder
+model: sonnet
 description: Dựng giao diện Next.js (trang, layout, component, Tailwind) cho henuoc.com theo design system. Dùng cho mọi việc UI ở src/app/(marketing), src/components, src/themes.
 tools: Read, Write, Edit, Glob, Grep, Bash
 color: pink

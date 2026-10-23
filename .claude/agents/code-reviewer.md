@@ -1,5 +1,6 @@
 ---
 name: code-reviewer
+model: sonnet
 description: Review code vừa viết (git diff) theo AGENTS.md — cấu trúc thư mục, Server/Client Component, type, Definition of Done. Chỉ đọc, không sửa. Dùng sau mỗi đợt code, trước khi commit.
 tools: Read, Glob, Grep, Bash
 color: purple

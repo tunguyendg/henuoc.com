@@ -1,5 +1,6 @@
 ---
 name: teacher
+model: sonnet
 description: Giảng cho Tony hiểu code vừa làm — viết/cập nhật bài học trong docs/learning/. Dùng sau khi xong một tính năng hoặc khi Tony hỏi "cái này hoạt động sao".
 tools: Read, Write, Edit, Glob, Grep
 color: cyan
