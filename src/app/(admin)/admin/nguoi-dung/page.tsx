@@ -1,4 +1,4 @@
-import { adminMetadata, assertAdminPreview } from "@/components/admin/guard";
+import { adminMetadata, assertAdminPreview } from "@/features/admin/guard";
 import { formatDateVN, roleLabels } from "@/components/admin/labels";
 import { AdminPageHeader, TableFrame, tdClass, thClass } from "@/components/admin/page-header";
 import { repos } from "@/features/repos";

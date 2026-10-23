@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FlaskConical } from "lucide-react";
 import { AdminNav } from "@/components/admin/admin-nav";
-import { assertAdminPreview } from "@/components/admin/guard";
+import { assertAdminPreview } from "@/features/admin/guard";
 import { LogoTile } from "@/components/site/logo";
 
-// No auth yet: dev-only mock. Pages repeat the guard (see components/admin/guard.ts).
+// No auth yet: dev-only mock. Pages repeat the guard (see features/admin/guard.ts).
 export const metadata: Metadata = {
   title: { default: "Quản trị", template: "%s · Hẹn Ước" },
   robots: { index: false, follow: false },

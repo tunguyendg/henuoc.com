@@ -1,4 +1,4 @@
-import { adminMetadata, assertAdminPreview } from "@/components/admin/guard";
+import { adminMetadata, assertAdminPreview } from "@/features/admin/guard";
 import { tierLabels } from "@/components/admin/labels";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { ThemeSwitch } from "@/components/admin/theme-switch";

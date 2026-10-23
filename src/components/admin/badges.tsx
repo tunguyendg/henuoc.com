@@ -19,7 +19,7 @@ export function PlanBadge({ plan }: { plan: Plan }) {
 const statusTone = {
   DRAFT: { tone: "neutral", icon: FilePen },
   PUBLISHED: { tone: "success", icon: Globe },
-  ARCHIVED: { tone: "danger", icon: Archive },
+  ARCHIVED: { tone: "neutral", icon: Archive },
 } as const;
 
 export function WeddingStatusBadge({ status }: { status: WeddingStatus }) {

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const { repos } = await import("../repos");
-const { maskEmail, mockAdminDataForTests } = await import("./mock-repo");
+const { mockAdminDataForTests } = await import("./mock-repo");
 const { MOCK_WEDDING_ID } = await import("../wedding/mock-repo");
 
 const FORBIDDEN_KEYS = new Set(["email", "phone", "token", "tokenHash", "tokenCipher"]);
@@ -105,9 +105,6 @@ describe("admin repo", () => {
       expect(serialized).not.toContain(`${local}@`);
     }
     expect(users.every((u) => u.emailMasked.includes("***@"))).toBe(true);
-    expect(maskEmail("minhanh@gmail.com")).toBe("mi***@gmail.com");
-    expect(maskEmail("qv@example.net")).toBe("q***@example.net");
-    expect(maskEmail("khong-hop-le")).toBe("***");
   });
 
   it("dữ liệu gốc bị đóng băng; sửa kết quả không đổi dữ liệu gốc", async () => {

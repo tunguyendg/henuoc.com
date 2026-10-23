@@ -24,18 +24,22 @@ export function ThemeSwitch({ initialEnabled, name }: { initialEnabled: boolean;
             setEnabled((v) => !v);
             setMessage(PREVIEW_NOT_SAVED);
           }}
-          className={cn(
-            "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors",
-            enabled ? "bg-rose-600" : "bg-muted",
-          )}
+          className="inline-flex h-11 w-12 shrink-0 items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600"
         >
           <span
             aria-hidden
             className={cn(
-              "inline-block size-5 rounded-full bg-surface shadow transition-transform",
-              enabled ? "translate-x-6" : "translate-x-1",
+              "relative inline-flex h-7 w-12 items-center rounded-full transition-colors",
+              enabled ? "bg-rose-600" : "bg-muted",
             )}
-          />
+          >
+            <span
+              className={cn(
+                "inline-block size-5 rounded-full bg-surface shadow transition-transform",
+                enabled ? "translate-x-6" : "translate-x-1",
+              )}
+            />
+          </span>
         </button>
       </div>
       <p role="status" aria-live="polite" className="min-h-4 text-xs text-muted">

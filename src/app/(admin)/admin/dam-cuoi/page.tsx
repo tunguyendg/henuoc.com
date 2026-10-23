@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { WeddingStatusBadge } from "@/components/admin/badges";
-import { adminMetadata, assertAdminPreview } from "@/components/admin/guard";
+import { adminMetadata, assertAdminPreview } from "@/features/admin/guard";
 import { formatDateVN, planLabels, statusLabels } from "@/components/admin/labels";
 import { AdminPageHeader, TableFrame, tdClass, thClass } from "@/components/admin/page-header";
 import { PlanToggle } from "@/components/admin/plan-toggle";
@@ -53,7 +53,7 @@ export default function AdminWeddingsPage({ searchParams }: PageProps<"/admin/da
 }
 
 const selectClass =
-  "h-12 rounded-(--radius-btn) border border-border bg-surface px-3 text-base text-ink focus:border-rose-600";
+  "h-12 rounded-(--radius-btn) border border-border bg-surface px-3 text-base text-ink focus:border-rose-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600";
 
 async function WeddingsSection({
   searchParams,

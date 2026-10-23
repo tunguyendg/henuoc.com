@@ -8,6 +8,7 @@ import {
   MOCK_WEDDING_ID,
   type MockWeddingRow,
 } from "../wedding/mock-repo";
+import { maskEmail } from "./mask";
 import type { AdminRepo } from "./repo";
 import type {
   AdminThemeSummary,
@@ -234,16 +235,6 @@ const mockAdminWeddingRows: readonly MockAdminWeddingRow[] = deepFreeze([
     createdAt: "2026-08-10T04:00:00.000Z",
   },
 ]);
-
-/** "minhanh.demo@example.com" → "mi***@example.com". Never returns the local part in full. */
-export function maskEmail(email: string): string {
-  const at = email.lastIndexOf("@");
-  if (at <= 0) return "***";
-  const local = email.slice(0, at);
-  const domain = email.slice(at + 1);
-  const visible = local.length > 2 ? local.slice(0, 2) : local.slice(0, 1);
-  return `${visible}***@${domain}`;
-}
 
 const newestFirst = (a: { createdAt: string }, b: { createdAt: string }) =>
   b.createdAt.localeCompare(a.createdAt);

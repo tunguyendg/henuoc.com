@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { adminMetadata, assertAdminPreview } from "@/components/admin/guard";
+import { adminMetadata, assertAdminPreview } from "@/features/admin/guard";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { Card } from "@/components/ui/card";
 import { repos } from "@/features/repos";
