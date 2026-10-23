@@ -59,4 +59,56 @@ export const articles: Article[] = [
       "/tao-thiep",
     ],
   },
+  {
+    slug: "le-vu-quy-thanh-hon-tan-hon",
+    title: "Lễ vu quy là gì? Tân hôn và thành hôn khác gì · Hẹn Ước",
+    description:
+      "Lễ vu quy là gì, khác tân hôn và thành hôn thế nào? Bảng phân biệt, lưu ý cách gọi theo gia đình và mẫu câu để chốt nội dung thiệp cưới.",
+    h1: "Lễ vu quy là gì? Phân biệt với tân hôn và thành hôn",
+    keyword: "lễ vu quy là gì",
+    breadcrumb: "Vu quy, tân hôn, thành hôn",
+    publishedAt: "2026-10-23",
+    related: ["/cam-nang/cach-ghi-thiep-cuoi", "/mau-thiep-cuoi", "/tao-thiep"],
+  },
+  {
+    slug: "gui-thiep-cuoi-qua-zalo",
+    title: "Gửi thiệp cưới qua Zalo: cách mời khéo · Hẹn Ước",
+    description:
+      "Gửi thiệp cưới qua Zalo sao cho lịch sự: bảng chọn cách mời theo người nhận, tám tin nhắn tự chỉnh và cách theo dõi phản hồi sau khi gửi.",
+    h1: "Gửi thiệp cưới qua Zalo sao cho lịch sự, rõ lời mời",
+    keyword: "gửi thiệp cưới qua zalo",
+    breadcrumb: "Gửi thiệp cưới qua Zalo",
+    publishedAt: "2026-10-23",
+    related: ["/tinh-nang/loi-moi-rieng", "/cam-nang/loi-moi-dam-cuoi-hay", "/mau-thiep-cuoi"],
+  },
+  {
+    slug: "du-tru-chi-phi-dam-cuoi",
+    title: "Dự trù chi phí đám cưới: bảng tự điền · Hẹn Ước",
+    description:
+      "Dự trù chi phí đám cưới bằng bảng hạng mục tự điền, công thức tiền tiệc và mẫu hỏi báo giá; tách tiền cọc, khoản còn trả và phần chưa chốt.",
+    h1: "Dự trù chi phí đám cưới bằng bảng tự điền và báo giá thật",
+    keyword: "dự trù chi phí đám cưới",
+    breadcrumb: "Dự trù chi phí đám cưới",
+    publishedAt: "2026-10-23",
+    related: [
+      "/cam-nang/cach-tinh-so-luong-khach-moi",
+      "/cong-cu/checklist-dam-cuoi",
+      "/tinh-nang/checklist-dam-cuoi",
+    ],
+  },
+  {
+    slug: "cach-tinh-so-luong-khach-moi",
+    title: "Tính số lượng khách mời đám cưới và số bàn · Hẹn Ước",
+    description:
+      "Tính số lượng khách mời đám cưới từ phản hồi của từng người, xử lý khách trùng, chia số bàn và trao đổi bàn dự phòng bằng bảng tự điền.",
+    h1: "Tính số lượng khách mời đám cưới để chốt số bàn",
+    keyword: "tính số lượng khách mời đám cưới",
+    breadcrumb: "Tính số lượng khách mời",
+    publishedAt: "2026-10-23",
+    related: [
+      "/tinh-nang/rsvp",
+      "/tinh-nang/quan-ly-khach-moi",
+      "/cam-nang/du-tru-chi-phi-dam-cuoi",
+    ],
+  },
 ];

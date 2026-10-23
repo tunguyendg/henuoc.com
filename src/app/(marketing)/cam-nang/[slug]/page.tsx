@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { ArticleCta, ArticleDate } from "@/components/articles/article-meta";
 import { ArticleImage, createArticleImage } from "@/components/articles/article-image";
-import { getArticleImages } from "@/lib/article-images";
+import { ArticleCopy } from "@/components/articles/article-copy";
+import { articleImageSrc, getArticleImages } from "@/lib/article-images";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -66,7 +67,9 @@ export default async function Page({ params }: Props) {
 
           <div className="mt-8 text-[17px] text-ink [&>:first-child]:mt-0">
             {/* `ArticleCta` is passed in so the .mdx body can place <ArticleCta /> mid-article without imports. */}
-            <Body components={{ ArticleCta, ArticleImage: createArticleImage(images) }} />
+            <Body
+              components={{ ArticleCta, ArticleCopy, ArticleImage: createArticleImage(images) }}
+            />
           </div>
 
           <ArticleCta
@@ -85,6 +88,7 @@ export default async function Page({ params }: Props) {
           "@type": "Article",
           headline: seo.h1,
           description: seo.description,
+          image: cover ? new URL(articleImageSrc(cover), site.url).toString() : undefined,
           datePublished: article.publishedAt,
           dateModified: modified,
           author: org,

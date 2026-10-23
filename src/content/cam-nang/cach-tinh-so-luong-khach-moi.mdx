@@ -1,0 +1,126 @@
+Tính số lượng khách mời đám cưới nên bắt đầu từ **số người dự từng buổi**, không phải số thiệp hay số tin nhắn đã gửi. Tách khách đã xác nhận, khách không đến và khách chưa trả lời; sau đó chia số người dự kiến cho sức chứa mỗi bàn mà nơi tổ chức xác nhận, làm tròn lên và thoả thuận riêng về bàn dự phòng.
+
+_Biên soạn: Hẹn Ước._
+
+**Trong bài này:**
+
+- [Đếm người, không đếm thiệp](#dem-nguoi-khong-dem-thiep)
+- [Chia danh sách theo từng buổi](#chia-danh-sach-theo-tung-buoi)
+- [Lập khoảng số người có thể đến](#lap-khoang-so-nguoi-co-the-den)
+- [Từ số người sang số bàn](#tu-so-nguoi-sang-so-ban)
+- [Bảng để sao chép hoặc in](#bang-de-sao-chep-hoac-in)
+- [Chốt với nơi tổ chức và cập nhật](#chot-voi-noi-to-chuc-va-cap-nhat)
+
+## Đếm người, không đếm thiệp
+
+Một lời mời cho một người và một lời mời cho cả gia đình không có cùng số chỗ ngồi. Cột cần để tính bàn là số người đã trả lời sẽ dự, kể cả người đi cùng trong phạm vi lời mời. Đừng tự cộng vợ chồng hoặc con của khách nếu họ chưa xác nhận.
+
+Với lời mời gia đình, hỏi “nhà mình có những ai đi được” thay vì chỉ “nhà mình có đi không”. Ghi riêng trẻ em nếu có để hỏi nơi tổ chức cách bố trí ghế, suất ăn và tính tiền; không mặc định trẻ em không cần chỗ hoặc mọi nơi áp cùng một cách tính.
+
+Không có một tỷ lệ khách đến cố định nên áp cho tất cả danh sách. Hãy lấy phản hồi của chính khách nhà mình làm căn cứ. Nếu còn người chưa trả lời, phần đó là chưa chắc chắn, không tự đổi thành “sẽ đến” hay “không đến” để bảng trông hoàn chỉnh.
+
+## Chia danh sách theo từng buổi
+
+Tạo một bảng riêng cho mỗi buổi tiệc cần chốt bàn. Người dự cả hai buổi được tính một lần ở từng buổi; người có tên trong danh sách cả nhà trai lẫn nhà gái chỉ được tính một lần trong cùng một tiệc chung.
+
+Cách kiểm tra khách trùng nên bắt đầu từ mối quan hệ thực tế: hai bạn cùng quen một đồng nghiệp, bố mẹ hai bên cùng mời một người bạn, hoặc một khách vừa có lời mời cá nhân vừa nằm trong lời mời gia đình. Đừng xoá chỉ vì trùng tên; hãy hỏi người phụ trách danh sách đó.
+
+Chỉ chia sẻ phần thông tin cần cho người đón khách hoặc nơi tổ chức. Không đưa danh sách tên, số điện thoại hay link thiệp riêng lên ảnh công khai hoặc nhóm mở.
+
+Phần [quản lý khách mời](/tinh-nang/quan-ly-khach-moi) giới thiệu cách chia nhóm và theo dõi lời mời. Nếu dashboard đang là bản xem thử, dùng sổ hoặc bảng riêng cho số liệu thật, không coi số mẫu trong giao diện là dữ liệu của đám cưới mình.
+
+## Lập khoảng số người có thể đến
+
+Với từng buổi, chia thành các nhóm:
+
+- **Đã xác nhận sẽ dự:** số người khách đã báo, cập nhật theo câu trả lời mới nhất.
+- **Đã báo không dự:** không cộng vào số người dự kiến hiện tại.
+- **Chưa trả lời:** ghi số người tối đa được mời trong nhóm này, rồi liên hệ xác nhận.
+- **Thay đổi mới:** ghi ngày cập nhật để người chốt bàn biết bảng nào là bản mới nhất.
+
+Một cách nhìn thận trọng là:
+
+> Mức đã xác nhận = tổng số người đã báo sẽ dự.
+>
+> Mức trên để trao đổi = mức đã xác nhận + số người tối đa còn chưa trả lời.
+
+Đây là khoảng làm việc khi còn thiếu thông tin, không phải dự báo rằng tất cả khách chưa trả lời đều sẽ đến. Nếu khoảng quá rộng, ưu tiên hỏi lại khách trước khi đặt cứng số bàn. Đồng thời hỏi nơi tổ chức hạn có thể thay đổi số lượng và cách tính bàn mở thêm.
+
+RSVP là câu trả lời xác nhận tham dự của khách. Trang [giới thiệu RSVP](/tinh-nang/rsvp) giải thích luồng này; nếu chức năng chưa mở ở thiệp của bạn, ghi nhận câu trả lời bằng gọi điện hoặc tin nhắn. Có link thiệp hay trạng thái mở link chưa phải là một xác nhận sẽ đến.
+
+## Từ số người sang số bàn
+
+Trước hết hỏi nơi tổ chức số ghế bố trí được và cách tính suất cho chính loại bàn mình chọn. Không lấy một con số trên mạng làm sức chứa mặc định cho mọi sảnh.
+
+> Số bàn theo sức chứa = số người dự kiến ÷ số ghế mỗi bàn, làm tròn lên.
+
+**Ví dụ hoàn toàn giả định, chỉ để minh hoạ phép tính:** có 137 người đã xác nhận, nhóm chưa trả lời được mời tối đa 13 người nữa; giả sử nơi tổ chức xác nhận bàn bạn chọn có 10 ghế. Khoảng đang cần trao đổi là 137–150 người. Theo phép chia làm tròn lên, tương ứng 14–15 bàn.
+
+Trong ví dụ đó, chênh lệch một bàn đến từ nhóm chưa trả lời, không phải quy tắc “đám cưới nào cũng dự phòng một bàn”. Mức đặt chính thức và cách giữ bàn dự phòng cần thống nhất với nơi tổ chức. Đừng cộng lại cả 13 người vào một khoản dự phòng khác, khiến cùng một phần chưa chắc chắn bị tính hai lần.
+
+Công thức sức chứa còn cần kiểm tra với cách xếp nhóm. Ví dụ một nhóm muốn ngồi cùng nhưng không lấp đầy bàn có thể khiến phương án xếp chỗ khác với kết quả chia đơn thuần. Nhân sự phục vụ, chụp ảnh hoặc ban nhạc nếu cần suất ăn riêng cũng nên ghi thành dòng riêng để hỏi bên tiệc, tránh tính lẫn vào khách đã xác nhận.
+
+<ArticleImage file="sanh-nhieu-ban" />
+
+Ảnh sảnh minh hoạ không cho biết sức chứa hay giá bàn của nơi hai bạn đặt. Chỉ dùng sơ đồ và thông tin đã xác nhận từ chính nơi tổ chức để chốt.
+
+## Bảng để sao chép hoặc in
+
+Bảng dưới để trống, có thể in trang hoặc chép sang sổ, bảng tính. Giữ số liệu theo từng buổi, cập nhật người đi cùng trước khi cộng tổng.
+
+<div className="my-6 overflow-x-auto">
+  <table className="w-full min-w-[680px] text-left text-sm [&_td]:border-b [&_td]:border-border [&_td]:p-3 [&_td]:align-top [&_th]:border-b-2 [&_th]:border-border [&_th]:p-3">
+    <thead>
+      <tr>
+        <th scope="col">Nhóm khách</th>
+        <th scope="col">Người đã báo dự</th>
+        <th scope="col">Người đã báo không dự</th>
+        <th scope="col">Tối đa chưa trả lời</th>
+        <th scope="col">Người cần hỏi lại / ghi chú</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Khách gia đình bên cô dâu</th>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+      </tr>
+      <tr>
+        <th scope="row">Khách gia đình bên chú rể</th>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+      </tr>
+      <tr>
+        <th scope="row">Bạn bè, đồng nghiệp hai bạn</th>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+        <td>Kiểm tra khách cùng được hai bên mời.</td>
+      </tr>
+      <tr>
+        <th scope="row">Tổng sau khi xử lý trùng</th>
+        <td>…</td>
+        <td>…</td>
+        <td>…</td>
+        <td>Cập nhật ngày … / người phụ trách …</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ArticleCopy
+  title="Phiếu chốt số lượng cho một buổi"
+  text="Buổi tiệc / ngày: [thông tin]\nNgười phụ trách / ngày cập nhật: [thông tin]\nĐã xác nhận sẽ dự: [số người]\nĐã xác nhận không dự: [số người]\nTối đa chưa trả lời: [số người]\nGhế mỗi bàn đã được nơi tổ chức xác nhận: [số ghế]\nSố bàn theo phương án hiện tại: [số bàn]\nBàn dự phòng và điều kiện mở/tính tiền: [nội dung đã thoả thuận]\nHạn cuối điều chỉnh / người liên hệ: [thông tin]"
+/>
+
+## Chốt với nơi tổ chức và cập nhật
+
+Trước khi báo số cuối, hai bạn nên đối chiếu bảng với người đang giữ danh sách của từng bên. Xác nhận lại trẻ em, người đi cùng, khách đổi buổi và suất ăn riêng nếu có. Gửi số lượng cùng ngày cập nhật để tránh một người giữ bảng cũ và một người giữ bảng mới.
+
+Hỏi rõ bàn dự phòng chỉ giữ chỗ hay đã chuẩn bị món, thời điểm được mở thêm và cách tính tiền. Bài này không đề xuất tỷ lệ dự phòng chung; điều cần chốt là cách xử lý phần chưa chắc chắn trong danh sách của chính mình.
+
+Sau khi biết số bàn và điều kiện tính tiền, chuyển sang [bảng dự trù chi phí đám cưới](/cam-nang/du-tru-chi-phi-dam-cuoi). Mỗi lần khách thay đổi phản hồi, cập nhật cả số người lẫn khoản tiền tiệc liên quan, thay vì chỉ sửa một trong hai bảng.
