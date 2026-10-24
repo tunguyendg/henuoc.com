@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { isAllowedMusicUrl } from "@/lib/url-allowlist";
+import { getTrack, getTracks } from "@/data/music";
 import { AddToCalendar } from "../_shared/AddToCalendar";
 import { Gift } from "../_shared/Gift";
 import { MapButton } from "../_shared/MapButton";
@@ -31,15 +31,17 @@ function SectionTitle({ children }: { children: ReactNode }) {
   );
 }
 
-export default function Theme({ content, guest, mode }: ThemeProps<PlaceholderOptions>) {
+export default function Theme({ content, guest, options, mode }: ThemeProps<PlaceholderOptions>) {
   const { couple, sections } = content;
   const [first, second] = couple.brideFirst
     ? [couple.bride, couple.groom]
     : [couple.groom, couple.bride];
 
-  // Same rule as MapButton: a URL that fails the allowlist is dropped on the server → no ♪ button.
-  const musicSrc =
-    content.music && isAllowedMusicUrl(content.music.src) ? content.music.src : undefined;
+  // Resolve only enabled catalog tracks; raw content URLs never reach the client player.
+  const selectedTrack = options.musicSlug
+    ? getTrack(options.musicSlug)
+    : getTracks({ enabled: true }).find((track) => track.src === content.music?.src);
+  const track = selectedTrack?.enabled ? selectedTrack : undefined;
   const names = `${first.shortName} & ${second.shortName}`;
   const dateLabel = content.weddingDate
     ? weddingDateFormat.format(new Date(content.weddingDate))
@@ -55,7 +57,7 @@ export default function Theme({ content, guest, mode }: ThemeProps<PlaceholderOp
 
   return (
     <div data-theme="placeholder" className="min-h-full bg-canvas text-ink">
-      <Experience musicSrc={musicSrc} mode={mode}>
+      <Experience musicSrc={track?.src} musicCredit={track?.credit} mode={mode}>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted">Thiệp cưới</p>
           <p className="font-serif text-4xl leading-tight break-words">{names}</p>

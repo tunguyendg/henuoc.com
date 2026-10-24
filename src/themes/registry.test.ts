@@ -128,6 +128,22 @@ describe("placeholder theme: hành trình khách", () => {
     const good = await render();
     expect(good).toContain("Bật nhạc");
   });
+
+  it("musicSlug chọn đúng bài và credit CC-BY từ kho", async () => {
+    const html = await render({ options: { musicSlug: "kevin-there-is-romance" } });
+    expect(html).toContain("There is Romance Kevin MacLeod");
+    expect(html).toContain("https://creativecommons.org/licenses/by/4.0/");
+    expect(html).not.toContain("Canon in D — United States Air Force Band");
+  });
+
+  it("preview không hiện nút nhạc hoặc credit của bài đã chọn", async () => {
+    const html = await render({
+      mode: "preview",
+      options: { musicSlug: "kevin-there-is-romance" },
+    });
+    expect(html).not.toContain("Bật nhạc");
+    expect(html).not.toContain("There is Romance Kevin MacLeod");
+  });
 });
 
 describe("demoContent", () => {

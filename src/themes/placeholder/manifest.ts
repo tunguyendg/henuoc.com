@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { musicSlugSchema } from "@/data/music";
 import type { ThemeManifest } from "../types";
 
-export const optionsSchema = z.object({});
+export const optionsSchema = z.object({ musicSlug: musicSlugSchema.optional() });
 
 export type PlaceholderOptions = z.infer<typeof optionsSchema>;
 
@@ -28,6 +29,6 @@ export const manifest: ThemeManifest<PlaceholderOptions> = {
     "thanks",
   ],
   optionsSchema,
-  defaultOptions: {},
+  defaultOptions: { musicSlug: "canon-in-d-usaf" },
   assets: [],
 };

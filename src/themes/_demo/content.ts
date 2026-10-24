@@ -1,3 +1,4 @@
+import { getTrack } from "@/data/music";
 import "server-only"; // imports the QR renderer, which must never reach a client bundle
 import { cache } from "react";
 import { findBankByBin } from "@/data/banks";
@@ -161,7 +162,7 @@ export const demoContent: WeddingContent = {
     rsvp: true,
     thanks: true,
   },
-  music: { src: "/audio/demo-piano.m4a", title: "Demo piano (CC0)" },
+  music: { src: getTrack("canon-in-d-usaf")!.src, title: getTrack("canon-in-d-usaf")!.title },
   weddingDate: "2027-10-17T11:00:00.000Z",
   showWatermark: true,
 };

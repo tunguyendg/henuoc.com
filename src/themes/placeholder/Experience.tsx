@@ -9,23 +9,21 @@ import type { ThemeProps } from "../types";
 // The one client leaf of this theme. Functions (music.unlock) cannot cross the Server → Client
 // boundary as props, so the hook, the envelope and the ♪ button must live in the same client tree.
 // The cover (names + date) arrives as server-rendered `children`.
-//
-// NOTE: useMusic is still the empty stub (Tony writes it, docs/07 §3). Until then the ♪ button shows
-// and can be pressed, but no sound plays. That is the expected state for now.
 
 interface ExperienceProps {
   musicSrc?: string;
+  musicCredit?: string;
   mode: ThemeProps["mode"];
   children: ReactNode;
 }
 
-export function Experience({ musicSrc, mode, children }: ExperienceProps) {
+export function Experience({ musicSrc, musicCredit, mode, children }: ExperienceProps) {
   // preview = builder: no music at all (docs/07 §10).
   const music = useMusic(musicSrc, { disabled: mode === "preview" });
   return (
     <>
       <Envelope onOpen={music.unlock}>{children}</Envelope>
-      <MusicToggle music={music} hidden={!musicSrc || mode === "preview"} />
+      <MusicToggle music={music} credit={musicCredit} hidden={!musicSrc || mode === "preview"} />
     </>
   );
 }

@@ -201,10 +201,10 @@ Ví dụ: không dùng chữ trắng trên ảnh sáng không overlay; không ho
 
 ## 9. Nhạc nền
 
-- Thư viện nhạc trong `src/lib/music.ts` (id, tên, nguồn, giấy phép, URL R2). MVP **~10 bài** không lời (piano, acoustic) từ **Pixabay Music** hoặc nguồn có giấy phép thương mại rõ ràng.
+- Kho nhạc import tĩnh từ `src/content/music/library.json` qua `src/data/music.ts` (`Track`, `getTracks({ enabled: true })`, `getTrack(slug)`). Theme chọn `options.musicSlug`, Zod chỉ chấp nhận slug tồn tại và enabled. Không đọc file lúc render.
 - Mỗi bài ghi tác giả + link nguồn + loại giấy phép trong `CREDITS.md` (mục "Nhạc nền"). Bài nào không ghi được giấy phép → không đưa vào.
 - **Không cho người dùng upload nhạc** (rủi ro bản quyền, bị gỡ thiệp). Chỉ chọn từ thư viện.
-- File MP3 128kbps, ≤ 3MB, host trên R2. `preload="none"`.
+- File phát hiện tại: `public/audio/library/<slug>.m4a`; `preload="none"`. Mọi track enabled phải có file, không có giọng hát. CC-BY phải có credit; bài có credit hiển thị đầy đủ bằng chữ nhỏ cạnh nút ♪, kể cả các dòng giấy phép. Demo placeholder dùng `canon-in-d-usaf`; không sửa hook `useMusic` trong phần tích hợp kho.
 - **Không** dùng nhạc trending TikTok/YouTube.
 
 ## 10. Trải nghiệm khách
