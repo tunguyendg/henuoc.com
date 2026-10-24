@@ -108,5 +108,65 @@
     "photographerUrl": "https://unsplash.com/@paupattersonphotography_",
     "unsplashUrl": "https://unsplash.com/photos/lxHHTpPfA4w",
     "alt": "Thiệp mời cưới vẽ hoa dại màu nước, đặt cạnh hoa hồng kem, mao lương cam và dải ruy băng hồng"
+  },
+  {
+    "slug": "le-dam-ngo-can-chuan-bi-gi",
+    "role": "cover",
+    "file": "cam-nang/le-dam-ngo-can-chuan-bi-gi/cover.webp",
+    "cdnPath": "photo-1790845160662-da5c604f96a5",
+    "photographer": "HACA Wedding Film",
+    "photographerUrl": "https://unsplash.com/@hacawedding",
+    "unsplashUrl": "https://unsplash.com/photos/xNiIZ9G9hQg",
+    "alt": "Người phụ nữ mặc áo dài đỏ bưng khay phủ khăn đỏ, đi cạnh chàng trai mặc vest cầm hoa, phía sau là họ hàng"
+  },
+  {
+    "slug": "le-dam-ngo-can-chuan-bi-gi",
+    "role": "inline",
+    "file": "cam-nang/le-dam-ngo-can-chuan-bi-gi/khay-tra-mut.webp",
+    "cdnPath": "photo-1630247019300-e8a9498b831b",
+    "photographer": "Irish83",
+    "photographerUrl": "https://unsplash.com/@irish83",
+    "unsplashUrl": "https://unsplash.com/photos/WNhmpHs33V4",
+    "alt": "Ấm trà đất nung và chén nhỏ trên khay tre, bên cạnh đĩa hạt điều, mắc ca và hồng sấy"
+  },
+  {
+    "slug": "gui-thiep-cuoi-truoc-bao-lau",
+    "role": "cover",
+    "file": "cam-nang/gui-thiep-cuoi-truoc-bao-lau/cover.webp",
+    "cdnPath": "photo-1646568779317-ab2710d28926",
+    "photographer": "Diana Light",
+    "photographerUrl": "https://unsplash.com/@dreamcatchlight",
+    "unsplashUrl": "https://unsplash.com/photos/A8UtGwywXqw",
+    "alt": "Ba phong bì trắng gắn sáp niêm phong màu vàng đồng, cạnh nhành hoa hồng nhạt trên nền trắng"
+  },
+  {
+    "slug": "nhan-tin-xac-nhan-tham-du-dam-cuoi",
+    "role": "cover",
+    "file": "cam-nang/nhan-tin-xac-nhan-tham-du-dam-cuoi/cover.webp",
+    "cdnPath": "photo-1746014600486-d7f5d25fd2ea",
+    "photographer": "Swello",
+    "photographerUrl": "https://unsplash.com/@getswello",
+    "unsplashUrl": "https://unsplash.com/photos/2f_zK0ruzJE",
+    "alt": "Hai tay đeo nhẫn cầm điện thoại nhắn tin bên bàn gỗ"
+  },
+  {
+    "slug": "lich-trinh-ngay-cuoi",
+    "role": "cover",
+    "file": "cam-nang/lich-trinh-ngay-cuoi/cover.webp",
+    "cdnPath": "photo-1790845740310-f96afe221535",
+    "photographer": "HACA Wedding Film",
+    "photographerUrl": "https://unsplash.com/@hacawedding",
+    "unsplashUrl": "https://unsplash.com/photos/TRfDDW-Nz_c",
+    "alt": "Đoàn rước dâu mặc áo dài bưng lễ vật đi trên đường làng, chú rể mặc vest đen đi đầu"
+  },
+  {
+    "slug": "lich-trinh-ngay-cuoi",
+    "role": "inline",
+    "file": "cam-nang/lich-trinh-ngay-cuoi/le-gia-tien.webp",
+    "cdnPath": "photo-1656726855515-37d1390ad212",
+    "photographer": "Nguyễn Hiệp",
+    "photographerUrl": "https://unsplash.com/@hieptltb97",
+    "unsplashUrl": "https://unsplash.com/photos/yh9lcTWQUcs",
+    "alt": "Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo"
   }
 ]
