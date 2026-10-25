@@ -10,6 +10,7 @@ import { LogoTile } from "@/components/site/logo";
 import { site } from "@/lib/site";
 import { Container } from "@/components/ui/container";
 import { RequireLogin } from "@/components/auth/require-login";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 
 // Private app area: never indexed (AGENTS.md §4), not part of the SEO registry. Pages below inherit
 // `robots` because metadata merges per key and they only set `title`.
@@ -49,13 +50,16 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
         <nav aria-label="Điều hướng bảng điều khiển">
           <DashboardSidebarNav />
         </nav>
-        <Link
-          href="/"
-          className="mt-auto flex h-11 items-center gap-2 rounded-(--radius-btn) px-3 text-sm font-medium text-muted transition-colors duration-200 hover:bg-rose-50/60 hover:text-ink"
-        >
-          <ArrowLeft aria-hidden className="size-4" strokeWidth={1.75} />
-          Về trang chủ
-        </Link>
+        <div className="mt-auto flex flex-col gap-1">
+          <Link
+            href="/"
+            className="flex h-11 items-center gap-2 rounded-(--radius-btn) px-3 text-sm font-medium text-muted transition-colors duration-200 hover:bg-rose-50/60 hover:text-ink"
+          >
+            <ArrowLeft aria-hidden className="size-4" strokeWidth={1.75} />
+            Về trang chủ
+          </Link>
+          <SignOutButton variant="sidebar" />
+        </div>
       </aside>
 
       {/* Mobile header (<md) */}
@@ -70,6 +74,9 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
         <Suspense fallback={<WeddingHeadingFallback variant="header" />}>
           <WeddingHeading variant="header" />
         </Suspense>
+        <div className="ml-auto shrink-0">
+          <SignOutButton variant="icon" />
+        </div>
       </header>
 
       {/* Bottom padding keeps content clear of the fixed mobile tab bar (56px + home indicator). */}

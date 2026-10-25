@@ -32,7 +32,7 @@
 
 - Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
 
-- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Dòng phụ trang `/dang-nhap` sửa sẵn trong `page.tsx` (chưa commit, đi cùng LoginForm)
+- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Đã thêm: nút Đăng xuất (sidebar + header mobile, tải lại trang về `/`), `/dang-nhap` có phiên → `/dashboard`, test `proxy.ts`.
 
 ## ⏭️ Tiếp theo (frontend)
 
@@ -46,6 +46,8 @@
 - T-006 việc sau: bổ sung `prisma migrate deploy` sau khi chốt quyền DB, thứ tự migration và chiến lược expand/contract. **Chưa có migrate trong deploy hiện tại.**
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
+
+- `dashboard/layout.tsx` vẫn `notFound()` ở production → đăng nhập xong bị đẩy sang `/dashboard` là 404, nút Đăng xuất không hiện. Tony quyết gỡ trước khi deploy auth (proxy + requireUser đã có, còn thiếu ownership + dữ liệu thật thay mock).
 
 - Deploy sau T-032: panel AZDIGI phải có đủ `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (https://henuoc.com), `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY` — thiếu là app throw lúc khởi động. `BETTER_AUTH_URL` hiện nhận cả http/localhost (CI dùng giá trị giả) → cân nhắc chặn lúc runtime production.
 
