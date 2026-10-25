@@ -7,7 +7,6 @@ import type { MusicController } from "./use-music";
 
 export interface MusicToggleProps {
   music: MusicController;
-  credit?: string;
   /** Render nothing (no music track, or preview). */
   hidden?: boolean;
   className?: string;
@@ -17,16 +16,11 @@ export interface MusicToggleProps {
 }
 
 /** Floating ♪ button, bottom-right, clear of the notch / home indicator. */
-export function MusicToggle({ music, credit, hidden, className, icon, offIcon }: MusicToggleProps) {
+export function MusicToggle({ music, hidden, className, icon, offIcon }: MusicToggleProps) {
   if (hidden) return null;
   const on = music.isPlaying;
   return (
     <div className="fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 flex items-end gap-3">
-      {credit?.trim() && (
-        <small className="max-w-[min(16rem,calc(100vw-6rem))] rounded-xl bg-surface/95 p-2 text-xs leading-snug break-words whitespace-pre-line text-muted shadow-card">
-          {credit}
-        </small>
-      )}
       <button
         type="button"
         onClick={music.toggle}

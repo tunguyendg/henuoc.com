@@ -57,7 +57,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
 
   return (
     <div data-theme="placeholder" className="min-h-full bg-canvas text-ink">
-      <Experience musicSrc={track?.src} musicCredit={track?.credit} mode={mode}>
+      <Experience musicSrc={track?.src} mode={mode}>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted">Thiệp cưới</p>
           <p className="font-serif text-4xl leading-tight break-words">{names}</p>
@@ -203,7 +203,14 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
         )}
 
         {/* Outside `thanks`: the Free plan keeps its watermark even if that section is off. */}
-        <Watermark show={content.showWatermark} />
+        <div className="space-y-1 text-center">
+          <Watermark show={content.showWatermark} />
+          {mode !== "preview" && track?.license === "CC-BY-4.0" && track.credit?.trim() && (
+            <p className="text-xs text-muted">
+              Nhạc nền: {track.credit.trim().replace(/\s+/g, " ")}
+            </p>
+          )}
+        </div>
       </main>
     </div>
   );

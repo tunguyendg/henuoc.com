@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+import { getTracks } from "@/data/music";
 import { isAllowedImageUrl, isAllowedMapUrl, isAllowedMusicUrl } from "@/lib/url-allowlist";
 import { crc16Ccitt } from "@/lib/vietqr";
 import { demoContent, getDemoContent } from "./_demo/content";
@@ -134,6 +135,29 @@ describe("placeholder theme: hành trình khách", () => {
     expect(html).toContain("There is Romance Kevin MacLeod");
     expect(html).toContain("https://creativecommons.org/licenses/by/4.0/");
     expect(html).not.toContain("Canon in D — United States Air Force Band");
+  });
+
+  it.each(getTracks({ enabled: true }))(
+    "$slug: chỉ CC-BY-4.0 hiện credit cuối thiệp",
+    async (track) => {
+      const html = await render({ options: { musicSlug: track.slug } });
+      expect(html.includes("Nhạc nền:")).toBe(track.license === "CC-BY-4.0");
+      if (track.license === "CC-BY-4.0") {
+        expect(html).toContain(`Nhạc nền: ${track.credit!.trim().replace(/\s+/g, " ")}`);
+        expect(html.indexOf("Nhạc nền:")).toBeGreaterThan(html.indexOf("Thiệp tạo bằng"));
+      }
+    },
+  );
+
+  it("credit CC-BY vẫn hiện khi tắt watermark và thanks", async () => {
+    const base = await getDemoContent();
+    const html = await render(
+      { options: { musicSlug: "kevin-there-is-romance" } },
+      { showWatermark: false, sections: { ...base.sections, thanks: false } },
+    );
+    expect(html).toContain("Nhạc nền:");
+    expect(html).not.toContain("Thiệp tạo bằng");
+    expect(html).not.toContain("Cảm ơn bạn!");
   });
 
   it("preview không hiện nút nhạc hoặc credit của bài đã chọn", async () => {

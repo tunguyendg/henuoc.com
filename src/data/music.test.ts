@@ -46,15 +46,15 @@ describe("Kho nhạc", () => {
     expect(optionsSchema.safeParse({ musicSlug: "/audio/demo-piano.m4a" }).success).toBe(false);
   });
 
-  it("nút nhạc hiện đầy đủ credit và ẩn cả credit trong preview", () => {
+  it("nút nhạc chỉ có nút tròn, không có bong bóng credit", () => {
     const props = {
       music: { isPlaying: false, isMuted: false, unlock() {}, toggle() {} },
-      credit: getTrack("kevin-canon-in-d-major")!.credit,
     };
     const html = renderToStaticMarkup(createElement(MusicToggle, props));
     expect(html).toContain("Bật nhạc");
-    expect(html).toContain("Kevin MacLeod");
-    expect(html).toContain("https://creativecommons.org/licenses/by/4.0/");
+    expect(html).not.toContain("Kevin MacLeod");
+    expect(html).not.toContain("<small");
+    expect(html).not.toContain("https://creativecommons.org/licenses/by/4.0/");
     expect(renderToStaticMarkup(createElement(MusicToggle, { ...props, hidden: true }))).toBe("");
   });
 });

@@ -12,18 +12,17 @@ import type { ThemeProps } from "../types";
 
 interface ExperienceProps {
   musicSrc?: string;
-  musicCredit?: string;
   mode: ThemeProps["mode"];
   children: ReactNode;
 }
 
-export function Experience({ musicSrc, musicCredit, mode, children }: ExperienceProps) {
+export function Experience({ musicSrc, mode, children }: ExperienceProps) {
   // preview = builder: no music at all (docs/07 §10).
   const music = useMusic(musicSrc, { disabled: mode === "preview" });
   return (
     <>
       <Envelope onOpen={music.unlock}>{children}</Envelope>
-      <MusicToggle music={music} credit={musicCredit} hidden={!musicSrc || mode === "preview"} />
+      <MusicToggle music={music} hidden={!musicSrc || mode === "preview"} />
     </>
   );
 }
