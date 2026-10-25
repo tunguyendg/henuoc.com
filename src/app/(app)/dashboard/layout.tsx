@@ -9,6 +9,7 @@ import { WeddingHeading, WeddingHeadingFallback } from "@/components/dashboard/w
 import { LogoTile } from "@/components/site/logo";
 import { site } from "@/lib/site";
 import { Container } from "@/components/ui/container";
+import { RequireLogin } from "@/components/auth/require-login";
 
 // Private app area: never indexed (AGENTS.md §4), not part of the SEO registry. Pages below inherit
 // `robots` because metadata merges per key and they only set `title`.
@@ -31,6 +32,9 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
   return (
     <div className="flex-1 md:pl-64">
       {/* Desktop sidebar (md+) */}
+      <Suspense fallback={null}>
+        <RequireLogin />
+      </Suspense>
       <aside className="hidden border-r border-border bg-surface md:fixed md:inset-y-0 md:left-0 md:flex md:w-64 md:flex-col md:gap-6 md:overflow-y-auto md:px-4 md:py-6">
         {/* Brand mark only (not a link): "Về trang chủ" below is the single way back to "/". */}
         <div className="flex items-center gap-2.5 px-2">
