@@ -9,16 +9,18 @@ datasource db {
 
 // ───────── Auth (Better Auth — sinh bằng `npx @better-auth/cli generate`, giữ đúng tên field) ─────────
 model User {
-  id            String    @id
+  id            String          @id
   name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  email         String          @unique
+  emailVerified Boolean         @default(false)
   image         String?
-  role          UserRole  @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role          UserRole        @default(USER)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   sessions      Session[]
   accounts      Account[]
+  memberships   WeddingMember[]
+
   @@map("user")
 }
 
@@ -32,6 +34,8 @@ model Session {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // đăng xuất mọi thiết bị / xoá user → tìm session theo userId
   @@map("session")
 }
 
@@ -50,6 +54,8 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
   @@map("account")
 }
 
@@ -60,10 +66,75 @@ model Verification {
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([identifier]) // mỗi lần nhập OTP, Better Auth tìm mã theo email
   @@map("verification")
 }
 
 enum UserRole {
   USER
   ADMIN
+}
+
+// ───────── Đám cưới ─────────
+model Wedding {
+  id              String        @id @default(cuid())
+  slug            String        @unique // link thiệp công khai: /thiep/[slug]
+  status          WeddingStatus @default(DRAFT)
+  plan            Plan          @default(FREE) // MVP: admin set tay
+  themeSlug       String
+  themeVersion    Int           @default(1) // ghim version: sửa theme không vỡ thiệp cũ
+  themeOptions    Json          @default("{}") // validate bằng Zod của theme TRƯỚC khi ghi
+  brideName       String
+  groomName       String
+  brideShortName  String?
+  groomShortName  String?
+  brideFirst      Boolean       @default(true)
+  brideParents    String?
+  groomParents    String?
+  brideFamilyAddr String?
+  groomFamilyAddr String?
+  inviteMessage   String?
+  sections        Json          @default("{}") // bật/tắt section — validate bằng Zod
+  musicTrackId    String? // id trong src/content/music/library.json (chưa phải bảng)
+  rsvpDeadline    DateTime?
+  allowWalkInRsvp Boolean       @default(false)
+  tableSize       Int           @default(10)
+  weddingDate     DateTime?
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  members WeddingMember[]
+
+  @@map("wedding")
+}
+
+model WeddingMember {
+  weddingId String
+  userId    String
+  role      MemberRole @default(OWNER)
+  createdAt DateTime   @default(now())
+  wedding   Wedding    @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([weddingId, userId]) // khoá chính ghép = 1 người chỉ vào 1 đám cưới 1 lần
+  @@index([userId]) // "đám cưới của tao" tìm theo userId → cần index riêng (leftmost prefix)
+  @@map("wedding_member")
+}
+
+enum WeddingStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Plan {
+  FREE
+  PREMIUM
+}
+
+enum MemberRole {
+  OWNER
+  EDITOR
 }
