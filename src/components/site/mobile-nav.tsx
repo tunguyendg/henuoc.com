@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { MobileAuthActions } from "./header-actions";
 import { mainNav } from "@/lib/site";
 
 /**
@@ -63,22 +63,7 @@ export function MobileNav() {
               ))}
             </ul>
           </nav>
-          <div className="mt-8 flex flex-col gap-3">
-            <Link
-              href="/tao-thiep"
-              onClick={close}
-              className={buttonVariants({ size: "lg", className: "w-full" })}
-            >
-              Tạo thiệp miễn phí
-            </Link>
-            <Link
-              href="/dang-nhap"
-              onClick={close}
-              className={buttonVariants({ variant: "secondary", size: "lg", className: "w-full" })}
-            >
-              Đăng nhập
-            </Link>
-          </div>
+          <MobileAuthActions onNavigate={close} />
         </div>
       ) : null}
     </div>

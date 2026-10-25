@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { mainNav } from "@/lib/site";
+import { HeaderActions } from "./header-actions";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 
@@ -27,13 +27,8 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Link href="/dang-nhap" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-            Đăng nhập
-          </Link>
-          <Link href="/tao-thiep" className={buttonVariants({ size: "sm" })}>
-            Tạo thiệp miễn phí
-          </Link>
+        <div className="hidden md:block">
+          <HeaderActions />
         </div>
 
         <MobileNav />

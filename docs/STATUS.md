@@ -32,7 +32,7 @@
 
 - Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
 
-- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Đã thêm: nút Đăng xuất (sidebar + header mobile, tải lại trang về `/`), `/dang-nhap` có phiên → `/dashboard`, test `proxy.ts`.
+- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Đã thêm: nút Đăng xuất (sidebar + header mobile, tải lại trang về `/`), `/dang-nhap` có phiên → `/dashboard`, test `proxy.ts`. Header marketing biết đăng nhập ở CLIENT (`site/header-actions.tsx`, `useSession`) → trang marketing vẫn ○ Static; đã đăng nhập hiện "Vào bảng điều khiển" + chữ cái đầu.
 
 ## ⏭️ Tiếp theo (frontend)
 
