@@ -1,4 +1,5 @@
-import { PlaceholderPage } from "@/components/site/placeholder-page";
+import { LoginForm } from "@/components/auth/login-form";
+import { Container } from "@/components/ui/container";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getSeoPage } from "@/lib/seo/pages";
 
@@ -6,9 +7,16 @@ export const metadata = pageMetadata("/dang-nhap");
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      title={getSeoPage("/dang-nhap").h1}
-      description="Đăng nhập bằng Google hoặc email sẽ có trong phiên bản tiếp theo."
-    />
+    <Container width="prose" className="py-16 md:py-24">
+      <div className="mx-auto max-w-sm">
+        <h1 className="text-center font-display text-3xl font-extrabold tracking-[-0.03em] text-ink">
+          {getSeoPage("/dang-nhap").h1}
+        </h1>
+        <p className="mt-3 text-center text-muted">
+          Chưa có tài khoản? Cứ nhập email, Hẹn Ước tự tạo cho bạn.
+        </p>
+        <LoginForm />
+      </div>
+    </Container>
   );
 }
