@@ -77,6 +77,7 @@ viết tay hay dùng AI. Luật:
 - Định dạng **WebP**, cạnh dài **≤ 1600px**, bìa tỉ lệ 16:9 hoặc 3:2. Mục tiêu ≤ 200KB/ảnh.
 - `alt` **mô tả đúng cái có trong ảnh** (người, trang phục, vật, bối cảnh), tiếng Việt, ≤ 125 ký tự. Không nhồi từ khoá, không "ảnh đẹp đám cưới".
 - Ghi **credit** dưới ảnh: "Ảnh: Tên tác giả / Unsplash" (link về trang tác giả). Unsplash License không bắt buộc nhưng Hẹn Ước luôn ghi.
+- Ảnh tự chụp: entry `{ slug, file, source: "own", role, alt, caption }`, không có `cdnPath` hay credit Unsplash. Caption ghi đúng nội dung và tác giả Hẹn Ước; chỉ dùng dữ liệu demo. Script tải bỏ qua entry này, test vẫn kiểm file tồn tại. Screenshot dọc giữ nguyên khung hình khi hiển thị trong bài.
 - Unsplash: **chỉ ảnh free** (trang ảnh ghi "Free to use under the Unsplash License"). **Không** dùng Unsplash+ (`plus.unsplash.com`, `premium_photo-…`).
 - Ưu tiên ảnh cưới Việt / châu Á. Ảnh đồ vật (điện thoại, thiệp, bàn tiệc) không cần.
 - Không dùng lại ảnh đã ở trang chủ (`public/images/wedding/`) để bài có hình riêng.

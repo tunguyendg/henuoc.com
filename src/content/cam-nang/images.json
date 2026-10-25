@@ -137,7 +137,7 @@
     "photographer": "Diana Light",
     "photographerUrl": "https://unsplash.com/@dreamcatchlight",
     "unsplashUrl": "https://unsplash.com/photos/A8UtGwywXqw",
-    "alt": "Ba phong bì trắng gắn sáp niêm phong màu vàng đồng, cạnh nhành hoa hồng nhạt trên nền trắng"
+    "alt": "Phong bì và giấy màu nhạt, hai dấu sáp vàng đồng cùng nhành hoa trên nền trắng"
   },
   {
     "slug": "nhan-tin-xac-nhan-tham-du-dam-cuoi",
@@ -157,7 +157,7 @@
     "photographer": "HACA Wedding Film",
     "photographerUrl": "https://unsplash.com/@hacawedding",
     "unsplashUrl": "https://unsplash.com/photos/TRfDDW-Nz_c",
-    "alt": "Đoàn rước dâu mặc áo dài bưng lễ vật đi trên đường làng, chú rể mặc vest đen đi đầu"
+    "alt": "Chàng trai mặc vest đi cạnh người phụ nữ áo dài hồng bưng giỏ đỏ, phía sau là đoàn người mang lễ vật"
   },
   {
     "slug": "lich-trinh-ngay-cuoi",
@@ -168,5 +168,21 @@
     "photographerUrl": "https://unsplash.com/@hieptltb97",
     "unsplashUrl": "https://unsplash.com/photos/yh9lcTWQUcs",
     "alt": "Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo"
+  },
+  {
+    "slug": "gui-thiep-cuoi-truoc-bao-lau",
+    "file": "checklist-phat-thiep.webp",
+    "source": "own",
+    "role": "inline",
+    "alt": "Checklist Hẹn Ước với thẻ Gửi thiệp mời và ngày hạn minh hoạ",
+    "caption": "Ảnh chụp công cụ checklist Hẹn Ước: thẻ Gửi thiệp mời có hạn theo ngày cưới minh hoạ. Ảnh: Hẹn Ước."
+  },
+  {
+    "slug": "nhan-tin-xac-nhan-tham-du-dam-cuoi",
+    "file": "rsvp-demo.webp",
+    "source": "own",
+    "role": "inline",
+    "alt": "Form RSVP trên thiệp demo Hẹn Ước với lựa chọn Sẽ đến, Không đến được và ô lời nhắn",
+    "caption": "Ảnh chụp form xác nhận tham dự trên thiệp demo Hẹn Ước; dùng dữ liệu demo, không phải phản hồi của khách thật. Ảnh: Hẹn Ước."
   }
 ]

@@ -123,3 +123,13 @@ describe("Cẩm nang (src/data/articles.ts)", () => {
     }
   });
 });
+
+it.each(parseArticleImages(imageManifest))(
+  "$slug/$file: mọi ảnh kể cả ảnh tự chụp có file thật",
+  (image) => {
+    const file = join(process.cwd(), "public", articleImageSrc(image).slice(1));
+    expect(statSync(file, { throwIfNoEntry: false })?.isFile(), `Thiếu file ảnh: ${file}`).toBe(
+      true,
+    );
+  },
+);

@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -97,4 +97,28 @@ it("keeps successful downloads and credits when another image fails", async () =
   const credits = await readFile(join(outputDir, "CREDITS.md"), "utf8");
   expect(credits).toContain("thiep-moi.webp");
   expect(credits).not.toContain("anh-bia.webp");
+});
+
+it("skips own entries without fetching, replacing the file or adding Unsplash credits", async () => {
+  const own = {
+    slug: "bai-thu",
+    file: "screenshot.webp",
+    source: "own",
+    role: "inline",
+    alt: "Form minh hoạ",
+    caption: "Ảnh: Hẹn Ước.",
+  };
+  await writeFile(manifestPath, JSON.stringify([...fixture, own]));
+  await mkdir(join(outputDir, own.slug), { recursive: true });
+  const ownPath = join(outputDir, own.slug, "screenshot.webp");
+  const original = Buffer.from("original screenshot supplied by Tony");
+  await writeFile(ownPath, original);
+  const config = options();
+  await fetchArticleImages(config);
+  expect(config.fetchImpl).toHaveBeenCalledTimes(fixture.length);
+  expect(config.report).toHaveBeenCalledWith(expect.stringContaining("Bỏ qua ảnh tự chụp"));
+  expect(await readFile(join(outputDir, "CREDITS.md"), "utf8")).not.toContain(own.slug);
+  expect(await readFile(ownPath)).toEqual(original);
+  expect(() => parseImageManifest([{ ...own, cdnPath: "photo-invalid" }])).toThrow("own");
+  expect(() => parseImageManifest([{ ...own, caption: "" }])).toThrow("caption");
 });

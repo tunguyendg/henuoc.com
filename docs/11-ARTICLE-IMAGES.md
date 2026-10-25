@@ -26,7 +26,7 @@ Manifest: `src/content/cam-nang/images.json`, mảng các object:
 <ArticleImage file="anh-trong-bai" />
 ```
 
-Component tự lấy alt và credit từ manifest, chỉ tra ảnh thuộc bài hiện tại. Mỗi ảnh hiển thị `figure`, ảnh responsive và caption có link tác giả / Unsplash.
+Component tự lấy alt và credit từ manifest, chỉ tra ảnh thuộc bài hiện tại. Mỗi ảnh hiển thị `figure`, ảnh responsive và caption: ảnh Unsplash có link tác giả / Unsplash; ảnh tự chụp dùng `caption` riêng.
 
 Chạy bằng Node 22:
 
@@ -39,3 +39,9 @@ Script dùng fetch có sẵn của Node, không cần dependency. Ảnh tải t�
 Credit của các file tải thành công hoặc đã có được ghi vào `public/images/cam-nang/CREDITS.md`, giữ nội dung cũ và không lặp credit khi chạy lại. Không dùng fixture kiểm thử làm nguồn ảnh thật.
 
 Thiếu manifest: script báo lỗi rõ và ứng dụng không build được. Thiếu ảnh role cover hoặc file ảnh bìa: test SEO fail. Manifest có lỗi: cần sửa trước khi build. Sau khi cập nhật manifest, chạy tải ảnh trước khi build / deploy.
+
+## Ảnh tự chụp
+
+Manifest hỗ trợ `{ slug, file, source: "own", role, alt, caption }`. Không thêm trường Unsplash vào ảnh tự chụp. Tony đặt WebP tại cùng thư mục `public/images/cam-nang/<slug>/`; `file` nhận tên gốc, tên `.webp` hoặc đường dẫn `cam-nang/<slug>/<file>.webp` như ảnh Unsplash.
+
+Script bỏ qua ảnh `source: "own"`, không tải và không ghi credit Unsplash. Component hiển thị caption riêng, dùng `object-contain` cho screenshot dọc. Test SEO kiểm sự tồn tại của tất cả file, kể cả ảnh inline tự chụp. Chỉ chụp dữ liệu demo, không chụp dữ liệu thật của khách.

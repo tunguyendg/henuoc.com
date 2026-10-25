@@ -10,15 +10,14 @@ export function parseImageManifest(value) {
   const seen = new Set();
   return value.map((image, index) => {
     const label = `images.json[${index}]`;
-    for (const field of [
-      "slug",
-      "file",
-      "cdnPath",
-      "photographer",
-      "photographerUrl",
-      "unsplashUrl",
-      "alt",
-    ]) {
+    if (image?.source !== undefined && !["own", "unsplash"].includes(image.source)) {
+      throw new Error(`${label}: source phải là own hoặc unsplash.`);
+    }
+    const fields =
+      image?.source === "own"
+        ? ["slug", "file", "alt", "caption"]
+        : ["slug", "file", "cdnPath", "photographer", "photographerUrl", "unsplashUrl", "alt"];
+    for (const field of fields) {
       if (typeof image?.[field] !== "string" || !image[field].trim()) {
         throw new Error(`${label}: thiếu hoặc sai trường ${field}.`);
       }
@@ -32,20 +31,28 @@ export function parseImageManifest(value) {
         `${label}: slug và tên file phải là kebab-case; đường dẫn chỉ được nằm trong cam-nang/<slug>/.`,
       );
     }
-    if (!/^photo-[a-zA-Z0-9-]+$/.test(image.cdnPath)) {
-      throw new Error(
-        `${label}: cdnPath phải là photo-… trên images.unsplash.com, không gồm query.`,
-      );
-    }
-    for (const field of ["photographerUrl", "unsplashUrl"]) {
-      const url = new URL(image[field]);
-      if (
-        url.protocol !== "https:" ||
-        url.hostname !== "unsplash.com" ||
-        url.username ||
-        url.password
-      ) {
-        throw new Error(`${label}: ${field} phải là URL HTTPS trên unsplash.com.`);
+    if (image.source === "own") {
+      for (const field of ["cdnPath", "photographer", "photographerUrl", "unsplashUrl"]) {
+        if (field in image) throw new Error(`${label}: ảnh own không dùng trường ${field}.`);
+      }
+      if (!["cover", "inline"].includes(image.role))
+        throw new Error(`${label}: role phải là cover hoặc inline.`);
+    } else {
+      if (!/^photo-[a-zA-Z0-9-]+$/.test(image.cdnPath)) {
+        throw new Error(
+          `${label}: cdnPath phải là photo-… trên images.unsplash.com, không gồm query.`,
+        );
+      }
+      for (const field of ["photographerUrl", "unsplashUrl"]) {
+        const url = new URL(image[field]);
+        if (
+          url.protocol !== "https:" ||
+          url.hostname !== "unsplash.com" ||
+          url.username ||
+          url.password
+        ) {
+          throw new Error(`${label}: ${field} phải là URL HTTPS trên unsplash.com.`);
+        }
       }
     }
     const key = `${image.slug}/${file}`;
@@ -90,6 +97,10 @@ export async function fetchArticleImages({
   for (const image of images) {
     const relativePath = `${image.slug}/${image.file}.webp`;
     const destination = join(outputDir, image.slug, `${image.file}.webp`);
+    if (image.source === "own") {
+      report(`Bỏ qua ảnh tự chụp: ${relativePath} (không tải hoặc sửa credit Unsplash).`);
+      continue;
+    }
     try {
       if (await exists(destination)) {
         report(`Bỏ qua: ${relativePath} (đã có).`);

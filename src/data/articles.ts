@@ -111,4 +111,64 @@ export const articles: Article[] = [
       "/cam-nang/du-tru-chi-phi-dam-cuoi",
     ],
   },
+  {
+    slug: "le-dam-ngo-can-chuan-bi-gi",
+    title: "Lễ dạm ngõ cần chuẩn bị gì? Checklist hai nhà · Hẹn Ước",
+    description:
+      "Lễ dạm ngõ cần chuẩn bị gì? Checklist hai gia đình, câu hỏi về lễ vật theo vùng và mẫu lời thưa chuyện; phân biệt buổi ra mắt với lễ ăn hỏi.",
+    h1: "Lễ dạm ngõ cần chuẩn bị gì? Checklist và lời thưa chuyện",
+    keyword: "lễ dạm ngõ cần chuẩn bị gì",
+    breadcrumb: "Chuẩn bị lễ dạm ngõ",
+    publishedAt: "2026-10-24",
+    related: [
+      "/cong-cu/checklist-dam-cuoi",
+      "/cam-nang/le-vu-quy-thanh-hon-tan-hon",
+      "/cam-nang/cach-ghi-thiep-cuoi",
+    ],
+  },
+  {
+    slug: "gui-thiep-cuoi-truoc-bao-lau",
+    title: "Gửi thiệp cưới trước bao lâu? Lịch tự điền · Hẹn Ước",
+    description:
+      "Gửi thiệp cưới trước bao lâu tuỳ khoảng cách và gia đình: bảng thời điểm theo nhóm khách, cách tính lùi từ hạn chốt khách và mẫu nhắc phản hồi.",
+    h1: "Gửi thiệp cưới trước bao lâu để khách tiện sắp xếp?",
+    keyword: "gửi thiệp cưới trước bao lâu",
+    breadcrumb: "Thời điểm gửi thiệp",
+    publishedAt: "2026-10-24",
+    related: [
+      "/cong-cu/checklist-dam-cuoi",
+      "/cam-nang/gui-thiep-cuoi-qua-zalo",
+      "/tinh-nang/rsvp",
+    ],
+  },
+  {
+    slug: "nhan-tin-xac-nhan-tham-du-dam-cuoi",
+    title: "Xác nhận tham dự đám cưới: mẫu tin nhắn · Hẹn Ước",
+    description:
+      "Mẫu tin nhắn xác nhận tham dự đám cưới cho họ hàng, đồng nghiệp và bạn bè theo từng thời điểm; cách hỏi lịch sự, ghi nhận phản hồi và dùng RSVP.",
+    h1: "Nhắn tin xác nhận tham dự đám cưới: mẫu theo thời điểm",
+    keyword: "xác nhận tham dự đám cưới",
+    breadcrumb: "Nhắn tin xác nhận tham dự",
+    publishedAt: "2026-10-24",
+    related: [
+      "/tinh-nang/rsvp",
+      "/cam-nang/loi-moi-dam-cuoi-hay",
+      "/cam-nang/cach-tinh-so-luong-khach-moi",
+    ],
+  },
+  {
+    slug: "lich-trinh-ngay-cuoi",
+    title: "Lịch trình ngày cưới: mẫu tự điền theo buổi · Hẹn Ước",
+    description:
+      "Lịch trình ngày cưới tự điền cho lễ hỏi khác ngày, gộp hỏi–cưới và riêng phần tiệc nhà hàng; cách chốt mốc, giao việc, dự phòng di chuyển và trễ lịch.",
+    h1: "Lịch trình ngày cưới: mẫu tự điền cho từng cách tổ chức",
+    keyword: "lịch trình ngày cưới",
+    breadcrumb: "Lịch trình ngày cưới",
+    publishedAt: "2026-10-24",
+    related: [
+      "/cam-nang/le-vu-quy-thanh-hon-tan-hon",
+      "/cam-nang/le-dam-ngo-can-chuan-bi-gi",
+      "/cong-cu/checklist-dam-cuoi",
+    ],
+  },
 ];

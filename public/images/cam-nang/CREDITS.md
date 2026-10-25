@@ -34,3 +34,21 @@ Nguồn: Unsplash · https://unsplash.com/license
 
 <!-- image: loi-moi-dam-cuoi-hay/cover.webp -->
 - `loi-moi-dam-cuoi-hay/cover.webp`: Thiệp mời cưới vẽ hoa dại màu nước, đặt cạnh hoa hồng kem, mao lương cam và dải ruy băng hồng — Ảnh: [Pau Patterson Photography](<https://unsplash.com/@paupattersonphotography_>) / [Unsplash](<https://unsplash.com/photos/lxHHTpPfA4w>).
+
+<!-- image: le-dam-ngo-can-chuan-bi-gi/cover.webp -->
+- `le-dam-ngo-can-chuan-bi-gi/cover.webp`: Người phụ nữ mặc áo dài đỏ bưng khay phủ khăn đỏ, đi cạnh chàng trai mặc vest cầm hoa, phía sau là họ hàng — Ảnh: [HACA Wedding Film](<https://unsplash.com/@hacawedding>) / [Unsplash](<https://unsplash.com/photos/xNiIZ9G9hQg>).
+
+<!-- image: le-dam-ngo-can-chuan-bi-gi/khay-tra-mut.webp -->
+- `le-dam-ngo-can-chuan-bi-gi/khay-tra-mut.webp`: Ấm trà đất nung và chén nhỏ trên khay tre, bên cạnh đĩa hạt điều, mắc ca và hồng sấy — Ảnh: [Irish83](<https://unsplash.com/@irish83>) / [Unsplash](<https://unsplash.com/photos/WNhmpHs33V4>).
+
+<!-- image: gui-thiep-cuoi-truoc-bao-lau/cover.webp -->
+- `gui-thiep-cuoi-truoc-bao-lau/cover.webp`: Ba phong bì trắng gắn sáp niêm phong màu vàng đồng, cạnh nhành hoa hồng nhạt trên nền trắng — Ảnh: [Diana Light](<https://unsplash.com/@dreamcatchlight>) / [Unsplash](<https://unsplash.com/photos/A8UtGwywXqw>).
+
+<!-- image: nhan-tin-xac-nhan-tham-du-dam-cuoi/cover.webp -->
+- `nhan-tin-xac-nhan-tham-du-dam-cuoi/cover.webp`: Hai tay đeo nhẫn cầm điện thoại nhắn tin bên bàn gỗ — Ảnh: [Swello](<https://unsplash.com/@getswello>) / [Unsplash](<https://unsplash.com/photos/2f_zK0ruzJE>).
+
+<!-- image: lich-trinh-ngay-cuoi/cover.webp -->
+- `lich-trinh-ngay-cuoi/cover.webp`: Đoàn rước dâu mặc áo dài bưng lễ vật đi trên đường làng, chú rể mặc vest đen đi đầu — Ảnh: [HACA Wedding Film](<https://unsplash.com/@hacawedding>) / [Unsplash](<https://unsplash.com/photos/TRfDDW-Nz_c>).
+
+<!-- image: lich-trinh-ngay-cuoi/le-gia-tien.webp -->
+- `lich-trinh-ngay-cuoi/le-gia-tien.webp`: Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo — Ảnh: [Nguyễn Hiệp](<https://unsplash.com/@hieptltb97>) / [Unsplash](<https://unsplash.com/photos/yh9lcTWQUcs>).

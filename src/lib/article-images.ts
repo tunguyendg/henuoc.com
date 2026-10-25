@@ -13,16 +13,26 @@ const unsplashUrl = z.url().refine((value) => {
     url.protocol === "https:" && url.hostname === "unsplash.com" && !url.username && !url.password
   );
 });
-const imageSchema = z.object({
+const imageBaseSchema = z.object({
   slug: segment,
   role: z.enum(["cover", "inline"]),
   file: z.string().min(1),
+  alt: z.string().trim().min(1),
+});
+const ownImageSchema = imageBaseSchema
+  .extend({
+    source: z.literal("own"),
+    caption: z.string().trim().min(1),
+  })
+  .strict();
+const unsplashImageSchema = imageBaseSchema.extend({
+  source: z.literal("unsplash").default("unsplash"),
   cdnPath: z.string().regex(/^photo-[a-zA-Z0-9-]+$/),
   photographer: z.string().trim().min(1),
   photographerUrl: unsplashUrl,
   unsplashUrl,
-  alt: z.string().trim().min(1),
 });
+const imageSchema = z.union([ownImageSchema, unsplashImageSchema]);
 
 export type ArticleImageData = z.infer<typeof imageSchema>;
 
