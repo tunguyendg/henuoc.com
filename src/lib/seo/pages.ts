@@ -325,13 +325,13 @@ const staticPages: SeoPage[] = [
     title: "Đăng nhập · Hẹn Ước",
     description:
       "Đăng nhập Hẹn Ước bằng Google hoặc email để lưu thiệp cưới, quản lý khách mời và theo dõi RSVP trên mọi thiết bị.",
-    h1: "Đăng nhập",
+    h1: "Đăng nhập hoặc tạo tài khoản",
     keyword: "đăng nhập",
     breadcrumb: "Đăng nhập",
     parent: "/",
     schema: "WebPage",
     related: ["/tao-thiep"],
-    index: false,
+    index: false, // /dang-ky 308 về đây (next.config.ts) nên không cần mục riêng
   },
 ];
 

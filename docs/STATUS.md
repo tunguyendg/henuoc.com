@@ -32,6 +32,8 @@
 
 - Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
 
+- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Dòng phụ trang `/dang-nhap` sửa sẵn trong `page.tsx` (chưa commit, đi cùng LoginForm)
+
 ## ⏭️ Tiếp theo (frontend)
 
 1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
@@ -44,6 +46,8 @@
 - T-006 việc sau: bổ sung `prisma migrate deploy` sau khi chốt quyền DB, thứ tự migration và chiến lược expand/contract. **Chưa có migrate trong deploy hiện tại.**
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
+
+- Deploy sau T-032: panel AZDIGI phải có đủ `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (https://henuoc.com), `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY` — thiếu là app throw lúc khởi động. `BETTER_AUTH_URL` hiện nhận cả http/localhost (CI dùng giá trị giả) → cân nhắc chặn lúc runtime production.
 
 - `getInviteLinkAction` (Server Action = endpoint công khai) đang chỉ chặn bằng NODE_ENV. Trước khi mở production: session + ownership, nếu không đoán guestId là lấy được link (có token) của nhà khác.
 

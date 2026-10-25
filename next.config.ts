@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   // Không chạy sharp trên shared hosting: ảnh được tối ưu sẵn (WebP) trước khi đưa lên public/ hoặc R2.
   images: { unoptimized: true },
   poweredByHeader: false,
+  // Đăng nhập và đăng ký là một luồng (Google / email OTP tự tạo tài khoản) → giữ một URL duy nhất.
+  async redirects() {
+    return [{ source: "/dang-ky", destination: "/dang-nhap", permanent: true }];
+  },
   turbopack: {
     rules: {
       "*.css": {
