@@ -184,5 +184,45 @@
     "role": "inline",
     "alt": "Form RSVP trên thiệp demo Hẹn Ước với lựa chọn Sẽ đến, Không đến được và ô lời nhắn",
     "caption": "Ảnh chụp form xác nhận tham dự trên thiệp demo Hẹn Ước; dùng dữ liệu demo, không phải phản hồi của khách thật. Ảnh: Hẹn Ước."
+  },
+  {
+    "slug": "di-dam-cuoi-bao-nhieu-tien",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1647470226360-93809de2fa31",
+    "photographer": "Diana Light",
+    "photographerUrl": "https://unsplash.com/@dreamcatchlight",
+    "unsplashUrl": "https://unsplash.com/photos/wedding-stationery-and-envelopes-laid-out-on-a-table-Bj_5Rnu_la4",
+    "alt": "Giấy thiệp và phong bì cưới được bày trên mặt bàn"
+  },
+  {
+    "slug": "le-an-hoi-can-chuan-bi-gi",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1656726855515-37d1390ad212",
+    "photographer": "Nguyễn Hiệp",
+    "photographerUrl": "https://unsplash.com/@hieptltb97",
+    "unsplashUrl": "https://unsplash.com/photos/yh9lcTWQUcs",
+    "alt": "Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo"
+  },
+  {
+    "slug": "co-nen-dung-thiep-cuoi-online",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1644850513537-15a3b4e5408b",
+    "photographer": "Siamak",
+    "photographerUrl": "https://unsplash.com/@onlysiamak",
+    "unsplashUrl": "https://unsplash.com/photos/a-table-topped-with-lots-of-cards-and-envelopes-WEkTLS1KOyQ",
+    "alt": "Các tấm thiệp cưới và phong bì được bày trên bàn"
+  },
+  {
+    "slug": "loi-cam-on-sau-dam-cuoi",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1775880305689-b3eb6679728b",
+    "photographer": "Adhitya Sibikumar",
+    "photographerUrl": "https://unsplash.com/@adhitya_2505",
+    "unsplashUrl": "https://unsplash.com/photos/a-thank-you-card-and-lit-candle-on-a-table-pKniW7hUNFo",
+    "alt": "Tấm thiệp cảm ơn đặt cạnh ngọn nến đang cháy trên bàn tiệc"
   }
 ]

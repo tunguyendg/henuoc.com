@@ -52,6 +52,7 @@ export const articles: Article[] = [
     breadcrumb: "Lời mời đám cưới hay",
     publishedAt: "2026-10-20",
     related: [
+      "/cam-nang/loi-cam-on-sau-dam-cuoi",
       "/tinh-nang/loi-moi-rieng",
       "/cong-cu/mau-loi-moi-dam-cuoi",
       "/mau-thiep-cuoi",
@@ -79,7 +80,12 @@ export const articles: Article[] = [
     keyword: "gửi thiệp cưới qua zalo",
     breadcrumb: "Gửi thiệp cưới qua Zalo",
     publishedAt: "2026-10-23",
-    related: ["/tinh-nang/loi-moi-rieng", "/cam-nang/loi-moi-dam-cuoi-hay", "/mau-thiep-cuoi"],
+    related: [
+      "/cam-nang/co-nen-dung-thiep-cuoi-online",
+      "/tinh-nang/loi-moi-rieng",
+      "/cam-nang/loi-moi-dam-cuoi-hay",
+      "/mau-thiep-cuoi",
+    ],
   },
   {
     slug: "du-tru-chi-phi-dam-cuoi",
@@ -91,6 +97,7 @@ export const articles: Article[] = [
     breadcrumb: "Dự trù chi phí đám cưới",
     publishedAt: "2026-10-23",
     related: [
+      "/cam-nang/di-dam-cuoi-bao-nhieu-tien",
       "/cam-nang/cach-tinh-so-luong-khach-moi",
       "/cong-cu/checklist-dam-cuoi",
       "/tinh-nang/checklist-dam-cuoi",
@@ -121,6 +128,7 @@ export const articles: Article[] = [
     breadcrumb: "Chuẩn bị lễ dạm ngõ",
     publishedAt: "2026-10-24",
     related: [
+      "/cam-nang/le-an-hoi-can-chuan-bi-gi",
       "/cong-cu/checklist-dam-cuoi",
       "/cam-nang/le-vu-quy-thanh-hon-tan-hon",
       "/cam-nang/cach-ghi-thiep-cuoi",
@@ -170,5 +178,70 @@ export const articles: Article[] = [
       "/cam-nang/le-dam-ngo-can-chuan-bi-gi",
       "/cong-cu/checklist-dam-cuoi",
     ],
+  },
+  {
+    slug: "di-dam-cuoi-bao-nhieu-tien",
+    title: "Đi đám cưới bao nhiêu tiền? Khoảng tham khảo · Hẹn Ước",
+    description:
+      "Đi đám cưới bao nhiêu tiền tuỳ quan hệ và địa phương: bảng khoảng tham khảo, phiếu tự cân nhắc ngân sách và cách gửi lời chúc tế nhị.",
+    h1: "Đi đám cưới bao nhiêu tiền? Cân nhắc theo quan hệ và địa phương",
+    keyword: "đi đám cưới bao nhiêu tiền",
+    breadcrumb: "Tiền mừng cưới",
+    related: [
+      "/cam-nang/du-tru-chi-phi-dam-cuoi",
+      "/mau-thiep-cuoi",
+      "/tinh-nang/loi-moi-rieng",
+      "/cam-nang/nhan-tin-xac-nhan-tham-du-dam-cuoi",
+    ],
+    publishedAt: "2026-10-25",
+  },
+  {
+    slug: "le-an-hoi-can-chuan-bi-gi",
+    title: "Lễ ăn hỏi cần chuẩn bị gì? Mâm quả và số tráp · Hẹn Ước",
+    description:
+      "Lễ ăn hỏi cần chuẩn bị gì? Checklist hai nhà, cách bàn mâm quả và số tráp theo Bắc, Trung, Nam, cùng khung trình tự để người lớn xác nhận.",
+    h1: "Lễ ăn hỏi cần chuẩn bị gì? Checklist, mâm quả và trình tự lễ",
+    keyword: "lễ ăn hỏi cần chuẩn bị gì",
+    breadcrumb: "Chuẩn bị lễ ăn hỏi",
+    related: [
+      "/cam-nang/le-dam-ngo-can-chuan-bi-gi",
+      "/cam-nang/lich-trinh-ngay-cuoi",
+      "/mau-thiep-cuoi",
+      "/tinh-nang/checklist-dam-cuoi",
+      "/cong-cu/checklist-dam-cuoi",
+    ],
+    publishedAt: "2026-10-25",
+  },
+  {
+    slug: "co-nen-dung-thiep-cuoi-online",
+    title: "Có nên dùng thiệp cưới online? Cách chọn · Hẹn Ước",
+    description:
+      "Có nên dùng thiệp cưới online? So sánh với thiệp giấy, bảng chọn cách mời theo người nhận và mẫu thưa gửi người lớn tuổi để gia đình cùng bàn.",
+    h1: "Có nên dùng thiệp cưới online? Chọn cách mời hợp với gia đình",
+    keyword: "có nên dùng thiệp cưới online",
+    breadcrumb: "Có nên dùng thiệp online",
+    related: [
+      "/mau-thiep-cuoi",
+      "/tinh-nang/loi-moi-rieng",
+      "/cam-nang/gui-thiep-cuoi-qua-zalo",
+      "/cam-nang/gui-thiep-cuoi-truoc-bao-lau",
+    ],
+    publishedAt: "2026-10-25",
+  },
+  {
+    slug: "loi-cam-on-sau-dam-cuoi",
+    title: "Lời cảm ơn sau đám cưới: mẫu tin nhắn · Hẹn Ước",
+    description:
+      "Lời cảm ơn sau đám cưới cho khách dự tiệc, gia đình và người phụ giúp: mẫu tin nhắn tự chỉnh, lời cảm ơn công khai và checklist trước khi gửi.",
+    h1: "Lời cảm ơn sau đám cưới cho khách, gia đình và người phụ giúp",
+    keyword: "lời cảm ơn sau đám cưới",
+    breadcrumb: "Lời cảm ơn sau đám cưới",
+    related: [
+      "/cam-nang/loi-moi-dam-cuoi-hay",
+      "/cam-nang/lich-trinh-ngay-cuoi",
+      "/mau-thiep-cuoi",
+      "/tinh-nang/loi-moi-rieng",
+    ],
+    publishedAt: "2026-10-25",
   },
 ];

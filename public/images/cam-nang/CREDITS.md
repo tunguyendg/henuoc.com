@@ -52,3 +52,15 @@ Nguồn: Unsplash · https://unsplash.com/license
 
 <!-- image: lich-trinh-ngay-cuoi/le-gia-tien.webp -->
 - `lich-trinh-ngay-cuoi/le-gia-tien.webp`: Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo — Ảnh: [Nguyễn Hiệp](<https://unsplash.com/@hieptltb97>) / [Unsplash](<https://unsplash.com/photos/yh9lcTWQUcs>).
+
+<!-- image: le-an-hoi-can-chuan-bi-gi/cover.webp -->
+- `le-an-hoi-can-chuan-bi-gi/cover.webp`: Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo — Ảnh: [Nguyễn Hiệp](<https://unsplash.com/@hieptltb97>) / [Unsplash](<https://unsplash.com/photos/yh9lcTWQUcs>).
+
+<!-- image: di-dam-cuoi-bao-nhieu-tien/cover.webp -->
+- `di-dam-cuoi-bao-nhieu-tien/cover.webp`: Giấy thiệp và phong bì cưới được bày trên mặt bàn — Ảnh: [Diana Light](<https://unsplash.com/@dreamcatchlight>) / [Unsplash](<https://unsplash.com/photos/wedding-stationery-and-envelopes-laid-out-on-a-table-Bj_5Rnu_la4>).
+
+<!-- image: co-nen-dung-thiep-cuoi-online/cover.webp -->
+- `co-nen-dung-thiep-cuoi-online/cover.webp`: Các tấm thiệp cưới và phong bì được bày trên bàn — Ảnh: [Siamak](<https://unsplash.com/@onlysiamak>) / [Unsplash](<https://unsplash.com/photos/a-table-topped-with-lots-of-cards-and-envelopes-WEkTLS1KOyQ>).
+
+<!-- image: loi-cam-on-sau-dam-cuoi/cover.webp -->
+- `loi-cam-on-sau-dam-cuoi/cover.webp`: Tấm thiệp cảm ơn đặt cạnh ngọn nến đang cháy trên bàn tiệc — Ảnh: [Adhitya Sibikumar](<https://unsplash.com/@adhitya_2505>) / [Unsplash](<https://unsplash.com/photos/a-thank-you-card-and-lit-candle-on-a-table-pKniW7hUNFo>).
