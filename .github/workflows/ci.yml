@@ -25,5 +25,11 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://henuoc.com
           DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          # Giả: chỉ để qua validate env.server.ts lúc build. Giá trị thật đặt ở panel AZDIGI.
+          BETTER_AUTH_SECRET: build-only-fake-secret-0000000000000000
+          BETTER_AUTH_URL: http://localhost:3000
+          GOOGLE_CLIENT_ID: build-fake-google-client-id
+          GOOGLE_CLIENT_SECRET: build-fake-google-client-secret
+          RESEND_API_KEY: re_build
       - name: Standalone output tồn tại
         run: test -f .next/standalone/server.js
