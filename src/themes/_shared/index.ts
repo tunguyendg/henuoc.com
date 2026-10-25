@@ -1,5 +1,5 @@
 // Shared theme primitives (docs/07-THEMES.md §3). Themes import from "@/themes/_shared".
-// Server Components: MapButton, Watermark, Gift. Everything else is a client leaf or a hook.
+// Server Components: MapButton, Watermark, MusicCredit, Gift. Everything else is a client leaf or a hook.
 
 export { AddToCalendar, type AddToCalendarProps } from "./AddToCalendar";
 export { Envelope, type EnvelopeProps } from "./Envelope";
@@ -7,6 +7,7 @@ export { Gift, type GiftProps } from "./Gift";
 export { GiftButton, type GiftButtonProps } from "./GiftButton";
 export { GiftSheet, type GiftSheetProps } from "./GiftSheet";
 export { MapButton, type MapButtonProps } from "./MapButton";
+export { MusicCredit, musicCreditText, type MusicCreditProps } from "./MusicCredit";
 export { MusicToggle, type MusicToggleProps } from "./MusicToggle";
 export { Reveal, type RevealProps } from "./Reveal";
 export { RsvpForm, type RsvpEventOption, type RsvpFormProps } from "./RsvpForm";

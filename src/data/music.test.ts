@@ -4,6 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { getTrack, getTracks, musicSlugSchema } from "./music";
+import { MusicCredit, musicCreditText } from "@/themes/_shared/MusicCredit";
 import { MusicToggle } from "@/themes/_shared/MusicToggle";
 import { optionsSchema } from "@/themes/placeholder/manifest";
 
@@ -56,5 +57,22 @@ describe("Kho nhạc", () => {
     expect(html).not.toContain("<small");
     expect(html).not.toContain("https://creativecommons.org/licenses/by/4.0/");
     expect(renderToStaticMarkup(createElement(MusicToggle, { ...props, hidden: true }))).toBe("");
+  });
+
+  it.each(enabled)("$slug: credit CC-BY ghi đã chỉnh sửa, bài khác không có credit", (track) => {
+    const text = musicCreditText(track);
+    if (track.license !== "CC-BY-4.0") return expect(text).toBeNull();
+    expect(text).toMatch(/^Nhạc nền \(đã chỉnh sửa\): /);
+    expect(text).toContain("Kevin MacLeod");
+    expect(text).toContain("https://creativecommons.org/licenses/by/4.0/");
+    expect(text).not.toMatch(/\n/);
+  });
+
+  it("MusicCredit ẩn trong preview và khi không có bài", () => {
+    const track = getTrack("kevin-there-is-romance")!;
+    const html = renderToStaticMarkup(createElement(MusicCredit, { track }));
+    expect(html).toContain("(đã chỉnh sửa)");
+    expect(renderToStaticMarkup(createElement(MusicCredit, { track, hidden: true }))).toBe("");
+    expect(renderToStaticMarkup(createElement(MusicCredit, {}))).toBe("");
   });
 });

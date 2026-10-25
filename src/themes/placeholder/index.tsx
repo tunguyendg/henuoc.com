@@ -4,6 +4,7 @@ import { getTrack, getTracks } from "@/data/music";
 import { AddToCalendar } from "../_shared/AddToCalendar";
 import { Gift } from "../_shared/Gift";
 import { MapButton } from "../_shared/MapButton";
+import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
 import { Watermark } from "../_shared/Watermark";
@@ -205,11 +206,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
         {/* Outside `thanks`: the Free plan keeps its watermark even if that section is off. */}
         <div className="space-y-1 text-center">
           <Watermark show={content.showWatermark} />
-          {mode !== "preview" && track?.license === "CC-BY-4.0" && track.credit?.trim() && (
-            <p className="text-xs text-muted">
-              Nhạc nền: {track.credit.trim().replace(/\s+/g, " ")}
-            </p>
-          )}
+          <MusicCredit track={track} hidden={mode === "preview"} />
         </div>
       </main>
     </div>

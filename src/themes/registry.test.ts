@@ -141,10 +141,12 @@ describe("placeholder theme: hành trình khách", () => {
     "$slug: chỉ CC-BY-4.0 hiện credit cuối thiệp",
     async (track) => {
       const html = await render({ options: { musicSlug: track.slug } });
-      expect(html.includes("Nhạc nền:")).toBe(track.license === "CC-BY-4.0");
+      expect(html.includes("Nhạc nền")).toBe(track.license === "CC-BY-4.0");
       if (track.license === "CC-BY-4.0") {
-        expect(html).toContain(`Nhạc nền: ${track.credit!.trim().replace(/\s+/g, " ")}`);
-        expect(html.indexOf("Nhạc nền:")).toBeGreaterThan(html.indexOf("Thiệp tạo bằng"));
+        expect(html).toContain(
+          `Nhạc nền (đã chỉnh sửa): ${track.credit!.trim().replace(/\s+/g, " ")}`,
+        );
+        expect(html.indexOf("Nhạc nền")).toBeGreaterThan(html.indexOf("Thiệp tạo bằng"));
       }
     },
   );
@@ -155,7 +157,7 @@ describe("placeholder theme: hành trình khách", () => {
       { options: { musicSlug: "kevin-there-is-romance" } },
       { showWatermark: false, sections: { ...base.sections, thanks: false } },
     );
-    expect(html).toContain("Nhạc nền:");
+    expect(html).toContain("Nhạc nền (đã chỉnh sửa):");
     expect(html).not.toContain("Thiệp tạo bằng");
     expect(html).not.toContain("Cảm ơn bạn!");
   });
