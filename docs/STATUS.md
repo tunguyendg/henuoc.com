@@ -47,6 +47,8 @@
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
+- `wedding-access.ts` (có test IDOR `wedding-access.test.ts`): `getMyWedding` đang `select: { wedding: true }` = mọi cột → đừng truyền nguyên object xuống Client Component, nên select đúng cột. Server Action gọi `requireWeddingAccess` phải parse `weddingId` bằng Zod trước (rỗng/undefined → Prisma lỗi 500 thay vì 404).
+
 - `dashboard/layout.tsx` vẫn `notFound()` ở production → đăng nhập xong bị đẩy sang `/dashboard` là 404, nút Đăng xuất không hiện. Tony quyết gỡ trước khi deploy auth (proxy + requireUser đã có, còn thiếu ownership + dữ liệu thật thay mock).
 
 - Deploy sau T-032: panel AZDIGI phải có đủ `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (https://henuoc.com), `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY` — thiếu là app throw lúc khởi động. `BETTER_AUTH_URL` hiện nhận cả http/localhost (CI dùng giá trị giả) → cân nhắc chặn lúc runtime production.
