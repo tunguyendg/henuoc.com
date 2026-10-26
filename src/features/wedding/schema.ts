@@ -1,8 +1,11 @@
 import { z } from "zod";
 
 const name = (label: string) =>
-  z.string().trim().min(1, `Nhập tên ${label}`).max(60, `Tên ${label} tối đa 60 ký tự`);
-
+  z
+    .string()
+    // xoá ký tự điều khiển + zero-width (vô hình, dùng để giả tên / phá giao diện)
+    .transform((s) => s.replace(/[\p{Cc}\p{Cf}]/gu, ""))
+    .pipe(z.string().trim().min(1, `Nhập tên ${label}`).max(60, `Tên ${label} tối đa 60 ký tự`));
 export const createWeddingSchema = z.object({
   brideName: name("cô dâu"),
   groomName: name("chú rể"),
