@@ -50,6 +50,9 @@
 | T-023 | SEO base: `metadataBase`, `sitemap.ts`, `robots.ts`, OG động, JSON-LD | 🔴 | T-022 |
 | T-024 | Bảng giá, FAQ, 3 landing tính năng | 🟢 ⚡ | T-020 |
 | T-025 | Cẩm nang MDX (khung + 2 bài đầu) | 🟢 ⚡ | T-020 |
+| T-026 | Taxonomy 10 phong cách × 20 mẫu (`12-THEME-CATALOG.md`): `data/themes.ts`, trang phong cách + FAQ, luật index ≥ 2 mẫu + nội dung riêng | 🟢 | T-022 |
+| T-027 | Gallery: nhãn màu / gói / tính năng, biến thể màu, bộ lọc client (giữ ○ Static, noindex trang có lọc) | 🟢 | T-026 |
+| T-028 | "Dùng mẫu này" → `/tao-thiep?mau=` → `createWedding` validate `themeSlug` với registry (phần action 🔴 Tony) | 🟢/🔴 | T-026, M3 |
 
 **Done khi:** Lighthouse mobile ≥ 90 SEO / ≥ 85 Perf trên homepage + gallery; sitemap đúng; Search Console đã verify + submit sitemap.
 📘 `M2-seo.md`: SSG vs dynamic, `"use cache"`, generateMetadata, generateStaticParams, OG image runtime.

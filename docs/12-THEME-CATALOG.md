@@ -1,6 +1,6 @@
 # 12 — Danh mục mẫu thiệp: 10 phong cách × 20 mẫu
 
-> Tài liệu kế hoạch, **chưa có code nào đổi theo**. Phần "Ánh xạ cũ → mới" (§3) và "Từ khoá SEO" (§2) là **đề xuất — chờ Tony duyệt**.
+> Trạng thái (2026-10-26): §3 **đã duyệt**. §6 **đã quyết**: ngưỡng index = 2 mẫu có code + nội dung riêng. §2 từ khoá: **Tony đang kiểm volume**, tạm dùng cột đề xuất. Chia task: T-026 (taxonomy) · T-027 (gallery + bộ lọc) · T-028 ("Dùng mẫu này" → `createWedding`).
 > Liên quan: `07-THEMES.md` (engine, contract, QA) · `08-SEO.md` (index/noindex) · `src/data/themes.ts` (dữ liệu catalog hiện tại).
 
 ## 1. Hai lớp: catalog ≠ registry
@@ -34,7 +34,7 @@ Ghi chú từ khoá:
 - Tên hiển thị dài ("Tối giản & Thanh lịch") chỉ dùng cho chip / H2; **title ≤ 60 ký tự** nên title trang phong cách dựng từ `keyword`, không từ tên dài.
 - Không 2 phong cách chung 1 từ khoá chính (chống ăn thịt từ khoá, `08-SEO.md`).
 
-## 3. Ánh xạ catalog cũ → mới (đề xuất, Tony duyệt)
+## 3. Ánh xạ catalog cũ → mới (Tony đã duyệt 2026-10-26)
 
 Site chưa launch → đổi slug thoải mái, **không cần redirect**. Sau launch mọi đổi slug phải kèm redirect 308.
 
@@ -88,7 +88,7 @@ Lý do đổi `features` sang danh sách cố định: lọc được, không l�
 | URL | Index khi | Sitemap | Ghi chú |
 | --- | --- | --- | --- |
 | `/mau-thiep-cuoi` | Luôn (sau launch) | Có | Trang gallery chính |
-| `/mau-thiep-cuoi/phong-cach/<style>` | Có **≥ `MIN_THEMES_FOR_STYLE_INDEX` (= 3) mẫu `published`** thuộc phong cách đó (tính cả phong cách phụ) | Chỉ khi index | Luật cũ, giữ |
+| `/mau-thiep-cuoi/phong-cach/<style>` | **≥ 2 mẫu `published`** (= có code trong registry, qua QA) thuộc phong cách đó, tính cả phong cách phụ, **và** phong cách có nội dung riêng: `intro` viết tay + **≥ 3 câu FAQ** | Chỉ khi index | Đã quyết 2026-10-26 (thay ngưỡng 3 cũ) |
 | `/mau-thiep-cuoi/<theme>` | Mẫu `published` | Chỉ khi index | `concept` → noindex |
 | `/mau-thiep-cuoi?mau-sac=…&goi=…&tinh-nang=…` | **Không bao giờ** | Không | Bộ lọc = facet (§4) |
 | `/mau-thiep-cuoi/phong-cach/<style>?…` | Không bao giờ | Không | Lọc trong 1 phong cách |
@@ -100,12 +100,7 @@ Quy tắc bộ lọc:
 - **Lọc phía client** để trang gallery / phong cách vẫn ○ Static (bài học header T-032: đọc `searchParams` ở server làm cả trang thành động). Server render đủ 20 thẻ; client đọc query, ẩn thẻ không khớp, cập nhật URL bằng `history.replaceState` (không `router.push` → không tạo request RSC mới). Không JS vẫn thấy đủ mẫu.
 - Không tạo trang tĩnh kiểu `/mau-thiep-cuoi/mau-do` cho tới khi có dữ liệu Search Console chứng minh có người tìm "thiệp cưới màu đỏ" — lúc đó mới cân nhắc, đi kèm nội dung viết tay.
 
-⚠️ **Mâu thuẫn cần Tony quyết**: mỗi phong cách chỉ có **2 mẫu chính** nhưng ngưỡng index là **3**. Nếu chỉ tính phong cách chính, **không trang phong cách nào được index**, kể cả khi đủ 20 mẫu. Ba hướng:
-1. Gán thêm phong cách phụ có thật (vd. `black-white` cũng là `hien-dai-nghe-thuat`) để phong cách đạt 3 — chỉ khi đúng thẩm mỹ, không gán cho đủ số.
-2. Hạ ngưỡng xuống 2 — trang mỏng hơn, bù bằng `intro` dài hơn + FAQ phong cách.
-3. Giữ 3, chấp nhận trang phong cách noindex tới khi mỗi phong cách có mẫu thứ 3.
-
-Khuyến nghị: **(1) + (3)**. Gallery `/mau-thiep-cuoi` vẫn index nên không mất từ khoá chính.
+**Đã quyết (Tony, 2026-10-26)**: hạ ngưỡng `MIN_THEMES_FOR_STYLE_INDEX` từ 3 xuống **2**, nhưng trang phong cách chỉ index khi có thêm nội dung riêng (`intro` + `faq` ≥ 3 câu) để không thành trang mỏng. Phong cách phụ **chỉ gán khi thật sự hợp thẩm mỹ**, không gán để đủ số.
 
 ## 7. Luồng "Dùng mẫu này"
 
@@ -135,7 +130,7 @@ Khuyến nghị: **(1) + (3)**. Gallery `/mau-thiep-cuoi` vẫn index nên khôn
 | 4 | `seoul-romance` | han-quoc-nhat-ban | Từ khoá "thiệp cưới Hàn Quốc" có người tìm |
 | 5 | `royal-gold` | sang-trong | Ứng viên Premium đầu tiên |
 
-Sau 5 mẫu: 5 phong cách có 1 mẫu published, 5 phong cách có 0 → **toàn bộ trang phong cách noindex** (§6). Gallery và 5 trang chi tiết index được.
+Sau 5 mẫu: mỗi phong cách chính có tối đa 1 mẫu published (trừ khi phong cách phụ thật sự hợp) → trang phong cách vẫn noindex (§6, cần 2). Gallery và 5 trang chi tiết index được. Mẫu thứ 2 của phong cách nào + FAQ xong thì trang đó index.
 
 Việc cần đổi trong roadmap: T-014/T-015/T-016 (`hong-pastel`, `song-hy`, `ban-tin`) đổi thành `blush-rose`, `song-hy-do-son`, `ivory-editorial` theo bảng trên; `ban-tin` → `modern-editorial` lùi về sau 5 mẫu đầu. `07-THEMES.md §5` cập nhật theo.
 
