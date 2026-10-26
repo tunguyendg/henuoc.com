@@ -47,6 +47,11 @@
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
+- M3 onboarding `/dashboard/bat-dau` (form + test slug/schema/createWedding đã có). Còn mở:
+  - Trang nằm trong layout dashboard → người chưa có đám cưới vẫn thấy WeddingHeading/nav/banner (dữ liệu mock). Tony quyết: tách route group `(onboarding)` hay ẩn theo path. Chưa có link/redirect nào dẫn tới trang (dashboard chưa chuyển khi `getMyWedding()` null).
+  - `createWedding` (file Tony): race 2 request song song → 2 đám cưới (chặn bằng partial unique index OWNER/userId — cần migration, hỏi trước); chưa rate limit; tên nhận ký tự điều khiển/zero-width → thêm `.normalize("NFC")` + chặn `\p{C}`.
+  - Slug ghép từ tên = đoán được → route thiệp công khai `/thiep/[slug]` sau này BẮT BUỘC chỉ hiện `PUBLISHED`, DRAFT trả 404, noindex.
+
 - `wedding-access.ts` (có test IDOR `wedding-access.test.ts`): `getMyWedding` đang `select: { wedding: true }` = mọi cột → đừng truyền nguyên object xuống Client Component, nên select đúng cột. Server Action gọi `requireWeddingAccess` phải parse `weddingId` bằng Zod trước (rỗng/undefined → Prisma lỗi 500 thay vì 404).
 
 - `dashboard/layout.tsx` vẫn `notFound()` ở production → đăng nhập xong bị đẩy sang `/dashboard` là 404, nút Đăng xuất không hiện. Tony quyết gỡ trước khi deploy auth (proxy + requireUser đã có, còn thiếu ownership + dữ liệu thật thay mock).

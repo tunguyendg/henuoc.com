@@ -20,6 +20,7 @@ export function SignOutButton({ variant }: { variant: "sidebar" | "icon" }) {
         return;
       }
       // Tải lại hẳn trang (không dùng router): xoá cache RSC phía client → bấm Back không hiện lại dashboard cũ
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- cố ý reload hẳn để xoá cache client khi đăng xuất
       window.location.assign("/");
     } catch {
       setFailed(true); // lỗi mạng: bật lại nút để thử lại
