@@ -4,7 +4,16 @@ import type { z } from "zod";
 // Contract between the theme engine and every theme. Source of truth: docs/07-THEMES.md §2.
 
 export type StyleSlug =
-  "hien-dai" | "toi-gian" | "truyen-thong" | "han-quoc" | "hoa-la" | "vintage" | "sang-trong";
+  | "truyen-thong-viet"
+  | "toi-gian"
+  | "sang-trong"
+  | "lang-man-hoa-la"
+  | "han-quoc-nhat-ban"
+  | "rustic"
+  | "co-dien-hoai-niem"
+  | "bien"
+  | "hien-dai-nghe-thuat"
+  | "de-thuong";
 
 export type SectionKey =
   "cover" | "invitation" | "couple" | "events" | "countdown" | "album" | "gift" | "rsvp" | "thanks";

@@ -81,7 +81,7 @@ describe("admin repo", () => {
     for (const t of list) {
       expect(t.weddingCount).toBe(weddings.filter((w) => w.themeSlug === t.slug).length);
     }
-    expect(list.find((t) => t.slug === "hong-pastel")?.weddingCount).toBe(2);
+    expect(list.find((t) => t.slug === "blush-rose")?.weddingCount).toBe(2);
   });
 
   it("không DTO nào có key email/phone/token/tokenHash/tokenCipher", async () => {

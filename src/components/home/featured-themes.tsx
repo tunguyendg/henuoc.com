@@ -2,8 +2,19 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { ThemeCard } from "@/components/themes/theme-card";
-import { themes } from "@/data/themes";
+import { getTheme, type Theme } from "@/data/themes";
 import { SectionHeading } from "./section-heading";
+
+// 6 mẫu nổi bật trên trang chủ (ưu tiên mẫu sẽ làm đầu tiên, docs/12 §8).
+const FEATURED_SLUGS = [
+  "song-hy-do-son",
+  "blush-rose",
+  "seoul-romance",
+  "botanical-garden",
+  "sai-gon-xua",
+  "modern-editorial",
+];
+const featured = FEATURED_SLUGS.map(getTheme).filter((t): t is Theme => t !== undefined);
 
 export function FeaturedThemes() {
   return (
@@ -23,7 +34,7 @@ export function FeaturedThemes() {
         </div>
 
         <ul className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-6">
-          {themes.map((t) => (
+          {featured.map((t) => (
             <li key={t.slug}>
               <ThemeCard theme={t} />
             </li>

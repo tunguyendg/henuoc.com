@@ -1,13 +1,6 @@
 import { articleTopics, articlesPagePath, pageCount, topicPath } from "@/data/article-topics";
 import { articlePath, articles, type Article } from "@/data/articles";
-import {
-  MIN_THEMES_FOR_STYLE_INDEX,
-  publishedCount,
-  themeStyles,
-  themes,
-  type Theme,
-  type ThemeStyle,
-} from "@/data/themes";
+import { isStyleIndexable, themeStyles, themes, type Theme, type ThemeStyle } from "@/data/themes";
 
 /**
  * SỔ SEO — nguồn sự thật cho mọi trang công khai (docs/08-SEO.md).
@@ -354,17 +347,17 @@ export function clip(text: string, max = 158): string {
 function stylePage(s: ThemeStyle): SeoPage {
   return {
     path: stylePath(s.slug),
-    title: `Mẫu ${s.keyword} đẹp · Hẹn Ước`,
+    title: s.title ?? `Mẫu ${s.keyword} đẹp · Hẹn Ước`,
     description: clip(
       `Mẫu ${s.keyword} online, xem thử với tên hai bạn và gửi qua Zalo. ${s.intro}`,
     ),
-    h1: `Mẫu ${s.keyword}`,
+    h1: s.h1 ?? `Mẫu ${s.keyword}`,
     keyword: s.keyword,
     breadcrumb: s.name,
     parent: "/mau-thiep-cuoi",
     schema: "CollectionPage",
     related: ["/mau-thiep-cuoi", "/tao-thiep"],
-    index: publishedCount(s.slug) >= MIN_THEMES_FOR_STYLE_INDEX,
+    index: isStyleIndexable(s),
     priority: 0.7,
   };
 }

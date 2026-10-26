@@ -65,6 +65,30 @@ export default async function Page({ params }: Props) {
             </div>
           )}
         </div>
+
+        {style.faq.length > 0 && (
+          <section aria-labelledby="faq-heading" className="mt-16 max-w-3xl">
+            <h2
+              id="faq-heading"
+              className="font-display text-2xl font-extrabold tracking-[-0.02em] text-ink"
+            >
+              Câu hỏi thường gặp
+            </h2>
+            <div className="mt-6 divide-y divide-border rounded-(--radius-card) border border-border bg-surface">
+              {style.faq.map((f) => (
+                <details key={f.q} className="group px-5">
+                  <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 [&::-webkit-details-marker]:hidden">
+                    {f.q}
+                    <span aria-hidden className="text-rose-600 group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                  <p className="pb-4 text-muted">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
       </Container>
 
       <RelatedLinks path={path} />

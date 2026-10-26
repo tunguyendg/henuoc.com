@@ -108,11 +108,11 @@ Dữ liệu demo dùng chung: `src/themes/_demo/content.ts` (cặp đôi mẫu "
 
 | Slug | Tên | Phong cách | Tier | Ý tưởng layout |
 |---|---|---|---|---|
-| `hong-pastel` | Hồng Pastel | hoa-la, hien-dai | free | Phong bì hồng mở ra → cuộn dọc, card bo tròn xen hoa watercolor, ảnh bìa khung vòm, chữ script cho tên |
-| `song-hy` | Song Hỷ | truyen-thong | free | Nền đỏ son, viền hoa văn vàng kim, bố cục **đối xứng trung tâm**, chữ Hỷ, lời mời trang trọng kiểu thiệp giấy truyền thống, cuộn như mở cuộn thư |
-| `ban-tin` | Bản Tin | toi-gian, sang-trong | premium | Kiểu tạp chí: typography cực lớn, lưới bất đối xứng, ảnh full-bleed, dải ảnh cuộn ngang, đen–kem, không phong bì (mở bằng "lật trang") |
+| `blush-rose` (cũ `hong-pastel`) | Blush Rose | lang-man-hoa-la | free | Phong bì hồng mở ra → cuộn dọc, card bo tròn xen hoa watercolor, ảnh bìa khung vòm, chữ script cho tên |
+| `song-hy-do-son` (cũ `song-hy`) | Song Hỷ Đỏ Son | truyen-thong-viet | free | Nền đỏ son, viền hoa văn vàng kim, bố cục **đối xứng trung tâm**, chữ Hỷ, lời mời trang trọng kiểu thiệp giấy truyền thống, cuộn như mở cuộn thư |
+| `modern-editorial` (cũ `ban-tin`, làm sau 5 mẫu đầu) | Modern Editorial | hien-dai-nghe-thuat, toi-gian | premium | Kiểu tạp chí: typography cực lớn, lưới bất đối xứng, ảnh full-bleed, dải ảnh cuộn ngang, đen–kem, không phong bì (mở bằng "lật trang") |
 
-Sau MVP: thêm 2 theme/tuần → mục tiêu 10–12 theme khi launch (Hàn Quốc, Vintage, Tối giản trắng, Xanh sage, Đêm sao…).
+Danh mục đầy đủ 10 phong cách × 20 mẫu và thứ tự 5 mẫu đầu (song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold): `12-THEME-CATALOG.md`.
 
 ## 6. Quy trình sản xuất (Tony → Claude → Codex)
 

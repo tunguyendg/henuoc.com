@@ -38,7 +38,7 @@
 ## ⏭️ Tiếp theo (frontend)
 
 1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
-2. Danh mục mẫu mới `docs/12-THEME-CATALOG.md` (10 phong cách × 20 mẫu) — **chờ Tony duyệt** ánh xạ cũ→mới (§3), từ khoá (§2), ngưỡng index trang phong cách (§6). Sau đó 5 mẫu đầu: song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (thay T-014/015/016)
+2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu published + intro + ≥ 3 FAQ). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
 3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
 4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
