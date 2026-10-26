@@ -1,6 +1,6 @@
 # 12 — Danh mục mẫu thiệp: 10 phong cách × 20 mẫu
 
-> Trạng thái (2026-10-26): §3 **đã duyệt**. §6 **đã quyết**: ngưỡng index = 2 mẫu có code + nội dung riêng. §2 từ khoá: **Tony đang kiểm volume**, tạm dùng cột đề xuất. Chia task: T-026 (taxonomy) · T-027 (gallery + bộ lọc) · T-028 ("Dùng mẫu này" → `createWedding`).
+> Trạng thái (2026-10-26): §3 **đã duyệt**. §6 **đã quyết**: ngưỡng index = 2 mẫu có code + nội dung riêng. §2 từ khoá: **Tony đã kiểm lượng tìm** (2026-10-26), slug 06 → `rustic`, 08 → `bien`. Chia task: T-026 (taxonomy) · T-027 (gallery + bộ lọc) · T-028 ("Dùng mẫu này" → `createWedding`).
 > Liên quan: `07-THEMES.md` (engine, contract, QA) · `08-SEO.md` (index/noindex) · `src/data/themes.ts` (dữ liệu catalog hiện tại).
 
 ## 1. Hai lớp: catalog ≠ registry
@@ -16,22 +16,24 @@ Quy tắc: **slug catalog = slug registry = slug thư mục `src/themes/<slug>/`
 
 Slug phong cách và slug mẫu lấy **đúng theo bảng Tony chốt**. Mỗi mẫu có 1 phong cách chính (đứng đầu `styles[]`); có thể thêm phong cách phụ nếu thật sự hợp (xem §5 về ngưỡng index).
 
-| # | Slug phong cách | Tên hiển thị | Từ khoá SEO chính (đề xuất) | Mẫu 1 | Mẫu 2 |
+| # | Slug phong cách | Tên hiển thị | Từ khoá SEO chính (đã chốt) | Mẫu 1 | Mẫu 2 |
 | --- | --- | --- | --- | --- | --- |
 | 01 | `truyen-thong-viet` | Truyền thống Việt | thiệp cưới truyền thống | `song-hy-do-son` Song Hỷ Đỏ Son | `dong-duong` Đông Dương |
 | 02 | `toi-gian` | Tối giản & Thanh lịch | thiệp cưới tối giản | `ivory-editorial` Ivory Editorial | `black-white` Black & White |
 | 03 | `sang-trong` | Sang trọng & Hoàng gia | thiệp cưới sang trọng | `royal-gold` Royal Gold | `champagne` Champagne Elegance |
 | 04 | `lang-man-hoa-la` | Lãng mạn & Hoa lá | thiệp cưới hoa lá | `blush-rose` Blush Rose | `botanical-garden` Botanical Garden |
 | 05 | `han-quoc-nhat-ban` | Hàn Quốc & Nhật Bản | thiệp cưới Hàn Quốc | `seoul-romance` Seoul Romance | `sakura-zen` Sakura Zen |
-| 06 | `thien-nhien-moc-mac` | Thiên nhiên & Mộc mạc | thiệp cưới mộc mạc | `rustic-garden` Rustic Garden | `bohemian` Bohemian Love |
+| 06 | `rustic` | Thiên nhiên & Mộc mạc | thiệp cưới rustic · phụ: mộc mạc, boho | `rustic-garden` Rustic Garden | `bohemian` Bohemian Love |
 | 07 | `co-dien-hoai-niem` | Cổ điển & Hoài niệm | thiệp cưới vintage | `sai-gon-xua` Sài Gòn Xưa | `vintage-newspaper` Vintage Newspaper |
-| 08 | `bien-du-lich` | Biển & Du lịch | thiệp cưới biển | `ocean-promise` Ocean Promise | `travel-postcard` Travel Postcard |
+| 08 | `bien` | Biển & Du lịch | thiệp cưới phong cách biển · phụ: du lịch, destination | `ocean-promise` Ocean Promise | `travel-postcard` Travel Postcard |
 | 09 | `hien-dai-nghe-thuat` | Hiện đại & Nghệ thuật | thiệp cưới hiện đại | `modern-editorial` Modern Editorial | `colorful-pop` Colorful Pop |
-| 10 | `de-thuong` | Dễ thương & Cá nhân hóa | thiệp cưới dễ thương | `chibi-couple` Chibi Couple | `illustrated-love` Illustrated Love |
+| 10 | `de-thuong` | Dễ thương & Cá nhân hóa | thiệp cưới dễ thương **+** chibi (ngang nhau, cả hai trong title + H1) | `chibi-couple` Chibi Couple | `illustrated-love` Illustrated Love |
 
 Ghi chú từ khoá:
-- `keyword` dùng thẳng trong `<title>` + H1 (test SEO kiểm), nên phải là cụm người Việt thật sự gõ. Cột trên là **đề xuất chưa kiểm volume** — riêng "mộc mạc", "biển", "dễ thương" nên kiểm Google Suggest / Search Console trước khi chốt (có thể là "thiệp cưới rustic", "thiệp cưới chibi").
-- Tên hiển thị dài ("Tối giản & Thanh lịch") chỉ dùng cho chip / H2; **title ≤ 60 ký tự** nên title trang phong cách dựng từ `keyword`, không từ tên dài.
+- `keyword` dùng thẳng trong `<title>` + H1 (test SEO kiểm). Mặc định: title `Mẫu <keyword> đẹp · Hẹn Ước`, H1 `Mẫu <keyword>`.
+- Phong cách cần 2 từ khoá ngang nhau (10 `de-thuong`) dùng trường ghi đè `title` / `h1` trong `ThemeStyle`: H1 "Mẫu thiệp cưới dễ thương, chibi", title "Thiệp cưới dễ thương, chibi đẹp · Hẹn Ước" — `keyword` vẫn là "thiệp cưới dễ thương" và phải nằm trong cả hai.
+- Từ khoá phụ (`secondaryKeywords`: mộc mạc, boho · du lịch, destination) không nhồi vào title; đưa tự nhiên vào `intro`, FAQ và mô tả mẫu.
+- Tên hiển thị dài ("Tối giản & Thanh lịch") chỉ dùng cho chip / breadcrumb; **title ≤ 60 ký tự** nên title dựng từ `keyword`, không từ tên dài.
 - Không 2 phong cách chung 1 từ khoá chính (chống ăn thịt từ khoá, `08-SEO.md`).
 
 ## 3. Ánh xạ catalog cũ → mới (Tony đã duyệt 2026-10-26)
@@ -49,7 +51,7 @@ Site chưa launch → đổi slug thoải mái, **không cần redirect**. Sau l
 | `han-quoc` | `han-quoc-nhat-ban` | Đổi slug + tên |
 | `vintage` | `co-dien-hoai-niem` | Đổi slug + tên (giữ từ khoá "thiệp cưới vintage") |
 | `hien-dai` | `hien-dai-nghe-thuat` | Đổi slug + tên |
-| — | `thien-nhien-moc-mac`, `bien-du-lich`, `de-thuong` | Thêm mới, viết `intro` tay |
+| — | `rustic`, `bien`, `de-thuong` | Thêm mới, viết `intro` tay |
 
 ### Mẫu (6 cũ → 20 mới)
 
@@ -164,7 +166,7 @@ Mỗi theme ghi nguồn + giấy phép từng asset vào `manifest.assets[]` (co
 
 | File | Đổi gì |
 | --- | --- |
-| `src/data/themes.ts` | 10 `themeStyles` (slug, name, keyword, intro), 20 `themes` theo §2–3; thêm `colors`, `variants`, đổi `features` sang tag cố định; type `ColorTag`, `FeatureTag` + map nhãn |
+| `src/data/themes.ts` | 10 `themeStyles` (slug, name, keyword, `secondaryKeywords`, `title`/`h1` ghi đè tuỳ chọn, intro, faq), 20 `themes` theo §2–3; thêm `colors`, `variants`, đổi `features` sang tag cố định; type `ColorTag`, `FeatureTag` + map nhãn |
 | `src/components/home/mini-invitation.tsx` | Thêm `miniStyles` cho mẫu mới hoặc preview chung theo phong cách |
 | `src/components/home/featured-themes.tsx` | Chọn lại mẫu nổi bật trang chủ (ưu tiên 5 mẫu đầu) |
 | `src/components/themes/style-chips.tsx` | 10 chip → cuộn ngang trên mobile, không xuống 3 dòng |

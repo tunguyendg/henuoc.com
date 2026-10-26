@@ -17,7 +17,7 @@ Catalog `src/data/themes.ts` chuyển sang 10 phong cách × 20 mẫu đúng slu
 **Không được đụng:** `src/features/wedding/**` (Tony), `src/lib/session.ts`, `src/lib/auth*`, `src/proxy.ts`, `src/content/**`, `src/data/articles.ts`, phần cẩm nang trong `pages.ts`.
 
 ## Yêu cầu chi tiết
-1. `themeStyles`: 10 phong cách theo bảng §2 (slug, name, keyword tạm theo cột đề xuất, `intro` 2–3 câu viết tay tiếng Việt). Thêm `faq: { q: string; a: string }[]` — để **rỗng** (Tony/Claude viết sau), không bịa.
+1. `themeStyles`: 10 phong cách theo bảng §2 (slug, name, keyword theo cột đã chốt, `secondaryKeywords`, ghi đè `title`/`h1` cho `de-thuong`, `intro` 2–3 câu viết tay tiếng Việt). Thêm `faq: { q: string; a: string }[]` — để **rỗng** (Tony/Claude viết sau), không bịa.
 2. `themes`: 20 mẫu theo §2, ánh xạ 6 mẫu cũ theo §3 (giữ mô tả/feature/palette, đổi slug + tên + `styles`). 14 mẫu mới: `status: "concept"`, `summary` 1 câu, `description` 80–150 chữ viết tay, `features` lấy từ danh sách đang dùng, `palette` 3–4 mã hex hợp tên mẫu, `tier` (Premium: `royal-gold`, `champagne`, `modern-editorial`, `seoul-romance`, `sakura-zen`, `illustrated-love`; còn lại free — đề xuất, ghi chú để Tony đổi). `preview`: dùng `MiniStyle` gần nhất đang có. Phong cách phụ chỉ gán khi thật hợp.
 3. `MIN_THEMES_FOR_STYLE_INDEX = 2`; thêm `MIN_STYLE_FAQ = 3` và hàm `isStyleIndexable(style)` = published ≥ 2 **và** `intro` không rỗng **và** `faq.length ≥ 3`. `pages.ts` dùng hàm này.
 4. Trang phong cách: nếu `faq.length > 0` thì hiện khối "Câu hỏi thường gặp" (`<details>` hoặc dl), H2 rõ ràng. Không thêm JSON-LD mới.
@@ -30,4 +30,4 @@ Catalog `src/data/themes.ts` chuyển sang 10 phong cách × 20 mẫu đúng slu
 
 ## Ghi chú
 - Site chưa launch → không cần redirect slug cũ.
-- Từ khoá §2 có thể đổi sau khi Tony kiểm volume — chỉ sửa trường `keyword`.
+- Từ khoá §2 đã chốt 2026-10-26 (slug `rustic`, `bien`; `de-thuong` có title/H1 ghi đè chứa cả "chibi").
