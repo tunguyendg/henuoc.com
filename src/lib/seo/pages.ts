@@ -1,3 +1,4 @@
+import { articleTopics, articlesPagePath, pageCount, topicPath } from "@/data/article-topics";
 import { articlePath, articles, type Article } from "@/data/articles";
 import {
   MIN_THEMES_FOR_STYLE_INDEX,
@@ -229,6 +230,7 @@ const staticPages: SeoPage[] = [
       "/mau-thiep-cuoi",
       "/tinh-nang",
       "/cong-cu",
+      ...articleTopics.map((topic) => topicPath(topic.slug)),
     ],
     index: true,
     priority: 0.7,
@@ -393,7 +395,7 @@ function articlePage(a: Article): SeoPage {
     breadcrumb: a.breadcrumb,
     parent: "/cam-nang",
     schema: "Article",
-    related: a.related,
+    related: [...new Set([...a.related, topicPath(a.category)])],
     index: true,
     priority: 0.6,
   };
@@ -404,6 +406,40 @@ export const seoPages: SeoPage[] = [
   ...themeStyles.map(stylePage),
   ...themes.map(themePage),
   ...articles.map(articlePage),
+  ...Array.from({ length: pageCount() - 1 }, (_, i): SeoPage => {
+    const n = i + 2;
+    return {
+      path: articlesPagePath(n),
+      parent: "/cam-nang",
+      schema: "CollectionPage",
+      index: true,
+      priority: 0.5,
+      keyword: "cẩm nang cưới",
+      title: `Cẩm nang cưới – Trang ${n} · Hẹn Ước`,
+      h1: `Cẩm nang cưới – Trang ${n}`,
+      breadcrumb: `Trang ${n}`,
+      description: `Cẩm nang cưới – Trang ${n}: bài hướng dẫn ghi thiệp, viết lời mời, tính khách mời, dự trù chi phí và phong tục cưới hỏi, kèm mẫu câu dùng ngay.`,
+      related: ["/cam-nang", ...articleTopics.map((topic) => topicPath(topic.slug))],
+    };
+  }),
+  ...articleTopics.map((topic): SeoPage => ({
+    path: topicPath(topic.slug),
+    parent: "/cam-nang",
+    schema: "CollectionPage",
+    index: true,
+    priority: 0.6,
+    title: topic.title,
+    description: topic.description,
+    h1: topic.h1,
+    keyword: topic.keyword,
+    breadcrumb: topic.breadcrumb,
+    related: [
+      ...articleTopics
+        .filter((other) => other.slug !== topic.slug)
+        .map((other) => topicPath(other.slug)),
+      "/cam-nang",
+    ],
+  })),
 ];
 
 const byPath = new Map(seoPages.map((p) => [p.path, p]));

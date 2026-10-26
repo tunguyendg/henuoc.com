@@ -1,3 +1,5 @@
+import type { ArticleTopicSlug } from "@/data/article-topics";
+
 /**
  * Danh mục bài Cẩm nang (docs/04-GROWTH.md §2.2). Nguồn sự thật cho metadata SEO của từng bài.
  * Thân bài nằm ở file .mdx riêng (chỉ nội dung); title / description / H1 / link nội bộ nằm ở đây
@@ -8,6 +10,7 @@
  */
 
 export interface Article {
+  category: ArticleTopicSlug;
   slug: string; // URL segment under /cam-nang
   title: string; // ≤ 60 chars, including the " · Hẹn Ước" suffix
   description: string; // 110–160 chars, no invented numbers
@@ -26,6 +29,7 @@ export function articlePath(slug: string) {
 export const articles: Article[] = [
   {
     slug: "cach-ghi-thiep-cuoi",
+    category: "thiep-loi-moi",
     title: "Cách ghi thiệp cưới đúng chuẩn: xưng hô, tên khách · Hẹn Ước",
     description:
       "Cách ghi thiệp cưới đúng chuẩn: chọn danh xưng theo vai vế, ghi tên khách, ngày âm dương và địa điểm tiệc, kèm ví dụ cho thiệp nhà trai và nhà gái.",
@@ -44,6 +48,7 @@ export const articles: Article[] = [
   },
   {
     slug: "loi-moi-dam-cuoi-hay",
+    category: "thiep-loi-moi",
     title: "Lời mời đám cưới hay, trang trọng cho từng khách · Hẹn Ước",
     description:
       "Gợi ý lời mời đám cưới hay cho ông bà, họ hàng, đồng nghiệp và bạn bè: câu chữ trang trọng để in thiệp và tin nhắn ngắn, lịch sự khi gửi qua Zalo.",
@@ -62,6 +67,7 @@ export const articles: Article[] = [
   },
   {
     slug: "le-vu-quy-thanh-hon-tan-hon",
+    category: "phong-tuc",
     title: "Lễ vu quy là gì? Tân hôn và thành hôn khác gì · Hẹn Ước",
     description:
       "Lễ vu quy là gì, khác tân hôn và thành hôn thế nào? Bảng phân biệt, lưu ý cách gọi theo gia đình và mẫu câu để chốt nội dung thiệp cưới.",
@@ -73,6 +79,7 @@ export const articles: Article[] = [
   },
   {
     slug: "gui-thiep-cuoi-qua-zalo",
+    category: "thiep-loi-moi",
     title: "Gửi thiệp cưới qua Zalo: cách mời khéo · Hẹn Ước",
     description:
       "Gửi thiệp cưới qua Zalo sao cho lịch sự: bảng chọn cách mời theo người nhận, tám tin nhắn tự chỉnh và cách theo dõi phản hồi sau khi gửi.",
@@ -89,6 +96,7 @@ export const articles: Article[] = [
   },
   {
     slug: "du-tru-chi-phi-dam-cuoi",
+    category: "chi-phi",
     title: "Dự trù chi phí đám cưới: bảng tự điền · Hẹn Ước",
     description:
       "Dự trù chi phí đám cưới bằng bảng hạng mục tự điền, công thức tiền tiệc và mẫu hỏi báo giá; tách tiền cọc, khoản còn trả và phần chưa chốt.",
@@ -105,6 +113,7 @@ export const articles: Article[] = [
   },
   {
     slug: "cach-tinh-so-luong-khach-moi",
+    category: "khach-moi",
     title: "Tính số lượng khách mời đám cưới và số bàn · Hẹn Ước",
     description:
       "Tính số lượng khách mời đám cưới từ phản hồi của từng người, xử lý khách trùng, chia số bàn và trao đổi bàn dự phòng bằng bảng tự điền.",
@@ -120,6 +129,7 @@ export const articles: Article[] = [
   },
   {
     slug: "le-dam-ngo-can-chuan-bi-gi",
+    category: "phong-tuc",
     title: "Lễ dạm ngõ cần chuẩn bị gì? Checklist hai nhà · Hẹn Ước",
     description:
       "Lễ dạm ngõ cần chuẩn bị gì? Checklist hai gia đình, câu hỏi về lễ vật theo vùng và mẫu lời thưa chuyện; phân biệt buổi ra mắt với lễ ăn hỏi.",
@@ -136,6 +146,7 @@ export const articles: Article[] = [
   },
   {
     slug: "gui-thiep-cuoi-truoc-bao-lau",
+    category: "thiep-loi-moi",
     title: "Gửi thiệp cưới trước bao lâu? Lịch tự điền · Hẹn Ước",
     description:
       "Gửi thiệp cưới trước bao lâu tuỳ khoảng cách và gia đình: bảng thời điểm theo nhóm khách, cách tính lùi từ hạn chốt khách và mẫu nhắc phản hồi.",
@@ -151,6 +162,7 @@ export const articles: Article[] = [
   },
   {
     slug: "nhan-tin-xac-nhan-tham-du-dam-cuoi",
+    category: "khach-moi",
     title: "Xác nhận tham dự đám cưới: mẫu tin nhắn · Hẹn Ước",
     description:
       "Mẫu tin nhắn xác nhận tham dự đám cưới cho họ hàng, đồng nghiệp và bạn bè theo từng thời điểm; cách hỏi lịch sự, ghi nhận phản hồi và dùng RSVP.",
@@ -166,6 +178,7 @@ export const articles: Article[] = [
   },
   {
     slug: "lich-trinh-ngay-cuoi",
+    category: "phong-tuc",
     title: "Lịch trình ngày cưới: mẫu tự điền theo buổi · Hẹn Ước",
     description:
       "Lịch trình ngày cưới tự điền cho lễ hỏi khác ngày, gộp hỏi–cưới và riêng phần tiệc nhà hàng; cách chốt mốc, giao việc, dự phòng di chuyển và trễ lịch.",
@@ -181,6 +194,7 @@ export const articles: Article[] = [
   },
   {
     slug: "di-dam-cuoi-bao-nhieu-tien",
+    category: "chi-phi",
     title: "Đi đám cưới bao nhiêu tiền? Khoảng tham khảo · Hẹn Ước",
     description:
       "Đi đám cưới bao nhiêu tiền tuỳ quan hệ và địa phương: bảng khoảng tham khảo, phiếu tự cân nhắc ngân sách và cách gửi lời chúc tế nhị.",
@@ -197,6 +211,7 @@ export const articles: Article[] = [
   },
   {
     slug: "le-an-hoi-can-chuan-bi-gi",
+    category: "phong-tuc",
     title: "Lễ ăn hỏi cần chuẩn bị gì? Mâm quả và số tráp · Hẹn Ước",
     description:
       "Lễ ăn hỏi cần chuẩn bị gì? Checklist hai nhà, cách bàn mâm quả và số tráp theo Bắc, Trung, Nam, cùng khung trình tự để người lớn xác nhận.",
@@ -214,6 +229,7 @@ export const articles: Article[] = [
   },
   {
     slug: "co-nen-dung-thiep-cuoi-online",
+    category: "thiep-loi-moi",
     title: "Có nên dùng thiệp cưới online? Cách chọn · Hẹn Ước",
     description:
       "Có nên dùng thiệp cưới online? So sánh với thiệp giấy, bảng chọn cách mời theo người nhận và mẫu thưa gửi người lớn tuổi để gia đình cùng bàn.",
@@ -230,6 +246,7 @@ export const articles: Article[] = [
   },
   {
     slug: "loi-cam-on-sau-dam-cuoi",
+    category: "khach-moi",
     title: "Lời cảm ơn sau đám cưới: mẫu tin nhắn · Hẹn Ước",
     description:
       "Lời cảm ơn sau đám cưới cho khách dự tiệc, gia đình và người phụ giúp: mẫu tin nhắn tự chỉnh, lời cảm ơn công khai và checklist trước khi gửi.",

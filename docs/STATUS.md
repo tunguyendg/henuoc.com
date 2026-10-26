@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-23 (T-006 deploy tay chạy được; chặng deploy tự động đang thử)
+> Cập nhật lần cuối: 2026-10-26 (Cẩm nang phân trang + 4 trang chủ đề)
 
 ## Đang ở đâu
 
@@ -24,6 +24,7 @@
 - T-050 (phần data + tool public): `src/data/checklist.ts` 42 việc theo 10 mốc (id khoá bằng snapshot test) + `src/lib/checklist-schedule.ts` (tính hạn theo ngày, giờ VN). Công cụ miễn phí: `/cong-cu` (hub), `/cong-cu/checklist-dam-cuoi` (chọn ngày → tự xếp lịch, tick lưu localStorage `henuoc:checklist:v1`, in được), `/cong-cu/mau-loi-moi-dam-cuoi` (5 kiểu · 13 mẫu, sao chép). Có trong sổ SEO, footer "Cẩm nang & công cụ", link từ 2 bài cẩm nang, CTA `/tao-thiep`
 - Admin mock `/admin` (Tổng quan · Người dùng · Đám cưới · Mẫu thiệp): `src/features/admin/*` qua `repos.admin`, email luôn che (`mask.ts`), nút nâng gói / công tắc mẫu là nút giả phía client, noindex + robots disallow, **`notFound()` ở production** (`features/admin/guard.ts`)
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
+- Cẩm nang phân trang + chủ đề (2026-10-26): `/cam-nang` = trang 1, `/cam-nang/trang/[page]` (6 bài/trang, `/trang/1` 308 → `/cam-nang`), 4 chủ đề `/cam-nang/chu-de/{phong-tuc,thiep-loi-moi,khach-moi,chi-phi}` (intro + list + link chủ đề khác). Dữ liệu `src/data/article-topics.ts`, mỗi bài có `category`; sổ SEO tự sinh trang/sitemap; bài tự link lên chủ đề của nó
 - T-013 primitives `src/themes/_shared/` (Envelope, MusicToggle, useCountdown, AddToCalendar, MapButton, Gift + GiftSheet, Reveal, Watermark, RsvpForm submit giả) + `src/lib/url-allowlist.ts` + `src/lib/qr.ts` (dep `qrcode` 1.5.4) + nhạc demo CC0 `public/audio/` — ghép đủ vào `/demo/placeholder`, 412 test
 
 ## 🔨 Đang làm
@@ -70,7 +71,8 @@
 - `/api/rsvp` chưa có: `use-rsvp-form.ts` submit giả mọi mode. Khi làm: token không qua props client, rate limit, server dựng ctx từ DB.
 - Máy dev đặt `NODE_TLS_REJECT_UNAUTHORIZED=0` (tắt kiểm chứng chỉ cho mọi lệnh Node/npm) → Tony gỡ khỏi shell profile.
 - Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
-- Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận.
+- Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận. Riêng `/cam-nang/trang/*` và `/cam-nang/chu-de/*`: `proxy.ts` rewrite path lạ sang `/_khong-ton-tai` → 404 thật (có test). Nâng Next thì `curl -I` lại `/cam-nang/trang/99`. Thêm path danh sách mới → cập nhật `articleListPaths()`.
+- Keyword hub chủ đề ("chi phí đám cưới", "khách mời đám cưới") gần với bài đuôi dài → theo dõi Search Console sau launch, tranh thứ hạng thì đổi title chủ đề.
 - VietQR chứa STK dạng rõ: không đưa payload/STK vào URL, title, OG, log, analytics; chỉ render ở `/thiepcuoi/*` noindex. Server Action nhận `bankBin` phải check `findBankByBin` (đừng tin dropdown).
 - `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới"; "checklist đám cưới" thuộc `/cong-cu/checklist-dam-cuoi`, "mẫu lời mời đám cưới" thuộc tool lời mời (bài cẩm nang giữ "lời mời đám cưới hay").
 - Admin thật: thay guard production bằng `requireAdmin()` kiểm `session.user.role === "ADMIN"` ở server, đặt trong mọi page (layout chỉ là lớp thêm); mọi Server Action ghi (đổi gói, bật/tắt mẫu) tự kiểm role lại + Zod. Không tin role từ cookie/JWT phía client.

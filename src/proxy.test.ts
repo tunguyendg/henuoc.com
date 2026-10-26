@@ -30,7 +30,34 @@ describe("proxy (lớp 1: chỉ kiểm có cookie phiên)", () => {
     },
   );
 
-  it("chỉ chạy cho /dashboard", () => {
-    expect(config.matcher).toEqual(["/dashboard/:path*"]);
+  it("chỉ chạy cho /dashboard và danh sách cẩm nang", () => {
+    expect(config.matcher).toEqual([
+      "/dashboard/:path*",
+      "/cam-nang/trang/:path*",
+      "/cam-nang/chu-de/:path*",
+    ]);
+  });
+});
+
+describe("proxy: danh sách cẩm nang lạ → 404 thật", () => {
+  const at = (path: string) => proxy(new NextRequest(`https://henuoc.com${path}`));
+
+  it.each(["/cam-nang/trang/2", "/cam-nang/chu-de/phong-tuc"])("%s hợp lệ → đi tiếp", (path) => {
+    expect(at(path).headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it.each([
+    "/cam-nang/trang/99",
+    "/cam-nang/trang/02",
+    "/cam-nang/trang/abc",
+    "/cam-nang/chu-de/xyz",
+    "/cam-nang/chu-de/phong-tuc/x",
+  ])("%s → rewrite sang path không có route", (path) => {
+    // x-middleware-rewrite là header NỘI BỘ của NextResponse.rewrite()
+    expect(at(path).headers.get("x-middleware-rewrite")).toBe("https://henuoc.com/_khong-ton-tai");
+  });
+
+  it("không cookie vẫn xem được cẩm nang (không bị đẩy về /dang-nhap)", () => {
+    expect(at("/cam-nang/trang/2").status).not.toBe(307);
   });
 });

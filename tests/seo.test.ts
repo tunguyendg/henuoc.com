@@ -4,7 +4,18 @@ import { join } from "node:path";
 import { articles } from "@/data/articles";
 import imageManifest from "@/content/cam-nang/images.json";
 import { articleImageSrc, parseArticleImages } from "@/lib/article-images";
-import { breadcrumbTrail, seoPages } from "@/lib/seo/pages";
+import {
+  articleTopics,
+  ARTICLES_PER_PAGE,
+  articlesInTopic,
+  articlesOnPage,
+  articlesPagePath,
+  getTopic,
+  pageCount,
+  sortedArticles,
+  topicPath,
+} from "@/data/article-topics";
+import { breadcrumbTrail, getSeoPage, seoPages } from "@/lib/seo/pages";
 
 /**
  * "Cảnh sát SEO": chạy cùng `npm test` và CI. Sửa sổ SEO sai luật → CI đỏ, không lên production.
@@ -133,3 +144,104 @@ it.each(parseArticleImages(imageManifest))(
     );
   },
 );
+
+describe("Chủ đề và phân trang cẩm nang", () => {
+  it("mọi bài có chủ đề hợp lệ", () => {
+    for (const article of articles) {
+      expect(articleTopics.map((topic) => topic.slug)).toContain(article.category);
+      expect(getSeoPage(`/cam-nang/${article.slug}`).related).toContain(
+        topicPath(article.category),
+      );
+    }
+  });
+
+  it.each(articleTopics)("$slug: có bài, intro 80–120 từ và liên kết đủ chủ đề khác", (topic) => {
+    const items = articlesInTopic(topic.slug);
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every((article) => article.category === topic.slug)).toBe(true);
+    expect(items.map((article) => article.publishedAt)).toEqual(
+      items
+        .map((article) => article.publishedAt)
+        .sort()
+        .reverse(),
+    );
+    const words = topic.intro.split(/\s+/).length;
+    expect(words).toBeGreaterThanOrEqual(80);
+    expect(words).toBeLessThanOrEqual(120);
+    expect(getTopic(topic.slug)).toBe(topic);
+    const page = getSeoPage(topicPath(topic.slug));
+    expect(page).toMatchObject({
+      parent: "/cam-nang",
+      schema: "CollectionPage",
+      index: true,
+      priority: 0.6,
+    });
+    expect(page.related).toEqual([
+      ...articleTopics
+        .filter((other) => other.slug !== topic.slug)
+        .map((other) => topicPath(other.slug)),
+      "/cam-nang",
+    ]);
+    expect(getSeoPage("/cam-nang").related).toContain(topicPath(topic.slug));
+  });
+
+  it("phân trang chứa đủ mỗi bài đúng một lần, mới nhất trước", () => {
+    expect(ARTICLES_PER_PAGE).toBe(6);
+    expect(pageCount()).toBe(Math.ceil(14 / 6));
+    const pages = Array.from({ length: pageCount() }, (_, i) => articlesOnPage(i + 1));
+    for (const page of pages) expect(page.length).toBeLessThanOrEqual(6);
+    const all = pages.flat();
+    expect(all).toEqual(sortedArticles());
+    expect(all.map((article) => article.publishedAt)).toEqual(
+      all
+        .map((article) => article.publishedAt)
+        .sort()
+        .reverse(),
+    );
+    for (const article of articles)
+      expect(all.filter((item) => item.slug === article.slug)).toHaveLength(1);
+    expect(all).toHaveLength(articles.length);
+  });
+
+  it("sổ chỉ có các trang phân trang hợp lệ và đường dẫn trang 1 là /cam-nang", () => {
+    expect(articlesPagePath(1)).toBe("/cam-nang");
+    expect(paths.has("/cam-nang/trang/1")).toBe(false);
+    expect(paths.has(`/cam-nang/trang/${pageCount() + 1}`)).toBe(false);
+    for (let n = 2; n <= pageCount(); n++) {
+      const page = getSeoPage(articlesPagePath(n));
+      expect(page.title).toContain(`Trang ${n}`);
+      expect(page).toMatchObject({
+        parent: "/cam-nang",
+        schema: "CollectionPage",
+        index: true,
+        priority: 0.5,
+      });
+      expect(page.related).toEqual([
+        "/cam-nang",
+        ...articleTopics.map((topic) => topicPath(topic.slug)),
+      ]);
+    }
+    expect(getTopic("khong-co")).toBeUndefined();
+  });
+
+  it("route sinh đúng static params và từ chối param sai trong page lẫn metadata", async () => {
+    const pagination = await import("@/app/(marketing)/cam-nang/trang/[page]/page");
+    const topics = await import("@/app/(marketing)/cam-nang/chu-de/[topic]/page");
+    expect(pagination.generateStaticParams()).toEqual(
+      Array.from({ length: pageCount() - 1 }, (_, i) => ({ page: String(i + 2) })),
+    );
+    expect(topics.generateStaticParams()).toEqual(
+      articleTopics.map((topic) => ({ topic: topic.slug })),
+    );
+    for (const value of ["02", "abc", "0", "1", "2.0", "-2", String(pageCount() + 1)]) {
+      const props = { params: Promise.resolve({ page: value }) };
+      await expect(pagination.generateMetadata(props)).rejects.toThrow(
+        "NEXT_HTTP_ERROR_FALLBACK;404",
+      );
+      await expect(pagination.default(props)).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
+    }
+    const props = { params: Promise.resolve({ topic: "khong-co" }) };
+    await expect(topics.generateMetadata(props)).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
+    await expect(topics.default(props)).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
+  });
+});

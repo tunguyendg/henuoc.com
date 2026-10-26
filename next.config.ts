@@ -11,7 +11,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Đăng nhập và đăng ký là một luồng (Google / email OTP tự tạo tài khoản) → giữ một URL duy nhất.
   async redirects() {
-    return [{ source: "/dang-ky", destination: "/dang-nhap", permanent: true }];
+    return [
+      { source: "/dang-ky", destination: "/dang-nhap", permanent: true },
+      { source: "/cam-nang/trang/1", destination: "/cam-nang", permanent: true },
+    ];
   },
   turbopack: {
     rules: {
