@@ -125,6 +125,18 @@ describe("Cẩm nang (src/data/articles.ts)", () => {
     );
   });
 
+  // Agent từng chép file ảnh bài cũ sang bài mới → cùng một ảnh hiện ở hai bài (docs/11 §Nguồn ảnh).
+  it("mỗi ảnh Unsplash chỉ dùng một lần trong manifest (bìa không trùng bìa hay ảnh trong bài)", () => {
+    const seen = new Map<string, string>();
+    for (const image of images) {
+      if (image.source === "own") continue;
+      const where = `${image.slug}/${image.file}`;
+      const first = seen.get(image.cdnPath);
+      expect(first, `${where} trùng ảnh với ${first} (${image.cdnPath})`).toBeUndefined();
+      seen.set(image.cdnPath, where);
+    }
+  });
+
   it.each(articles)("$slug: publishedAt / updatedAt đúng YYYY-MM-DD", (a) => {
     expect(a.publishedAt).toMatch(isoDate);
     expect(isRealDate(a.publishedAt)).toBe(true);
@@ -187,7 +199,7 @@ describe("Chủ đề và phân trang cẩm nang", () => {
 
   it("phân trang chứa đủ mỗi bài đúng một lần, mới nhất trước", () => {
     expect(ARTICLES_PER_PAGE).toBe(6);
-    expect(pageCount()).toBe(Math.ceil(14 / 6));
+    expect(pageCount()).toBe(Math.ceil(articles.length / 6));
     const pages = Array.from({ length: pageCount() }, (_, i) => articlesOnPage(i + 1));
     for (const page of pages) expect(page.length).toBeLessThanOrEqual(6);
     const all = pages.flat();
