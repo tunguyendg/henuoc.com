@@ -1,0 +1,162 @@
+[
+  {
+    "id": "141708",
+    "accessionNumber": "1965.293",
+    "file": "rosa-gallica-purpurea-velutina",
+    "palette": "do-do",
+    "title": "The Roses: Rosa Gallica Purpurea Velutina Parva",
+    "date": "1817–24",
+    "artists": [
+      {
+        "name": "Langlois",
+        "role": "artist"
+      },
+      {
+        "name": "Pierre-Joseph Redouté",
+        "role": "published by"
+      },
+      {
+        "name": "Henri Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1965.293/1965.293_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1965.293",
+    "width": 2563,
+    "height": 3400
+  },
+  {
+    "id": "122878",
+    "accessionNumber": "1943.140",
+    "file": "rosa-indica-stelligera",
+    "palette": "do-do",
+    "title": "Rosa Indica Stelligera",
+    "date": "1817–1824",
+    "artists": [
+      {
+        "name": "Henri Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1943.140/1943.140_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1943.140",
+    "width": 2497,
+    "height": 3400
+  },
+  {
+    "id": "133044",
+    "accessionNumber": "1955.468",
+    "file": "rosa-indica",
+    "palette": "do-do",
+    "title": "Les Roses: Rosa indica",
+    "date": "1817–1824",
+    "artists": [
+      {
+        "name": "Henri Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1955.468/1955.468_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1955.468",
+    "width": 2589,
+    "height": 3400
+  },
+  {
+    "id": "133045",
+    "accessionNumber": "1955.469",
+    "file": "rosa-alpina-pendulina",
+    "palette": "do-do",
+    "title": "Les Roses: Rosa alpina pendulina",
+    "date": "1817–1824",
+    "artists": [
+      {
+        "name": "Henri Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1955.469/1955.469_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1955.469",
+    "width": 2443,
+    "height": 3400
+  },
+  {
+    "id": "133048",
+    "accessionNumber": "1955.471",
+    "file": "rosa-gallica",
+    "palette": "hong",
+    "title": "Les Roses: Rosa Gallica",
+    "date": "1817–24",
+    "artists": [
+      {
+        "name": "Pierre-Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1955.471/1955.471_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1955.471",
+    "width": 2506,
+    "height": 3400
+  },
+  {
+    "id": "135597",
+    "accessionNumber": "1959.14",
+    "file": "rosa-centifolia-simplex",
+    "palette": "hong",
+    "title": "Cabbage Rose (Rosa Centifolia Simplex)",
+    "date": "1817–24",
+    "artists": [
+      {
+        "name": "Pierre-Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1959.14/1959.14_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1959.14",
+    "width": 2337,
+    "height": 3400
+  },
+  {
+    "id": "141707",
+    "accessionNumber": "1965.292",
+    "file": "rosa-hudsoniana-salicifolia",
+    "palette": "hong",
+    "title": "Les Roses: Rosa Hudsoniana Salicifolia",
+    "date": "1817–24",
+    "artists": [
+      {
+        "name": "Pierre-Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1965.292/1965.292_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1965.292",
+    "width": 2536,
+    "height": 3400
+  },
+  {
+    "id": "135614",
+    "accessionNumber": "1959.15",
+    "file": "rosa-carolina-corymbosa",
+    "palette": "hong",
+    "title": "Pasture Rose (Rosa Carolina Corymbosa)",
+    "date": "1817–24",
+    "artists": [
+      {
+        "name": "Pierre-Joseph Redouté",
+        "role": "artist"
+      }
+    ],
+    "license": "CC0",
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1959.15/1959.15_print.jpg",
+    "museumUrl": "https://clevelandart.org/art/1959.15",
+    "width": 2346,
+    "height": 3400
+  }
+]
