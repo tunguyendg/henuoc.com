@@ -46,7 +46,20 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới truyền thống",
     intro:
       "Sắc đỏ – vàng, chữ Hỷ và lời mời trang trọng đúng phong tục. Ông bà, cô chú nhận là thấy ngay không khí đám cưới.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới truyền thống hợp lễ gia tiên hay tiệc nhà hàng?",
+        a: "Sắc đỏ son, chữ Hỷ và bố cục trang trọng hợp lễ gia tiên, tiệc tại nhà lẫn nhà hàng có nhiều khách lớn tuổi. Song Hỷ Đỏ Son thiên về nghi lễ; Đông Dương gợi không gian nhà cổ với xanh ngọc và kem ấm.",
+      },
+      {
+        q: "Không thích nền đỏ thì chọn mẫu truyền thống màu gì?",
+        a: "Hai bạn có thể tham khảo bảng màu xanh ngọc, kem và nâu của Đông Dương để giữ nét Việt mà dịu hơn đỏ son. Đây là bảng màu định hướng của mẫu concept, chưa phải các màu có thể tự đổi trong trình tạo thiệp.",
+      },
+      {
+        q: "Có thể lấy mẫu Song Hỷ Đỏ Son để in thiệp giấy không?",
+        a: "Song Hỷ Đỏ Son hiện là concept thiệp online, chưa có file xuất dành cho nhà in. Nếu muốn làm thiệp giấy đồng bộ, hai bạn cần chuẩn bị thiết kế in riêng với kích thước, lề xén và màu in do nhà in xác nhận.",
+      },
+    ],
   },
   {
     slug: "toi-gian",
@@ -54,14 +67,40 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới tối giản",
     intro:
       "Ít chi tiết, nhiều khoảng trắng, để tên hai bạn và ngày cưới là nhân vật chính. Sang mà không cầu kỳ.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới tối giản có hợp tiệc nhỏ tại nhà không?",
+        a: "Có, khoảng trắng và ít hoạ tiết giúp lời mời giữ vẻ chỉn chu trong một buổi tiệc thân mật. Ivory Editorial với nền ngà tạo cảm giác ấm; Black & White hợp không khí gọn gàng, trang nhã hơn.",
+      },
+      {
+        q: "Nên chọn màu ngà hay đen trắng cho thiệp tối giản?",
+        a: "Màu ngà dễ đi cùng ảnh cưới ánh sáng ấm và hoa màu kem. Đen trắng hợp ảnh có tương phản rõ hoặc ảnh phóng sự; nên tránh để cả chữ lẫn nền ảnh quá tối khiến ngày giờ khó đọc.",
+      },
+      {
+        q: "Ít hoạ tiết có khiến thiệp cưới trông sơ sài không?",
+        a: "Điểm nhấn của phong cách này nằm ở tỷ lệ chữ, khoảng cách và cách đặt ảnh, thay vì số lượng chi tiết trang trí. Khi xem mẫu minh hoạ, hãy kiểm tra tên hai bạn, ngày cưới và địa điểm có dễ nhận ra trước tiên hay không.",
+      },
+    ],
   },
   {
     slug: "sang-trong",
     name: "Sang trọng & Hoàng gia",
     keyword: "thiệp cưới sang trọng",
     intro: "Màu đậm, viền ánh kim, bố cục cân đối — cho những tiệc cưới ở nhà hàng, khách sạn lớn.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới sang trọng phù hợp với tiệc ban ngày hay tiệc tối?",
+        a: "Royal Gold gợi tiệc tối trang trọng nhờ nền đậm và sắc vàng. Champagne Elegance sáng và mềm hơn, phù hợp cả tiệc trưa trong sảnh có ánh sáng tự nhiên; nên chọn theo màu trang trí thực tế của buổi tiệc.",
+      },
+      {
+        q: "Màu vàng trên thiệp online có giống ép kim trên giấy không?",
+        a: "Vàng trên màn hình chỉ là cách thể hiện màu và ánh sáng, không có bề mặt phản chiếu như ép kim thật. Royal Gold và Champagne Elegance đang là bản concept, nên hình minh hoạ cũng chưa thể dùng để đánh giá chất liệu của thiệp giấy.",
+      },
+      {
+        q: "Royal Gold và Champagne Elegance đã có nhạc nền chưa?",
+        a: "Nhạc nền nằm trong định hướng của hai mẫu, nhưng cả hai chưa được phát hành để tạo thiệp thật. Vì vậy, chưa thể chọn bài hay xác nhận trải nghiệm nghe nhạc riêng cho các mẫu này từ hình minh hoạ.",
+      },
+    ],
   },
   {
     slug: "lang-man-hoa-la",
@@ -69,7 +108,20 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới hoa lá",
     intro:
       "Hoa vẽ màu nước, nền phấn nhẹ, cảm giác lãng mạn như một buổi sáng tiệc cưới ngoài trời.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới hoa lá có chỉ hợp đám cưới sân vườn không?",
+        a: "Hoa lá cũng hợp sảnh cưới trong nhà có hoa tươi hoặc trang trí nhẹ nhàng. Blush Rose gợi không khí mềm mại với hoa hồng, còn Botanical Garden thiên về lá xanh và cảm giác thoáng mát.",
+      },
+      {
+        q: "Chọn hồng phấn hay xanh lá để hợp hoa cưới?",
+        a: "Hồng phấn dễ đi cùng hoa hồng trắng, hồng nhạt và ảnh có ánh sáng dịu. Xanh lá hợp bó hoa nhiều cành lá hoặc không gian phủ cây; nên chọn một tông chính để hoa trong ảnh và hoạ tiết thiệp không tranh nhau.",
+      },
+      {
+        q: "Ảnh cưới nhiều hoa có bị rối khi đặt vào mẫu hoa lá không?",
+        a: "Có thể bị rối nếu ảnh và viền trang trí đều dày chi tiết. Hai bạn nên ưu tiên ảnh có nền thoáng, ít màu nổi, rồi đối chiếu với phần minh hoạ của mẫu; các concept hiện tại chưa cho xem thử ảnh riêng trong theme hoàn chỉnh.",
+      },
+    ],
   },
   {
     slug: "han-quoc-nhat-ban",
@@ -77,7 +129,20 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới Hàn Quốc",
     intro:
       "Nền sáng, chữ mảnh, ảnh cưới lớn và chuyển động khẽ như thiệp cưới Hàn, thêm chút tĩnh lặng và hoa anh đào của Nhật. Nhẹ nhàng và rất hợp bộ ảnh studio.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới kiểu Hàn Quốc khác cảm hứng Nhật Bản ở điểm nào?",
+        a: "Trong danh mục này, Seoul Romance định hướng nền trắng, ảnh studio lớn và chữ mảnh. Sakura Zen dùng kem, hồng anh đào và nhiều khoảng trống, phù hợp cảm giác tĩnh lặng hơn là nhấn mạnh ảnh chân dung.",
+      },
+      {
+        q: "Ảnh cưới áo dài có hợp thiệp phong cách Hàn không?",
+        a: "Ảnh áo dài vẫn hợp nếu ánh sáng mềm, hậu cảnh gọn và màu ảnh nhẹ. Không cần đổi sang trang phục kiểu Hàn; sự hài hoà của ảnh với nền trắng và cách trình bày quan trọng hơn kiểu trang phục.",
+      },
+      {
+        q: "Chọn Sakura Zen có bắt buộc viết lời mời bằng tiếng Nhật không?",
+        a: "Không, cảm hứng Nhật ở đây là định hướng thị giác của mẫu, không phải yêu cầu về ngôn ngữ. Hai bạn có thể chuẩn bị lời mời tiếng Việt; concept này chưa đồng nghĩa với tính năng dịch tự động hoặc bộ lời mời song ngữ.",
+      },
+    ],
   },
   {
     slug: "rustic",
@@ -86,7 +151,20 @@ export const themeStyles: ThemeStyle[] = [
     secondaryKeywords: ["mộc mạc", "boho"],
     intro:
       "Màu đất, lá xanh, chất liệu gỗ và giấy thô, đúng chất rustic mộc mạc. Có cả nét boho phóng khoáng cho đám cưới sân vườn, đồng quê hay những buổi tiệc ấm cúng giữa người thân.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp rustic hợp đám cưới ở quê hay ở homestay?",
+        a: "Cả hai đều hợp nếu buổi tiệc thiên về sự gần gũi, bàn gỗ, cây xanh hoặc hoa khô. Rustic Garden nghiêng về sân vườn mộc mạc, còn Bohemian Love gợi tiệc ngoài trời phóng khoáng với cỏ lau và hoạ tiết dệt.",
+      },
+      {
+        q: "Rustic và boho nên phối những màu nào?",
+        a: "Rustic thường dễ phối với kem giấy, nâu đất và xanh rêu; boho có thể thêm đất nung, be và cam cháy. Các bảng màu trong danh mục là gợi ý thiết kế, hai bạn nên đối chiếu với hoa khô, khăn bàn và trang phục của mình.",
+      },
+      {
+        q: "Tiệc ở nhà hàng hiện đại có dùng thiệp rustic được không?",
+        a: "Vẫn có thể chọn nếu phần trang trí tiệc dùng chất liệu tự nhiên hoặc màu ấm. Nếu sảnh có nhiều kính và ánh sáng lạnh, hãy ưu tiên sắc kem, lá xanh nhẹ để lời mời giữ được sự liên kết với không gian.",
+      },
+    ],
   },
   {
     slug: "co-dien-hoai-niem",
@@ -94,7 +172,20 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới vintage",
     intro:
       "Tông giấy cũ, nét chữ nghiêng hoài cổ, gợi lại phố xưa và những tấm ảnh film. Dành cho cặp đôi mê những điều đã cũ mà vẫn đẹp.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp vintage hợp với bộ ảnh cưới nào?",
+        a: "Ảnh áo dài ở phố cũ, biệt thự cổ hoặc ảnh có màu film thường đi cùng phong cách này. Sài Gòn Xưa gợi bưu ảnh hoài niệm; Vintage Newspaper hợp bộ ảnh có câu chuyện và nét dí dỏm như một bản tin cưới.",
+      },
+      {
+        q: "Nền giấy cũ có làm lời mời khó đọc với người lớn tuổi không?",
+        a: "Nền ngả vàng vẫn có thể dễ đọc nếu chữ đủ đậm, đủ lớn và không đặt trên hoạ tiết dày. Khi chọn phong cách hoài niệm, nên ưu tiên độ rõ của giờ lễ, địa chỉ hơn hiệu ứng giấy cũ hay chữ viết tay cầu kỳ.",
+      },
+      {
+        q: "Vintage Newspaper có phải file báo cưới để mang đi in không?",
+        a: "Mẫu này mới là concept thiệp online lấy cảm hứng từ trang báo, chưa có bản dàn trang in báo hay file PDF cho nhà in. Hình xem trước giúp hình dung phong cách, không bảo đảm kích thước cột chữ hoặc độ phân giải khi in.",
+      },
+    ],
   },
   {
     slug: "bien",
@@ -103,7 +194,20 @@ export const themeStyles: ThemeStyle[] = [
     secondaryKeywords: ["du lịch", "destination"],
     intro:
       "Xanh sóng, cát trắng và cảm giác của một chuyến du lịch chung. Hợp với destination wedding ở biển, đảo hoặc cặp đôi yêu xê dịch.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp phong cách biển chỉ dành cho tiệc ở resort ven biển sao?",
+        a: "Không nhất thiết: xanh biển và cát trắng cũng hợp cặp đôi yêu biển dù tổ chức tiệc trong thành phố. Nếu tiệc diễn ra xa nơi khách sống, nên để thông tin địa điểm thật rõ thay vì chỉ nhấn mạnh cảnh biển.",
+      },
+      {
+        q: "Nên chọn Ocean Promise hay Travel Postcard cho destination wedding?",
+        a: "Ocean Promise gợi bờ biển bằng xanh ngọc, xanh sóng và cát trắng. Travel Postcard thiên về câu chuyện chuyến đi với bưu thiếp, tem vẽ và sắc kem; hai mẫu hiện là concept để tham khảo hướng thiết kế.",
+      },
+      {
+        q: "Thiệp chủ đề du lịch có kèm đặt phòng hoặc đặt xe cho khách không?",
+        a: "Chủ đề du lịch chỉ mô tả phong cách hình ảnh, không bao gồm dịch vụ đặt phòng, đặt vé hay xe đưa đón. Hai bạn cần thống nhất các việc này riêng với khách và đơn vị tổ chức tiệc.",
+      },
+    ],
   },
   {
     slug: "hien-dai-nghe-thuat",
@@ -111,7 +215,20 @@ export const themeStyles: ThemeStyle[] = [
     keyword: "thiệp cưới hiện đại",
     intro:
       "Bố cục gọn, chữ rõ, màu bạo. Hợp với cặp đôi trẻ muốn tấm thiệp trông như một trang tạp chí hay một ứng dụng đẹp trên điện thoại.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới hiện đại hợp tiệc trang trọng hay tiệc cùng bạn bè?",
+        a: "Modern Editorial với chữ đậm, đen và kem hợp tiệc có phong cách thời trang, chỉn chu. Colorful Pop hướng đến không khí vui, nhiều màu và ít nghi thức hơn; hãy chọn theo cách hai bạn muốn khách cảm nhận buổi tiệc.",
+      },
+      {
+        q: "Dùng nhiều màu trên thiệp có làm ảnh cưới bị chìm không?",
+        a: "Các mảng màu mạnh dễ cạnh tranh với ảnh có nhiều chi tiết hoặc trang phục rực rỡ. Với hướng Colorful Pop, nên chọn ảnh có nền gọn; nếu muốn ảnh là điểm nhấn chính, bảng màu tiết chế của Modern Editorial dễ phối hơn.",
+      },
+      {
+        q: "Mẫu Colorful Pop có tự phát nhạc khi khách mở thiệp không?",
+        a: "Hiện Colorful Pop mới là concept, dù danh mục có nêu định hướng nhạc nền. Không nên hiểu đó là cam kết tự phát nhạc: trình duyệt có thể yêu cầu khách thao tác trước khi cho phát âm thanh.",
+      },
+    ],
   },
   {
     slug: "de-thuong",
@@ -122,7 +239,20 @@ export const themeStyles: ThemeStyle[] = [
     secondaryKeywords: ["chibi"],
     intro:
       "Nhân vật chibi hoạt hình, màu tươi, nét tròn vui mắt. Tấm thiệp mang cá tính trẻ trung của cặp đôi và làm bạn bè bật cười khi mở ra.",
-    faq: [],
+    faq: [
+      {
+        q: "Thiệp cưới chibi có hợp gửi cho họ hàng lớn tuổi không?",
+        a: "Có thể hợp nếu hình vẽ vui vừa phải, lời mời lịch sự và thông tin buổi lễ rõ ràng. Nếu gia đình thích sự trang trọng, nên cân nhắc mức độ hoạt hình trước khi chọn Chibi Couple thay vì chỉ dựa vào sở thích của nhóm bạn.",
+      },
+      {
+        q: "Hẹn Ước có vẽ chibi giống mặt cô dâu chú rể từ ảnh không?",
+        a: "Hiện chưa có tính năng tạo chibi từ ảnh hay dịch vụ vẽ chân dung riêng được xác nhận cho mẫu này. Chibi Couple và Illustrated Love đều đang là concept; tên phong cách cá nhân hóa không có nghĩa là đã hỗ trợ đặt vẽ theo yêu cầu.",
+      },
+      {
+        q: "Không thích hồng tươi thì còn hướng thiệp dễ thương nào?",
+        a: "Illustrated Love gợi bảng màu đào, xanh bạc hà và xám xanh nhẹ như trang sổ tay, dịu hơn hướng màu tươi của Chibi Couple. Đây là hai hướng minh hoạ khác nhau để cân nhắc, chưa phải bộ tuỳ chọn đổi màu và nhân vật trong editor.",
+      },
+    ],
   },
 ];
 
