@@ -250,3 +250,11 @@ Phần bị tắt trong `sections` hoặc thiếu dữ liệu thì bỏ qua; th�
 - ⚠️ Đây là **ẩn trên giao diện, không phải bảo mật**: nếu `gifts` nằm sẵn trong props thì STK vẫn có trong payload trang.
   STK là thông tin cặp đôi chủ động đưa cho khách nên chấp nhận được. Muốn chặn bot cào STK → tải `gifts` khi bấm
   (route riêng, có rate limit), làm sau nếu cần.
+
+## 11. Tiện ích thuần dùng chung
+
+- `src/themes/_shared/lunar.ts`: `solarToLunar("2026-01-03")` nhận **ngày dân sự Việt Nam** dạng `YYYY-MM-DD` (1800–2199), trả `{ day, month, year, leap, canChi }`. Thuật toán thiên văn Hồ Ngọc Đức, cố định UTC+7; `canChi` là năm âm lịch, đổi vào Tết chứ không phải ngày 1/1 dương. `formatLunarDate()` thêm chữ `nhuận` khi cần. Nếu đầu vào là timestamp UTC, phía gọi phải lấy ngày ở `Asia/Ho_Chi_Minh` trước.
+- `src/themes/_shared/ics.ts`: `buildEventIcs({ title, startsAt, durationMinutes, location, uid? }, now?)` trả chuỗi ICS UTF-8 dùng CRLF, escape TEXT và gấp dòng tối đa 75 byte theo RFC 5545. `startsAt` phải là ISO UTC có `Z`, thời lượng hữu hạn và > 0. Truyền `uid` ổn định để nhập lại cùng sự kiện; bỏ trống sẽ tạo UUID mới. Không đưa token hoặc dữ liệu khách vào UID. `calendar.ts` giữ API `buildIcs(EventView, options)` và Google Calendar hiện có, dùng chung lõi ICS; cả hai từ chối thời lượng không hợp lệ.
+- `src/themes/_shared/dress-code.ts`: `dressCodeSchema` kiểm tra mảng 1–5 chuỗi `#RRGGBB` (không nhận hex rút gọn, alpha hay tên màu). Ghép vào schema của từng theme bằng `dressCode: dressCodeSchema.optional()`; placeholder đã áp dụng để kiểm tra contract. Đây chỉ là dữ liệu màu trong theme options, chưa thêm UI chọn hoặc hiển thị dress code.
+
+Tham khảo: [thuật toán Hồ Ngọc Đức](https://www.informatik.uni-leipzig.de/~duc/amlich/calrules.html), [RFC 5545](https://www.rfc-editor.org/rfc/rfc5545.html).

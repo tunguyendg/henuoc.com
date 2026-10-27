@@ -1,8 +1,12 @@
 import { z } from "zod";
 import { musicSlugSchema } from "@/data/music";
+import { dressCodeSchema } from "../_shared/dress-code";
 import type { ThemeManifest } from "../types";
 
-export const optionsSchema = z.object({ musicSlug: musicSlugSchema.optional() });
+export const optionsSchema = z.object({
+  musicSlug: musicSlugSchema.optional(),
+  dressCode: dressCodeSchema.optional(),
+});
 
 export type PlaceholderOptions = z.infer<typeof optionsSchema>;
 

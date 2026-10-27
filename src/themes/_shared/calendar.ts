@@ -1,11 +1,10 @@
+import { buildEventIcs, formatUtc } from "./ics";
+export { escapeText, foldLine, formatUtc } from "./ics";
 import type { EventView } from "../types";
 
 // iCalendar (RFC 5545) + Google Calendar link builders. Pure: no DOM, no Date.now() unless injected.
 
 const DEFAULT_DURATION_HOURS = 3;
-const UID_DOMAIN = "henuoc.com";
-const MAX_LINE_OCTETS = 75;
-
 export interface CalendarOptions {
   /** Event length when we only know the start. Default 3 hours. */
   durationHours?: number;
@@ -16,55 +15,15 @@ export interface CalendarOptions {
   now?: Date;
 }
 
-/** 2026-12-12T03:00:00.000Z → 20261212T030000Z */
-export function formatUtc(date: Date): string {
-  return date
-    .toISOString()
-    .replace(/[-:]/g, "")
-    .replace(/\.\d{3}/, "");
-}
-
-/** RFC 5545 §3.3.11 TEXT escaping: backslash, semicolon, comma, newline. */
-export function escapeText(value: string): string {
-  return value
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\r\n|\r|\n/g, "\\n");
-}
-
-const encoder = new TextEncoder();
-
-/**
- * RFC 5545 §3.1: lines longer than 75 octets are split with CRLF + one space. Counts UTF-8 bytes and
- * never cuts inside a code point (Vietnamese letters are 2–3 bytes each).
- */
-export function foldLine(line: string): string {
-  const parts: string[] = [];
-  let current = "";
-  let size = 0;
-  for (const char of line) {
-    const bytes = encoder.encode(char).length;
-    // Continuation lines start with a space, which also counts toward the 75 octets.
-    const limit = parts.length === 0 ? MAX_LINE_OCTETS : MAX_LINE_OCTETS - 1;
-    if (size + bytes > limit) {
-      parts.push(current);
-      current = "";
-      size = 0;
-    }
-    current += char;
-    size += bytes;
-  }
-  parts.push(current);
-  return parts.join("\r\n ");
-}
-
 function eventTimes(event: EventView, durationHours = DEFAULT_DURATION_HOURS) {
   const start = new Date(event.startsAt);
   if (Number.isNaN(start.getTime())) {
     throw new Error(`Invalid startsAt for event ${event.id}`);
   }
-  const end = new Date(start.getTime() + Math.max(0, durationHours) * 60 * 60 * 1000);
+  if (!Number.isFinite(durationHours) || durationHours <= 0) {
+    throw new RangeError("Expected a positive finite event duration");
+  }
+  const end = new Date(start.getTime() + durationHours * 60 * 60 * 1000);
   return { start, end };
 }
 
@@ -74,25 +33,17 @@ function location(event: EventView): string {
 
 export function buildIcs(event: EventView, opts: CalendarOptions = {}): string {
   const { start, end } = eventTimes(event, opts.durationHours);
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Hen Uoc//henuoc.com//VI",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    // Stable per event: re-importing updates the same calendar entry instead of duplicating it.
-    `UID:${escapeText(event.id)}@${UID_DOMAIN}`,
-    `DTSTAMP:${formatUtc(opts.now ?? new Date())}`,
-    `DTSTART:${formatUtc(start)}`,
-    `DTEND:${formatUtc(end)}`,
-    `SUMMARY:${escapeText(opts.summary ?? event.title)}`,
-  ];
-  const where = location(event);
-  if (where) lines.push(`LOCATION:${escapeText(where)}`);
-  if (opts.description) lines.push(`DESCRIPTION:${escapeText(opts.description)}`);
-  lines.push("END:VEVENT", "END:VCALENDAR");
-  return lines.map(foldLine).join("\r\n") + "\r\n";
+  return buildEventIcs(
+    {
+      title: opts.summary ?? event.title,
+      startsAt: start.toISOString(),
+      durationMinutes: (end.getTime() - start.getTime()) / 60_000,
+      location: location(event),
+      uid: `${event.id}@henuoc.com`,
+      description: opts.description,
+    },
+    opts.now,
+  );
 }
 
 export function googleCalendarUrl(event: EventView, opts: CalendarOptions = {}): string {

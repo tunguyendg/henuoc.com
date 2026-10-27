@@ -132,3 +132,13 @@ describe("icsFileName", () => {
     expect(icsFileName({ ...event, id: "///" })).toBe("henuoc-su-kien.ics");
   });
 });
+
+describe("calendar duration validation", () => {
+  it.each([0, -1, NaN, Infinity])(
+    "rejects %s hours for downloads and Google links",
+    (durationHours) => {
+      expect(() => buildIcs(event, { durationHours, now })).toThrow(RangeError);
+      expect(() => googleCalendarUrl(event, { durationHours })).toThrow(RangeError);
+    },
+  );
+});
