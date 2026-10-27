@@ -1,6 +1,7 @@
 // Admin (/admin, role ADMIN only) DTOs. Overview data only: no guest names, no guest contact data,
 // no tokens, and never a user's full email (only `emailMasked`). See docs/01-PRD.md F9.
 import type { Plan, WeddingStatus } from "../wedding/types";
+import type { ThemeStatus } from "@/data/themes";
 
 export type { Plan, WeddingStatus };
 export type UserRole = "USER" | "ADMIN";
@@ -32,6 +33,7 @@ export interface AdminThemeSummary {
   slug: string;
   name: string;
   tier: ThemeTier;
+  status: ThemeStatus;
   enabled: boolean;
   weddingCount: number;
 }

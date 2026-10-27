@@ -270,8 +270,9 @@ function toThemeSummary(t: (typeof themes)[number]): AdminThemeSummary {
     slug: t.slug,
     name: t.name,
     tier: t.tier,
-    // Default until admin toggles exist: only themes that passed QA ("published") are enabled.
-    enabled: t.status === "published",
+    status: t.status,
+    // Default until admin toggles exist: only "live" themes (in the registry, passed QA) are enabled.
+    enabled: t.status === "live",
     weddingCount: mockAdminWeddingRows.filter((w) => w.themeSlug === t.slug).length,
   };
 }

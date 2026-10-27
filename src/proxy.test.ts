@@ -35,6 +35,7 @@ describe("proxy (lớp 1: chỉ kiểm có cookie phiên)", () => {
       "/dashboard/:path*",
       "/cam-nang/trang/:path*",
       "/cam-nang/chu-de/:path*",
+      "/mau-thiep-cuoi/:slug",
     ]);
   });
 });
@@ -59,5 +60,26 @@ describe("proxy: danh sách cẩm nang lạ → 404 thật", () => {
 
   it("không cookie vẫn xem được cẩm nang (không bị đẩy về /dang-nhap)", () => {
     expect(at("/cam-nang/trang/2").status).not.toBe(307);
+  });
+});
+
+describe("proxy: mẫu thiệp chưa hiện công khai → 404 thật", () => {
+  const at = (path: string) => proxy(new NextRequest(`https://henuoc.com${path}`));
+
+  it("mẫu preview → đi tiếp", () => {
+    expect(at("/mau-thiep-cuoi/song-hy-do-son").headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it.each(["/mau-thiep-cuoi/royal-gold", "/mau-thiep-cuoi/khong-co-mau-nay"])(
+    "%s (planned / lạ) → rewrite sang path không có route",
+    (path) => {
+      expect(at(path).headers.get("x-middleware-rewrite")).toBe(
+        "https://henuoc.com/_khong-ton-tai",
+      );
+    },
+  );
+
+  it("không cookie vẫn xem được mẫu visible", () => {
+    expect(at("/mau-thiep-cuoi/song-hy-do-son").status).not.toBe(307);
   });
 });

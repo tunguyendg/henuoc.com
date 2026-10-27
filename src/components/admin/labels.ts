@@ -1,3 +1,4 @@
+import type { ThemeStatus } from "@/data/themes";
 import type { Plan, ThemeTier, UserRole, WeddingStatus } from "@/features/admin/types";
 
 export const planLabels: Record<Plan, string> = { FREE: "Miễn phí", PREMIUM: "Cao cấp" };
@@ -11,6 +12,12 @@ export const statusLabels: Record<WeddingStatus, string> = {
 export const roleLabels: Record<UserRole, string> = { USER: "Người dùng", ADMIN: "Quản trị" };
 
 export const tierLabels: Record<ThemeTier, string> = { free: "Miễn phí", premium: "Cao cấp" };
+
+export const themeStatusLabels: Record<ThemeStatus, string> = {
+  live: "Live",
+  preview: "Preview",
+  planned: "Lộ trình",
+};
 
 export const PREVIEW_NOT_SAVED = "Bản mẫu: chưa lưu";
 

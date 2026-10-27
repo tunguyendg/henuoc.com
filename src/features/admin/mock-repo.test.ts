@@ -77,7 +77,9 @@ describe("admin repo", () => {
       repos.admin.listThemes(),
       repos.admin.listWeddings(),
     ]);
-    expect(list.length).toBeGreaterThan(0);
+    expect(list).toHaveLength(20);
+    expect(list.find((t) => t.slug === "royal-gold")?.status).toBe("planned");
+    expect(list.find((t) => t.slug === "blush-rose")?.status).toBe("preview");
     for (const t of list) {
       expect(t.weddingCount).toBe(weddings.filter((w) => w.themeSlug === t.slug).length);
     }

@@ -1,6 +1,12 @@
 import { articleTopics, articlesPagePath, pageCount, topicPath } from "@/data/article-topics";
 import { articlePath, articles, type Article } from "@/data/articles";
-import { isStyleIndexable, themeStyles, themes, type Theme, type ThemeStyle } from "@/data/themes";
+import {
+  isStyleIndexable,
+  themeStyles,
+  visibleThemes,
+  type Theme,
+  type ThemeStyle,
+} from "@/data/themes";
 
 /**
  * SỔ SEO — nguồn sự thật cho mọi trang công khai (docs/08-SEO.md).
@@ -373,7 +379,7 @@ function themePage(t: Theme): SeoPage {
     parent: "/mau-thiep-cuoi",
     schema: "ItemPage",
     related: [...t.styles.map(stylePath), "/tao-thiep"],
-    index: t.status === "published",
+    index: t.status === "live",
     priority: 0.6,
   };
 }
@@ -397,7 +403,7 @@ function articlePage(a: Article): SeoPage {
 export const seoPages: SeoPage[] = [
   ...staticPages,
   ...themeStyles.map(stylePage),
-  ...themes.map(themePage),
+  ...visibleThemes.map(themePage),
   ...articles.map(articlePage),
   ...Array.from({ length: pageCount() - 1 }, (_, i): SeoPage => {
     const n = i + 2;

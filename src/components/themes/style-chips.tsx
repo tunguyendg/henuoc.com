@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { themeStyles } from "@/data/themes";
+import { hasVisibleThemes, themeStyles } from "@/data/themes";
 import { stylePath } from "@/lib/seo/pages";
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,11 @@ import { cn } from "@/lib/utils";
  * `only`: chỉ hiện các phong cách này (dùng ở trang chi tiết).
  */
 export function StyleChips({ active, only }: { active?: string; only?: string[] }) {
-  const list = only ? themeStyles.filter((s) => only.includes(s.slug)) : themeStyles;
+  // Danh sách chung: chỉ chip có mẫu hiển thị. Có `only` (trang chi tiết): giữ đúng các phong
+  // cách của mẫu đó, vì mẫu đang xem đã visible.
+  const list = only
+    ? themeStyles.filter((s) => only.includes(s.slug))
+    : themeStyles.filter((s) => hasVisibleThemes(s.slug) || s.slug === active);
   return (
     <ul className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:pb-0">
       {!only && (

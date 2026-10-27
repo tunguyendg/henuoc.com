@@ -7,10 +7,15 @@
 
 | Lớp | File | Chứa gì | Ai dùng |
 | --- | --- | --- | --- |
-| **Catalog** | `src/data/themes.ts` | Tên, mô tả, phong cách, nhãn, `status` (`concept` / `published`) của cả 20 mẫu — kể cả mẫu chưa có code | Gallery, trang phong cách, trang chi tiết, sổ SEO |
+| **Catalog** | `src/data/themes.ts` | Tên, mô tả, phong cách, nhãn, `status` (`live` / `preview` / `planned`) của cả 20 mẫu — kể cả mẫu chưa có code | Gallery, trang phong cách, trang chi tiết, sổ SEO |
 | **Registry** | `src/themes/registry.ts` | Theme **có code thật** (manifest + component, dynamic import) | Trang thiệp khách, builder, `createWedding` |
 
-Quy tắc: **slug catalog = slug registry = slug thư mục `src/themes/<slug>/`**. Mẫu chỉ được `status: "published"` khi đã có trong registry và qua QA (`07-THEMES.md §8`). Test sẽ kiểm: mọi mẫu `published` trong catalog đều có trong registry (§9).
+Quy tắc: **slug catalog = slug registry = slug thư mục `src/themes/<slug>/`**. Mẫu chỉ được `status: "live"` khi đã có trong registry và qua QA (`07-THEMES.md §8`). Test kiểm: mọi mẫu `live` trong catalog đều có trong registry (§9).
+
+`status` (đổi 2026-10-27, thay `concept`/`published`):
+- `live`: có trong registry → hiện, index, nút "Dùng mẫu này" → `/tao-thiep?mau=<slug>`.
+- `preview`: có preview riêng, chưa có code (6 mẫu cũ) → hiện, noindex, nút "Sắp ra mắt" (disabled).
+- `planned`: chỉ trên lộ trình → không hiện ở trang công khai, không sitemap, `/mau-thiep-cuoi/<slug>` 404 thật (`proxy.ts`). Chỉ hiện ở `/admin/mau-thiep`. Lên `preview` khi có preview riêng (test cấm 2 mẫu hiển thị dùng chung preview).
 
 ## 2. Taxonomy: 10 phong cách, 20 mẫu
 
@@ -63,7 +68,7 @@ Site chưa launch → đổi slug thoải mái, **không cần redirect**. Sau l
 | `seoul` Seoul | `seoul-romance` | Đổi slug + tên | Trùng ý tưởng |
 | `xanh-sage` Xanh Sage | `botanical-garden` | Đổi slug + tên | Xanh lá dịu, tiệc vườn |
 | `hoai-niem` Hoài Niệm | `sai-gon-xua` | Đổi slug + tên, viết lại mô tả | Giấy cũ, chữ nghiêng, áo dài/phố cổ |
-| — | 14 mẫu còn lại | Thêm mới, `status: "concept"` | |
+| — | 14 mẫu còn lại | Thêm mới, `status: "planned"` | |
 
 `preview` (kiểu `MiniStyle` trong `components/home/mini-invitation.tsx`) là khoá nội bộ, giữ nguyên cho 6 mẫu cũ (`songhy`, `pastel`, …). 14 mẫu mới cần thêm preview hoặc dùng 1 preview chung theo phong cách cho tới khi có thumbnail thật.
 
@@ -90,8 +95,8 @@ Lý do đổi `features` sang danh sách cố định: lọc được, không l�
 | URL | Index khi | Sitemap | Ghi chú |
 | --- | --- | --- | --- |
 | `/mau-thiep-cuoi` | Luôn (sau launch) | Có | Trang gallery chính |
-| `/mau-thiep-cuoi/phong-cach/<style>` | **≥ 2 mẫu `published`** (= có code trong registry, qua QA) thuộc phong cách đó, tính cả phong cách phụ, **và** phong cách có nội dung riêng: `intro` viết tay + **≥ 3 câu FAQ** | Chỉ khi index | Đã quyết 2026-10-26 (thay ngưỡng 3 cũ) |
-| `/mau-thiep-cuoi/<theme>` | Mẫu `published` | Chỉ khi index | `concept` → noindex |
+| `/mau-thiep-cuoi/phong-cach/<style>` | **≥ 2 mẫu `live`** (= có code trong registry, qua QA) thuộc phong cách đó, tính cả phong cách phụ, **và** phong cách có nội dung riêng: `intro` viết tay + **≥ 3 câu FAQ** | Chỉ khi index | Đã quyết 2026-10-26 (thay ngưỡng 3 cũ) |
+| `/mau-thiep-cuoi/<theme>` | Mẫu `live` | Chỉ khi index | `preview` → noindex; `planned` → 404 |
 | `/mau-thiep-cuoi?mau-sac=…&goi=…&tinh-nang=…` | **Không bao giờ** | Không | Bộ lọc = facet (§4) |
 | `/mau-thiep-cuoi/phong-cach/<style>?…` | Không bao giờ | Không | Lọc trong 1 phong cách |
 | `/tao-thiep?mau=<slug>&bien-the=<key>` | Không (app) | Không | Đã noindex trong sổ SEO |
@@ -114,13 +119,13 @@ Quy tắc bộ lọc:
                                          [Lưu thiệp] → /dang-nhap (nếu cần) → createWedding
 ```
 
-1. **Nút trên trang chi tiết** (và thẻ mẫu): link thường tới `/tao-thiep?mau=<slug>` (+ `&bien-the=<key>` nếu khách đã bấm chấm màu). Chỉ hiện với mẫu đã có trong registry; mẫu `concept` hiện "Sắp ra mắt" thay cho nút.
+1. **Nút trên trang chi tiết** (và thẻ mẫu): link thường tới `/tao-thiep?mau=<slug>` (+ `&bien-the=<key>` nếu khách đã bấm chấm màu). Chỉ hiện với mẫu đã có trong registry; mẫu `preview` hiện "Sắp ra mắt" thay cho nút.
 2. **`/tao-thiep`** đọc `mau` phía client. Slug lạ / không có trong registry / chưa `published` → bỏ qua, dùng mẫu mặc định, **không** báo lỗi (link cũ hỏng không làm kẹt người dùng). `bien-the` lạ → `defaultOptions`.
 3. **`createWedding`** (Tony viết) — thay đổi cần làm:
    - Schema nhận thêm `themeSlug` (+ `themeOptions` nếu có biến thể). **Validate với registry phía server**: `getThemeEntry(slug)` tồn tại **và** manifest `status === "published"`; options parse bằng `manifest.optionsSchema`. Không hợp lệ → dùng mẫu mặc định (không tin client).
-   - Không validate bằng catalog `data/themes.ts`: catalog có mẫu `concept` chưa có code → tạo đám cưới trỏ tới theme không render được.
+   - Không validate bằng catalog `data/themes.ts`: catalog có mẫu `preview`/`planned` chưa có code → tạo đám cưới trỏ tới theme không render được.
    - Gói: mẫu `premium` mà user chưa có gói → vẫn cho tạo/xem trước, chặn ở bước **xuất bản** (quyết định gói nằm ở `01-PRD.md`; ghi lại ở đây để không quên).
-   - Test hiện có "form gửi lén themeSlug bị bỏ qua (mass-assignment)" sẽ phải viết lại: `themeSlug` hợp lệ được nhận; slug lạ / `concept` / `__proto__` → về mặc định. `userId`, `role` vẫn tuyệt đối không nhận từ form.
+   - Test hiện có "form gửi lén themeSlug bị bỏ qua (mass-assignment)" sẽ phải viết lại: `themeSlug` hợp lệ được nhận; slug lạ / `preview` / `planned` / `__proto__` → về mặc định. `userId`, `role` vẫn tuyệt đối không nhận từ form.
 
 ## 8. Thứ tự làm 5 mẫu đầu
 
@@ -132,7 +137,7 @@ Quy tắc bộ lọc:
 | 4 | `seoul-romance` | han-quoc-nhat-ban | Từ khoá "thiệp cưới Hàn Quốc" có người tìm |
 | 5 | `royal-gold` | sang-trong | Ứng viên Premium đầu tiên |
 
-Sau 5 mẫu: mỗi phong cách chính có tối đa 1 mẫu published (trừ khi phong cách phụ thật sự hợp) → trang phong cách vẫn noindex (§6, cần 2). Gallery và 5 trang chi tiết index được. Mẫu thứ 2 của phong cách nào + FAQ xong thì trang đó index.
+Sau 5 mẫu: mỗi phong cách chính có tối đa 1 mẫu live (trừ khi phong cách phụ thật sự hợp) → trang phong cách vẫn noindex (§6, cần 2). Gallery và 5 trang chi tiết index được. Mẫu thứ 2 của phong cách nào + FAQ xong thì trang đó index.
 
 Việc cần đổi trong roadmap: T-014/T-015/T-016 (`hong-pastel`, `song-hy`, `ban-tin`) đổi thành `blush-rose`, `song-hy-do-son`, `ivory-editorial` theo bảng trên; `ban-tin` → `modern-editorial` lùi về sau 5 mẫu đầu. `07-THEMES.md §5` cập nhật theo.
 
@@ -140,7 +145,7 @@ Việc cần đổi trong roadmap: T-014/T-015/T-016 (`hong-pastel`, `song-hy`, 
 
 - Mọi `theme.styles[i]` tồn tại trong `themeStyles`; mỗi mẫu có đúng 1 phong cách chính (phần tử đầu).
 - Slug phong cách và slug mẫu: kebab-case, không trùng nhau, không trùng nhau giữa 2 danh sách.
-- Mẫu `published` ⇒ có trong `themeRegistry` và manifest cũng `published`.
+- Mẫu `live` ⇒ có trong `themeRegistry` và manifest cũng `published`.
 - `variants[].key` khớp enum `palette` trong `optionsSchema` của theme (khi theme đã có code).
 - `colors`, `features` chỉ dùng giá trị trong danh sách cố định (§4).
 - Sổ SEO: title ≤ 60, description 110–160, keyword có trong title + H1 — test `tests/seo.test.ts` đã kiểm, chỉ cần dữ liệu mới qua.
@@ -170,7 +175,7 @@ Mỗi theme ghi nguồn + giấy phép từng asset vào `manifest.assets[]` (co
 | `src/components/home/mini-invitation.tsx` | Thêm `miniStyles` cho mẫu mới hoặc preview chung theo phong cách |
 | `src/components/home/featured-themes.tsx` | Chọn lại mẫu nổi bật trang chủ (ưu tiên 5 mẫu đầu) |
 | `src/components/themes/style-chips.tsx` | 10 chip → cuộn ngang trên mobile, không xuống 3 dòng |
-| `src/components/themes/theme-card.tsx` | Nhãn gói, chấm màu biến thể, "Sắp ra mắt" cho `concept` |
+| `src/components/themes/theme-card.tsx` | Nhãn gói, chấm màu biến thể, "Sắp ra mắt" cho `preview` |
 | `src/app/(marketing)/mau-thiep-cuoi/page.tsx` | Bộ lọc client (màu / gói / tính năng), giữ ○ Static |
 | `src/app/(marketing)/mau-thiep-cuoi/phong-cach/[style]/page.tsx` | `generateStaticParams` theo 10 phong cách mới; bộ lọc trong phong cách |
 | `src/app/(marketing)/mau-thiep-cuoi/[slug]/page.tsx` | Nút "Dùng mẫu này" → `/tao-thiep?mau=`; chấm màu đổi preview |

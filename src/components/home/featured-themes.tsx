@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { ThemeCard } from "@/components/themes/theme-card";
-import { getTheme, type Theme } from "@/data/themes";
+import { getVisibleTheme, type Theme } from "@/data/themes";
 import { SectionHeading } from "./section-heading";
 
 // 6 mẫu nổi bật trên trang chủ (ưu tiên mẫu sẽ làm đầu tiên, docs/12 §8).
@@ -14,7 +14,7 @@ const FEATURED_SLUGS = [
   "sai-gon-xua",
   "modern-editorial",
 ];
-const featured = FEATURED_SLUGS.map(getTheme).filter((t): t is Theme => t !== undefined);
+const featured = FEATURED_SLUGS.map(getVisibleTheme).filter((t): t is Theme => t !== undefined);
 
 export function FeaturedThemes() {
   return (

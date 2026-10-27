@@ -4,7 +4,7 @@ import { RelatedLinks } from "@/components/seo/related-links";
 import { StyleChips } from "@/components/themes/style-chips";
 import { ThemeGrid } from "@/components/themes/theme-card";
 import { Container } from "@/components/ui/container";
-import { themes } from "@/data/themes";
+import { visibleThemes } from "@/data/themes";
 import { site } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getSeoPage, themePath } from "@/lib/seo/pages";
@@ -36,7 +36,7 @@ export default function Page() {
 
         <h2 className="sr-only">Tất cả mẫu thiệp</h2>
         <div className="mt-10">
-          <ThemeGrid items={themes} />
+          <ThemeGrid items={visibleThemes} />
         </div>
 
         <p className="mt-8 text-sm text-muted">
@@ -55,7 +55,7 @@ export default function Page() {
           url: new URL(PATH, site.url).toString(),
           mainEntity: {
             "@type": "ItemList",
-            itemListElement: themes.map((t, i) => ({
+            itemListElement: visibleThemes.map((t, i) => ({
               "@type": "ListItem",
               position: i + 1,
               name: t.name,

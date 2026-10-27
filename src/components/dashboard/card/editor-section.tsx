@@ -1,5 +1,5 @@
 import { assertDashboardPreview } from "@/components/dashboard/preview-guard";
-import { themes } from "@/data/themes";
+import { visibleThemes } from "@/data/themes";
 import { repos } from "@/features/repos";
 import { connection } from "next/server";
 import { CardEditor, type ThemeChoice } from "./card-editor";
@@ -13,10 +13,12 @@ export async function EditorSection() {
   const draft = await repos.wedding.getDraft(wedding.id);
 
   // Pass only what the editor edits, as plain strings/booleans (the owner's own data, no tokens).
+  // Mock preview: no theme is "live" yet, so preview themes are allowed here. Switch to live-only
+  // when real data replaces the mock (docs/STATUS.md).
   const initial: EditorValues = {
-    themeSlug: themes.some((t) => t.slug === draft.themeSlug)
+    themeSlug: visibleThemes.some((t) => t.slug === draft.themeSlug)
       ? draft.themeSlug
-      : (themes[0]?.slug ?? ""),
+      : (visibleThemes[0]?.slug ?? ""),
     brideName: draft.brideName,
     groomName: draft.groomName,
     brideShortName: draft.brideShortName ?? "",
@@ -33,7 +35,7 @@ export async function EditorSection() {
       address: e.address,
     })),
   };
-  const choices: ThemeChoice[] = themes.map((t) => ({
+  const choices: ThemeChoice[] = visibleThemes.map((t) => ({
     slug: t.slug,
     name: t.name,
     preview: t.preview,

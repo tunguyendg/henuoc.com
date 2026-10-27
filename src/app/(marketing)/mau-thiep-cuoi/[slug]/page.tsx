@@ -8,9 +8,9 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
 import { StyleChips } from "@/components/themes/style-chips";
 import { ThemeGrid } from "@/components/themes/theme-card";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { getTheme, similarThemes, themes } from "@/data/themes";
+import { getVisibleTheme, similarThemes, visibleThemes } from "@/data/themes";
 import { site } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getSeoPage, themePath } from "@/lib/seo/pages";
@@ -18,18 +18,18 @@ import { getSeoPage, themePath } from "@/lib/seo/pages";
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return themes.map((t) => ({ slug: t.slug }));
+  return visibleThemes.map((t) => ({ slug: t.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  if (!getTheme(slug)) return {};
+  if (!getVisibleTheme(slug)) return {};
   return pageMetadata(themePath(slug));
 }
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const theme = getTheme(slug);
+  const theme = getVisibleTheme(slug);
   if (!theme) notFound();
 
   const path = themePath(slug);
@@ -58,9 +58,15 @@ export default async function Page({ params }: Props) {
             <p className="mt-5 text-lg text-muted">{theme.description}</p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href={createHref} className={buttonVariants({ size: "lg" })}>
-                Dùng mẫu này <ArrowRight aria-hidden />
-              </Link>
+              {theme.status === "live" ? (
+                <Link href={createHref} className={buttonVariants({ size: "lg" })}>
+                  Dùng mẫu này <ArrowRight aria-hidden />
+                </Link>
+              ) : (
+                <Button size="lg" disabled>
+                  Sắp ra mắt
+                </Button>
+              )}
               <Link
                 href="/mau-thiep-cuoi"
                 className={buttonVariants({ variant: "secondary", size: "lg" })}
@@ -98,8 +104,9 @@ export default async function Page({ params }: Props) {
             </div>
 
             <p className="mt-10 rounded-xl bg-rose-50 p-4 text-sm text-ink">
-              Đây là thiệp minh hoạ. Bản hoàn chỉnh có hiệu ứng mở thiệp, nhạc nền và đầy đủ các mục
-              như trên.
+              {theme.status === "live"
+                ? "Đây là thiệp minh hoạ. Bản hoàn chỉnh có hiệu ứng mở thiệp, nhạc nền và đầy đủ các mục như trên."
+                : "Mẫu này đang được hoàn thiện nên chưa dùng được. Đây là bản minh hoạ để hai bạn hình dung phong cách."}
             </p>
           </div>
         </div>

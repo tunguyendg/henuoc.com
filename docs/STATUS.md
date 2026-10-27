@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-26 (Cẩm nang phân trang + 4 trang chủ đề)
+> Cập nhật lần cuối: 2026-10-27 (T-026 sửa: status mẫu live / preview / planned)
 
 ## Đang ở đâu
 
@@ -38,7 +38,7 @@
 ## ⏭️ Tiếp theo (frontend)
 
 1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
-2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu published + intro + ≥ 3 FAQ). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
+2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu live + intro + ≥ 3 FAQ). Sửa 2026-10-27: `status` live / preview (6 mẫu cũ, nút "Sắp ra mắt") / planned (14 mẫu mới: ẩn khỏi trang công khai + sitemap, `/mau-thiep-cuoi/<slug>` 404 thật qua `proxy.ts`, chỉ hiện ở `/admin/mau-thiep`). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
 3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
 4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 
@@ -77,11 +77,20 @@
 - `/tinh-nang/checklist-dam-cuoi` dùng keyword "lên kế hoạch đám cưới"; "checklist đám cưới" thuộc `/cong-cu/checklist-dam-cuoi`, "mẫu lời mời đám cưới" thuộc tool lời mời (bài cẩm nang giữ "lời mời đám cưới hay").
 - Admin thật: thay guard production bằng `requireAdmin()` kiểm `session.user.role === "ADMIN"` ở server, đặt trong mọi page (layout chỉ là lớp thêm); mọi Server Action ghi (đổi gói, bật/tắt mẫu) tự kiểm role lại + Zod. Không tin role từ cookie/JWT phía client.
 - Description `/cong-cu/checklist-dam-cuoi` ghi "hơn 40 việc": bớt việc xuống dưới 40 thì sửa câu này.
+- Editor `/dashboard` (mock) cho chọn cả mẫu `preview` vì chưa có mẫu `live`. Khi gỡ mock: chỉ cho chọn `live` (+ validate với registry phía server, docs/12 §7).
 - Trang pháp lý là dự thảo, `index: false` — Tony duyệt nội dung trước launch; khi đổi kiến trúc dữ liệu phải sửa chính sách cho khớp.
 - Nâng cấp Cao cấp qua email + chuyển khoản tay: PHẢI công bố điều khoản chính thức + chính sách hoàn tiền trước khi nhận tiền.
 - Xoá dữ liệu qua email: chỉ xoá sau khi chủ tài khoản bấm xác nhận qua email đăng nhập (header From giả được).
 - `hotro@henuoc.com` công khai → bật lọc spam, không dùng làm email admin/đăng nhập dịch vụ nào.
 - Chưa có backend → chưa có bề mặt tấn công dữ liệu. Khi làm M3/M4: IDOR, token khách, rate limit RSVP là ưu tiên.
+
+## 🚀 Checklist launch
+
+- [ ] Gallery `/mau-thiep-cuoi` chỉ còn mẫu `live` (mẫu `preview` chưa dùng được → chuyển `planned` hoặc làm xong code trước ngày launch)
+- [ ] Bật `NEXT_PUBLIC_ALLOW_INDEXING` (cả bước Build trong `_build.yml`)
+- [ ] Trang pháp lý Tony duyệt, bỏ `index: false`
+- [ ] Cẩm nang ≥ 5 bài (PRD)
+- [ ] Chốt gói Supabase production (ADR-004)
 
 ## 🧭 Quyết định chờ Tony
 

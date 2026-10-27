@@ -6,8 +6,9 @@ import type { StyleSlug } from "@/themes/types";
  * trang chi tiết và sổ SEO. Sau này theme thật (M1) chỉ cần thay `preview` và `status`.
  *
  * status:
- *  - "concept"   : mới là thiệp minh hoạ → noindex, không vào sitemap (docs/08-SEO.md §4)
- *  - "published" : theme thật đã qua QA (docs/07-THEMES.md §8) → index
+ *  - "live"    : có trong `themeRegistry` (code thật, đã qua QA — docs/07-THEMES.md §8) → index
+ *  - "preview" : có preview riêng, chưa có code → hiện ở trang công khai, noindex, không vào sitemap
+ *  - "planned" : mới trên lộ trình → KHÔNG hiện ở trang công khai nào, chỉ ở /admin/mau-thiep
  */
 
 export interface ThemeFaq {
@@ -26,13 +27,15 @@ export interface ThemeStyle {
   faq: ThemeFaq[]; // cần ≥ MIN_STYLE_FAQ câu (viết tay) thì trang phong cách mới được index
 }
 
+export type ThemeStatus = "live" | "preview" | "planned";
+
 export interface Theme {
   slug: string;
   name: string;
-  preview: MiniStyle;
+  preview: MiniStyle; // với mẫu "planned" chưa dùng (chưa có preview riêng)
   styles: StyleSlug[]; // slug phong cách, cái đầu tiên là phong cách chính
   tier: "free" | "premium"; // đề xuất, Tony có thể đổi
-  status: "concept" | "published";
+  status: ThemeStatus;
   summary: string; // 1 câu, dùng trên thẻ
   description: string; // 80–150 chữ, dùng cho trang chi tiết + SEO
   features: string[];
@@ -263,7 +266,7 @@ export const themes: Theme[] = [
     preview: "songhy",
     styles: ["truyen-thong-viet"],
     tier: "free",
-    status: "concept",
+    status: "preview",
     summary: "Đỏ son, viền vàng, trang trọng đúng phong tục.",
     description:
       "Song Hỷ Đỏ Son là mẫu thiệp truyền thống với nền đỏ son và viền vàng kim, bố cục đối xứng như thiệp giấy in. Lời mời trang trọng, có chỗ cho tên ông bà, bố mẹ hai bên và tách riêng lễ vu quy, lễ thành hôn. Lựa chọn an toàn khi khách mời có nhiều người lớn tuổi.",
@@ -282,7 +285,7 @@ export const themes: Theme[] = [
     preview: "vintage",
     styles: ["truyen-thong-viet", "co-dien-hoai-niem"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Gạch bông, xanh ngọc và nâu trầm kiểu nhà Đông Dương.",
     description:
       "Đông Dương lấy cảm hứng từ những ngôi nhà thời Pháp thuộc ở Việt Nam: gạch bông hoa văn, cửa chớp xanh ngọc, nâu trầm và kem ấm. Bố cục giữ nét trang trọng của thiệp truyền thống nhưng thoáng hơn, nhiều khoảng thở quanh tên cô dâu chú rể. Hoạ tiết gạch bông được vẽ lại bằng nét đơn giản, lặp thành đường viền mảnh. Đây là lựa chọn cho cặp đôi thích sự giao thoa giữa Á và Âu, chụp ảnh cưới ở biệt thự cổ hoặc tổ chức tiệc trong không gian xưa.",
@@ -295,7 +298,7 @@ export const themes: Theme[] = [
     preview: "hanquoc",
     styles: ["toi-gian"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Màu ngà sáng, chữ serif thanh mảnh, nhiều khoảng trắng.",
     description:
       "Ivory Editorial dùng nền màu ngà dịu, chữ serif thanh mảnh và khoảng trắng rộng như một trang sách ảnh. Tên cô dâu chú rể đặt giữa trang, giờ giấc và địa điểm xếp thành từng khối ngắn, dễ lướt trên điện thoại. Mẫu cố tình tiết chế màu sắc và chi tiết để ảnh cưới luôn là điểm nhìn đầu tiên. Vì trung tính nên nó đứng vững với hầu hết kiểu tiệc, từ nhà hàng nhỏ đến sân vườn, và không lỗi mốt sau vài năm nhìn lại.",
@@ -308,7 +311,7 @@ export const themes: Theme[] = [
     preview: "bantin",
     styles: ["toi-gian", "hien-dai-nghe-thuat"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Đen trắng tương phản mạnh, gọn và dứt khoát.",
     description:
       "Black & White chỉ dùng hai màu đen và trắng, tạo độ tương phản mạnh và cảm giác dứt khoát. Chữ đậm, đường kẻ mảnh, ảnh cưới đen trắng đặt lớn là điểm nhấn duy nhất. Không hoa văn, không màu mè, để khách tập trung vào tên hai bạn, ngày cưới và địa điểm. Mẫu có hơi hướng điện ảnh, rất hợp với bộ ảnh chụp ngược sáng hay ảnh phóng sự, và cho cảm giác một buổi tiệc tối sang trọng, tiết chế.",
@@ -321,7 +324,7 @@ export const themes: Theme[] = [
     preview: "songhy",
     styles: ["sang-trong"],
     tier: "premium",
-    status: "concept",
+    status: "planned",
     summary: "Nền đậm, viền ánh kim vàng, bố cục cân đối.",
     description:
       "Royal Gold phối nền xanh đen hoặc đỏ rượu với viền và hoạ tiết ánh kim vàng, bố cục đối xứng cân đối như thiệp in nổi. Chữ có chân, khoảng cách rộng, phong bì mở ra chậm rãi để tạo cảm giác trang trọng ngay từ giây đầu tiên. Hoạ tiết là đường diềm và khung cổ điển tự vẽ, không dùng huy hiệu hay quốc huy có thật. Mẫu dành cho những tiệc cưới lớn ở khách sạn, trung tâm tiệc cưới hoặc đám cưới theo nghi thức, nơi khách mặc vest và áo dài.",
@@ -334,7 +337,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["sang-trong"],
     tier: "premium",
-    status: "concept",
+    status: "planned",
     summary: "Vàng champagne ấm, mềm và thanh lịch.",
     description:
       "Champagne Elegance chọn tông vàng champagne ấm, kem và nâu nhạt, sang nhưng không nặng nề như các mẫu viền vàng đậm. Chữ thanh, ảnh cưới đặt trong khung bo mềm, ánh kim chạy nhẹ khi cuộn trang như ly rượu dưới đèn. Cảm giác chung là sự tinh tế của buổi tiệc tối hơn là phô trương. Nếu hai bạn thích vàng nhưng ngại vẻ hoàng gia quá cầu kỳ, đây là mức vừa phải: đủ ấm, đủ sáng và dễ phối với váy cưới màu ngà.",
@@ -347,7 +350,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["lang-man-hoa-la"],
     tier: "free",
-    status: "concept",
+    status: "preview",
     summary: "Hồng phấn và hoa hồng vẽ màu nước.",
     description:
       "Blush Rose mở ra bằng một phong bì hồng phấn, bên trong là hoa hồng vẽ màu nước viền quanh tên cô dâu chú rể viết nghiêng mềm mại. Các buổi lễ xếp thành thẻ bo tròn dễ đọc trên điện thoại. Phù hợp cặp đôi thích nhẹ nhàng, nữ tính nhưng không sến. Mẫu có đủ lịch âm dương, bản đồ chỉ đường, album ảnh và QR mừng cưới cho hai bên.",
@@ -360,7 +363,7 @@ export const themes: Theme[] = [
     preview: "sage",
     styles: ["lang-man-hoa-la"],
     tier: "free",
-    status: "concept",
+    status: "preview",
     summary: "Xanh lá dịu, tươi mát cho tiệc ngoài trời.",
     description:
       "Botanical Garden dùng tông xanh lá dịu và kem, gợi cảm giác tươi mát của một tiệc cưới ngoài trời hay trong vườn. Lá và cành vẽ tay viền quanh khung ảnh, chữ rõ, khoảng trắng rộng, các thông tin quan trọng như giờ, địa điểm luôn nổi bật. Hợp với đám cưới nhẹ nhàng, gần gũi. Có đếm ngược, lịch âm dương, bản đồ, album ảnh và RSVP.",
@@ -373,7 +376,7 @@ export const themes: Theme[] = [
     preview: "hanquoc",
     styles: ["han-quoc-nhat-ban", "toi-gian"],
     tier: "premium",
-    status: "concept",
+    status: "preview",
     summary: "Trắng tinh, chữ mảnh kiểu thiệp Hàn.",
     description:
       "Seoul Romance theo phong cách thiệp cưới Hàn Quốc: nền trắng tinh, chữ mảnh giãn rộng, ảnh cưới lớn làm điểm nhấn. Chuyển động nhẹ khi cuộn, không màu mè. Phù hợp với bộ ảnh cưới chụp studio hoặc phong cách Hàn, khi ảnh là nhân vật chính và chữ chỉ đóng vai phụ. Có đếm ngược, album ảnh và RSVP.",
@@ -386,7 +389,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["han-quoc-nhat-ban"],
     tier: "premium",
-    status: "concept",
+    status: "planned",
     summary: "Hoa anh đào rơi nhẹ trên nền kem tĩnh lặng.",
     description:
       "Sakura Zen lấy cảm hứng từ Nhật Bản: nền kem tĩnh lặng, cánh hoa anh đào rơi chậm khi cuộn trang, đường nét thanh và nhiều khoảng trống. Màu chủ đạo là hồng nhạt, xám than và trắng ngà, tạo cảm giác bình yên chứ không rực rỡ. Chữ nhỏ, giãn rộng, mỗi phần chỉ có vài dòng để người đọc dừng lại thở. Mẫu dành cho cặp đôi yêu văn hoá Nhật, cưới vào mùa xuân hoặc có bộ ảnh chụp dưới tán hoa.",
@@ -399,7 +402,7 @@ export const themes: Theme[] = [
     preview: "sage",
     styles: ["rustic"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Màu đất, giấy thô và cỏ xanh cho tiệc sân vườn.",
     description:
       "Rustic Garden dùng nền giấy thô, màu đất nung, xanh rêu và chi tiết gỗ mộc, gợi một buổi tiệc ngoài sân vườn có đèn dây và bàn dài. Chữ viết tay xen với chữ đứng để lời mời thân mật, không quá nghi thức. Cảm giác chung là ấm áp và gần gũi, như thư mời của người nhà gửi cho người nhà. Đây là mẫu cho đám cưới ở quê, homestay, nông trại hay những buổi tiệc nhỏ chỉ có người thân và bạn bè thân thiết.",
@@ -412,7 +415,7 @@ export const themes: Theme[] = [
     preview: "vintage",
     styles: ["rustic"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Boho ấm áp, cỏ lau, hoạ tiết dệt và màu đất.",
     description:
       "Bohemian Love mang không khí boho: cỏ lau khô, hoạ tiết dệt, vòng hoa và các mảng màu đất như terracotta, be, cam cháy. Bố cục phóng khoáng, hơi bất đối xứng, chữ viết tay mềm tạo cảm giác tự do, không gò bó. Thiệp gợi hình ảnh lễ cưới ngoài trời lúc hoàng hôn, khách ngồi trên thảm và hoa khô treo trên khung gỗ. Mẫu dành cho cặp đôi muốn một đám cưới thoải mái, nơi khách ăn mặc nhẹ nhàng và không khí quan trọng hơn nghi thức.",
@@ -425,7 +428,7 @@ export const themes: Theme[] = [
     preview: "vintage",
     styles: ["co-dien-hoai-niem"],
     tier: "free",
-    status: "concept",
+    status: "preview",
     summary: "Giấy ố vàng, chữ nghiêng, áo dài và phố cũ.",
     description:
       "Sài Gòn Xưa mang tông giấy ố vàng và nâu ấm, chữ nghiêng như viết tay, gợi những tấm thiệp và tấm bưu ảnh của Sài Gòn thế kỷ trước. Hợp với bộ ảnh áo dài, xe Vespa, phố cổ hay quán cà phê xưa. Có lịch âm dương, album ảnh và QR mừng cưới, đủ để dùng thật cho một đám cưới mang hơi thở hoài niệm.",
@@ -438,7 +441,7 @@ export const themes: Theme[] = [
     preview: "bantin",
     styles: ["co-dien-hoai-niem"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Trang báo cũ, chữ in và tiêu đề số đặc biệt.",
     description:
       "Vintage Newspaper trình bày lời mời như trang nhất một tờ báo cũ: tiêu đề chữ in đậm, các cột chữ nhỏ, nền giấy báo ngả vàng. Tin cưới của hai bạn là bài chính, các buổi lễ xếp thành mục tin ngắn bên cạnh. Tên báo là tên giả, không giống tờ báo thật nào. Mẫu có chút dí dỏm, dành cho cặp đôi mê sách báo cũ, chữ in và những dòng tít hài hước. Dòng tít chính có thể được viết lại thành câu đùa riêng của hai bạn.",
@@ -451,7 +454,7 @@ export const themes: Theme[] = [
     preview: "sage",
     styles: ["bien"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Xanh biển, cát trắng và nhịp sóng nhẹ.",
     description:
       "Ocean Promise phối xanh biển, xanh ngọc và cát trắng, có đường sóng nhẹ chạy giữa các phần của thiệp. Ảnh cưới đặt lớn, chữ thoáng, giờ giấc và địa điểm nổi bật để khách dễ tìm đường đến tiệc ở biển hoặc đảo. Màu sắc tươi sáng nhưng không chói, gợi gió mặn, nắng cuối chiều và tiếng sóng. Mẫu dành cho đám cưới bên bờ biển, resort hoặc cặp đôi muốn cảm giác mát lành của mùa hè ngay từ lúc khách mở thiệp.",
@@ -464,7 +467,7 @@ export const themes: Theme[] = [
     preview: "vintage",
     styles: ["bien"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Bưu thiếp, tem và dấu bưu điện tự vẽ.",
     description:
       "Travel Postcard biến lời mời thành một tấm bưu thiếp gửi từ chuyến đi chung của hai bạn, có tem và dấu bưu điện tự vẽ, đường bay nét đứt nối hai nơi. Ảnh du lịch đặt trong khung ảnh lấy liền, chữ viết tay ở mặt sau như dòng ghi nhanh trên đường đi. Tem và dấu đều là hình vẽ riêng, không dùng logo hãng bay hay bưu chính có thật. Mẫu dành cho cặp đôi yêu xê dịch, quen nhau trong một chuyến đi hoặc cưới ở nơi xa quê.",
@@ -477,7 +480,7 @@ export const themes: Theme[] = [
     preview: "bantin",
     styles: ["hien-dai-nghe-thuat", "toi-gian"],
     tier: "premium",
-    status: "concept",
+    status: "preview",
     summary: "Chữ in đậm kiểu tạp chí, tối giản đen – kem.",
     description:
       "Modern Editorial lấy cảm hứng từ trang tạp chí: chữ in hoa đậm, lưới bố cục rõ ràng, tông đen – kem tối giản. Ảnh cưới được đặt lớn, tràn màn hình, các buổi lễ trình bày như mục lục. Dành cho cặp đôi thích phong cách hiện đại, cá tính. Có đếm ngược, bản đồ, album ảnh và RSVP.",
@@ -490,7 +493,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["hien-dai-nghe-thuat"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Màu tươi, hình khối lớn, vui mắt như tranh pop.",
     description:
       "Colorful Pop dùng các mảng màu tươi như hồng, vàng chanh, xanh cobalt, hình khối lớn và chữ đậm, lấy cảm hứng chung từ nghệ thuật pop và không sao chép tranh cụ thể nào. Mỗi phần của thiệp một màu nền, cuộn đến đâu đổi màu đến đó, tạo nhịp vui mắt. Chữ vẫn giữ độ tương phản cao để đọc rõ dù nền rực. Mẫu dành cho tiệc cưới trẻ trung, ít nghi thức, nhiều âm nhạc, nơi cặp đôi muốn thiệp cũng vui như bữa tiệc.",
@@ -503,7 +506,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["de-thuong"],
     tier: "free",
-    status: "concept",
+    status: "planned",
     summary: "Cặp đôi hoạt hình chibi, màu tươi và nét tròn.",
     description:
       "Chibi Couple hướng tới một tấm thiệp vui mắt với cặp đôi hoạt hình chibi đầu to, nét tròn, đặt ngay đầu thiệp trên nền màu tươi. Lời mời có thể trình bày trong bong bóng thoại, các buổi lễ xếp như những màn chơi nhỏ. Hình vẽ theo phong cách riêng của mẫu, không bắt chước nhân vật có bản quyền. Đây là mẫu dành cho cặp đôi trẻ thích sự vui nhộn, muốn bạn bè bật cười ngay khi mở thiệp, và vẫn giữ chữ to rõ để người lớn tuổi đọc được.",
@@ -516,7 +519,7 @@ export const themes: Theme[] = [
     preview: "pastel",
     styles: ["de-thuong"],
     tier: "premium",
-    status: "concept",
+    status: "planned",
     summary: "Tranh minh hoạ nét mảnh, màu nhẹ như sổ tay.",
     description:
       "Illustrated Love hướng tới thiệp có tranh minh hoạ nét mảnh, màu nhẹ như trang sách thiếu nhi dành cho người lớn. Bảng màu đào, xanh bạc hà và xám xanh tạo cảm giác ấm và yên. Các mảng tranh xen giữa những dòng chữ ngắn, nhường chỗ cho tên hai bạn và ngày cưới. Mẫu dành cho cặp đôi muốn tấm thiệp mang chất thủ công, gần với một cuốn sổ tay hơn là một khuôn mẫu in sẵn. Hình minh hoạ sẽ là tranh tự vẽ, không mô phỏng hoạ sĩ có thật.",
@@ -525,8 +528,20 @@ export const themes: Theme[] = [
   },
 ];
 
+/** Mẫu hiện ở trang công khai (live + preview), giữ thứ tự catalog. */
+export const visibleThemes: Theme[] = themes.filter(isVisibleTheme);
+
+export function isVisibleTheme(t: Theme): boolean {
+  return t.status !== "planned";
+}
+
+/** Trả cả mẫu planned (admin cần). Trang công khai dùng `getVisibleTheme`. */
 export function getTheme(slug: string): Theme | undefined {
   return themes.find((t) => t.slug === slug);
+}
+
+export function getVisibleTheme(slug: string): Theme | undefined {
+  return visibleThemes.find((t) => t.slug === slug);
 }
 
 export function getStyle(slug: string): ThemeStyle | undefined {
@@ -534,31 +549,34 @@ export function getStyle(slug: string): ThemeStyle | undefined {
 }
 
 export function themesByStyle(styleSlug: string): Theme[] {
-  return themes.filter((t) => t.styles.some((s) => s === styleSlug));
+  return visibleThemes.filter((t) => t.styles.some((s) => s === styleSlug));
 }
 
-/** Mẫu tương tự: cùng phong cách chính trước, sau đó các mẫu còn lại. */
+export function hasVisibleThemes(styleSlug: string): boolean {
+  return themesByStyle(styleSlug).length > 0;
+}
+
+/** Mẫu tương tự: cùng phong cách chính trước, sau đó các mẫu còn lại (chỉ mẫu visible). */
 export function similarThemes(theme: Theme, limit = 3): Theme[] {
-  const others = themes.filter((t) => t.slug !== theme.slug);
+  const others = visibleThemes.filter((t) => t.slug !== theme.slug);
   const score = (t: Theme) => t.styles.filter((s) => theme.styles.includes(s)).length;
   return [...others].sort((a, b) => score(b) - score(a)).slice(0, limit);
 }
 
-/** Số mẫu ĐÃ PUBLISH tối thiểu để trang phong cách có thể index (docs/12 §6). */
+/** Số mẫu LIVE tối thiểu để trang phong cách có thể index (docs/12 §6). */
 export const MIN_THEMES_FOR_STYLE_INDEX = 2;
 
 /** Số câu FAQ viết tay tối thiểu để trang phong cách có thể index. */
 export const MIN_STYLE_FAQ = 3;
 
-export function publishedCount(styleSlug: string, pool: Theme[] = themes): number {
-  return pool.filter((t) => t.styles.some((s) => s === styleSlug) && t.status === "published")
-    .length;
+export function liveCount(styleSlug: string, pool: Theme[] = themes): number {
+  return pool.filter((t) => t.styles.some((s) => s === styleSlug) && t.status === "live").length;
 }
 
-/** Trang phong cách chỉ index khi đủ mẫu published + intro + FAQ (tránh trang mỏng). */
+/** Trang phong cách chỉ index khi đủ mẫu live + intro + FAQ (tránh trang mỏng). */
 export function isStyleIndexable(style: ThemeStyle, pool: Theme[] = themes): boolean {
   return (
-    publishedCount(style.slug, pool) >= MIN_THEMES_FOR_STYLE_INDEX &&
+    liveCount(style.slug, pool) >= MIN_THEMES_FOR_STYLE_INDEX &&
     style.intro.trim().length > 0 &&
     style.faq.length >= MIN_STYLE_FAQ
   );

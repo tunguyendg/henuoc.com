@@ -5,6 +5,9 @@ import {
   isStyleIndexable,
   themeStyles,
   themes,
+  visibleThemes,
+  themesByStyle,
+  similarThemes,
   type Theme,
   type ThemeStyle,
 } from "./themes";
@@ -75,9 +78,33 @@ describe("catalog mẫu thiệp", () => {
     }
   });
 
-  it("mẫu published phải có trong themeRegistry", () => {
-    for (const t of themes.filter((x) => x.status === "published")) {
+  it("mẫu live phải có trong themeRegistry", () => {
+    for (const t of themes.filter((x) => x.status === "live")) {
       expect(themeRegistry[t.slug], t.slug).toBeDefined();
+    }
+  });
+
+  it("6 mẫu MIGRATED là preview, 14 mẫu còn lại là planned", () => {
+    for (const t of themes) {
+      expect(t.status, t.slug).toBe(MIGRATED.has(t.slug) ? "preview" : "planned");
+    }
+  });
+
+  it("không có 2 mẫu visible dùng chung preview", () => {
+    const previews = visibleThemes.map((t) => t.preview);
+    expect(new Set(previews).size).toBe(previews.length);
+  });
+
+  it("visibleThemes không chứa planned; themesByStyle/similarThemes cũng vậy", () => {
+    expect(visibleThemes.some((t) => t.status === "planned")).toBe(false);
+    expect(visibleThemes.map((t) => t.slug)).toEqual(
+      themes.filter((t) => t.status !== "planned").map((t) => t.slug),
+    );
+    for (const s of themeStyles) {
+      expect(themesByStyle(s.slug).some((t) => t.status === "planned")).toBe(false);
+    }
+    for (const t of themes) {
+      expect(similarThemes(t, 20).some((x) => x.status === "planned")).toBe(false);
     }
   });
 });
@@ -112,22 +139,24 @@ describe("isStyleIndexable", () => {
     intro: "Giới thiệu.",
     faq: Array.from({ length: MIN_STYLE_FAQ }, (_, i) => ({ q: `Hỏi ${i}`, a: `Đáp ${i}` })),
   };
-  const published = (slug: string): Theme => ({
+  const make = (slug: string, status: Theme["status"]): Theme => ({
     ...themes[0]!,
     slug,
     styles: ["toi-gian"],
-    status: "published",
+    status,
   });
+  const live = (slug: string) => make(slug, "live");
+  const preview = (slug: string) => make(slug, "preview");
 
-  it("1 mẫu published (đủ FAQ) → không index", () => {
-    expect(isStyleIndexable(style, [published("a")])).toBe(false);
+  it("1 mẫu live + 2 preview (đủ FAQ) → không index", () => {
+    expect(isStyleIndexable(style, [live("a"), preview("b"), preview("c")])).toBe(false);
   });
-  it("2 mẫu published nhưng thiếu FAQ hoặc intro → không index", () => {
-    const two = [published("a"), published("b")];
+  it("2 mẫu live nhưng thiếu FAQ hoặc intro → không index", () => {
+    const two = [live("a"), live("b")];
     expect(isStyleIndexable({ ...style, faq: style.faq.slice(0, 2) }, two)).toBe(false);
     expect(isStyleIndexable({ ...style, intro: " " }, two)).toBe(false);
   });
-  it("2 mẫu published + intro + đủ FAQ → index", () => {
-    expect(isStyleIndexable(style, [published("a"), published("b")])).toBe(true);
+  it("2 mẫu live + intro + đủ FAQ → index", () => {
+    expect(isStyleIndexable(style, [live("a"), live("b")])).toBe(true);
   });
 });
