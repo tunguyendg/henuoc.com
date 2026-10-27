@@ -38,6 +38,9 @@ const MIGRATED = new Set([
   "sai-gon-xua",
 ]);
 
+// Mẫu đã có theme thật trong registry và qua QA (docs/07-THEMES.md §8).
+const LIVE = new Set(["blush-rose"]);
+
 const wordCount = (s: string) => s.trim().split(/\s+/).length;
 
 describe("catalog mẫu thiệp", () => {
@@ -84,9 +87,10 @@ describe("catalog mẫu thiệp", () => {
     }
   });
 
-  it("6 mẫu MIGRATED là preview, 14 mẫu còn lại là planned", () => {
+  it("mẫu đã có code là live, các mẫu MIGRATED khác là preview, còn lại planned", () => {
     for (const t of themes) {
-      expect(t.status, t.slug).toBe(MIGRATED.has(t.slug) ? "preview" : "planned");
+      const expected = LIVE.has(t.slug) ? "live" : MIGRATED.has(t.slug) ? "preview" : "planned";
+      expect(t.status, t.slug).toBe(expected);
     }
   });
 

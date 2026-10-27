@@ -1,0 +1,245 @@
+/* Blush Rose: palette, paper texture, and the few things Tailwind utilities cannot express
+   (transitions driven by data attributes, scroll-snap coverflow).
+   Plain global CSS with a br- prefix, NOT a CSS module: next.config.ts routes every *.css through the
+   Tailwind loader as plain CSS, which strips CSS-module hashing (class map comes out empty). */
+
+/* ── Palette "do-do" (default) ───────────────────────────────────────────────
+   paper #F3EDE3 · card #ECE5DA · wine #4A161A · gold #C4A257
+   wine/paper 12.69 · wine/card 11.81 · gold/wine 6.09 (gold = chữ chỉ trên nền wine; trên giấy chỉ trang trí)
+   muted = wine 80% trên paper/card: 7.29 / 7.00 */
+.br-root {
+  --br-paper: #f3ede3;
+  --br-card: #ece5da;
+  --br-wine: #4a161a;
+  --br-gold: #c4a257;
+}
+
+/* ── Palette "hong-nhat" ─────────────────────────────────────────────────────
+   paper #FBF1F2 · card #F6E3E7 · wine #5C2233 (rượu hồng) · accent #CC919F
+   wine/paper 10.95 · wine/card 9.85 (chữ chính ≥ 4.5)
+   accent/wine: #C98D9C ban đầu chỉ 4.49 → chỉnh thành #CC919F = 4.69 (chữ accent trên khối wine ≥ 4.5)
+   accent/paper ≈ 2.4: KHÔNG dùng làm chữ trên nền sáng, chỉ trang trí
+   muted = wine 80% trên paper/card: 6.31 / 5.82 */
+.br-root[data-palette="hong-nhat"] {
+  --br-paper: #fbf1f2;
+  --br-card: #f6e3e7;
+  --br-wine: #5c2233;
+  --br-gold: #cc919f;
+}
+
+/* Re-skin the shared design tokens inside the theme so RsvpForm, AddToCalendar, MapButton,
+   MusicToggle and Watermark pick up the palette without being edited. GiftSheet is portalled to
+   <body>, so it keeps the default brand colours. */
+.br-root {
+  --color-canvas: var(--br-paper);
+  --color-surface: color-mix(in srgb, var(--br-paper) 55%, white);
+  --color-ink: var(--br-wine);
+  --color-muted: color-mix(in srgb, var(--br-wine) 80%, var(--br-paper));
+  --color-border: color-mix(in srgb, var(--br-wine) 45%, var(--br-paper));
+  --color-rose-50: var(--br-card);
+  --color-rose-100: color-mix(in srgb, var(--br-card) 80%, var(--br-wine));
+  --color-rose-500: color-mix(in oklab, var(--br-wine) 70%, white);
+  --color-rose-600: var(--br-wine);
+  /* Hover shifts lightness clearly (the two wine values in the brief were indistinguishable). */
+  --color-rose-700: color-mix(in oklab, var(--br-wine) 85%, white);
+
+  position: relative;
+  min-height: 100%;
+  color: var(--br-wine);
+  font-family: var(--font-br-body), "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* One static texture layer: no animation, no filter on the scrolling element itself. */
+.br-paper {
+  background-color: var(--br-paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .29 0 0 0 0 .09 0 0 0 0 .1 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.br-title {
+  font-family: var(--font-br-title), "Playfair Display", Georgia, serif;
+}
+
+/* Great Vibes: tall ascenders/diacritics need line-height ≥ 1.3 and top padding to avoid clipping. */
+.br-script {
+  font-family: var(--font-br-script), "Great Vibes", cursive;
+  font-weight: 400;
+  line-height: 1.35;
+  padding-top: 0.25em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.br-main {
+  overflow-x: clip;
+}
+
+/* ── Envelope cover ─────────────────────────────────────────────────────────*/
+.br-stage {
+  position: relative;
+  width: min(86vw, 340px);
+  aspect-ratio: 400 / 290;
+  /* No perspective/transform here: they would isolate the flower's multiply blend. */
+}
+
+.br-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.br-env-back,
+.br-env-front {
+  transition:
+    transform calc(var(--br-open-ms, 900ms) * 0.45) ease-in calc(var(--br-open-ms, 900ms) * 0.55),
+    opacity calc(var(--br-open-ms, 900ms) * 0.3) ease-in calc(var(--br-open-ms, 900ms) * 0.55);
+}
+
+.br-flap {
+  transform-origin: 50% 24%;
+  transform: perspective(900px) rotateX(0deg);
+  backface-visibility: hidden;
+  transition: transform calc(var(--br-open-ms, 900ms) * 0.55) ease-in-out;
+}
+
+.br-photo {
+  position: absolute;
+  left: 27%;
+  top: 12%;
+  width: 46%;
+  aspect-ratio: 4 / 5;
+  transform: rotate(-3deg);
+  transition: transform calc(var(--br-open-ms, 900ms) * 0.7) ease-out;
+}
+
+.br-seal {
+  position: absolute;
+  width: 22%;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 250ms ease-out,
+    transform 250ms ease-out;
+}
+
+.br-overlay[data-state="opening"] .br-flap {
+  transform: perspective(900px) rotateX(180deg);
+}
+.br-overlay[data-state="opening"] .br-photo {
+  transform: translateY(-14%) rotate(0deg) scale(1.06);
+}
+.br-overlay[data-state="opening"] .br-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+.br-overlay[data-state="opening"] .br-env-back,
+.br-overlay[data-state="opening"] .br-env-front {
+  transform: translateY(22%);
+  opacity: 0;
+}
+
+/* Reduced motion: the overlay only fades (200ms, set inline); nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .br-env-back,
+  .br-env-front,
+  .br-flap,
+  .br-photo,
+  .br-seal {
+    transition: none !important;
+    transform: none !important;
+  }
+  .br-photo {
+    transform: rotate(-3deg) !important;
+  }
+  .br-seal {
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
+/* ── Heart calendar ─────────────────────────────────────────────────────────
+   Visible by default (SSR, no JS, reduced motion). Reveal marks data-reveal="hidden" only when the
+   card is below the fold, then "shown" → the stroke draws itself. */
+.br-heart {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 800ms ease-out 250ms;
+}
+[data-reveal="hidden"] .br-heart {
+  stroke-dashoffset: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .br-heart {
+    transition: none;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ── Coverflow album ────────────────────────────────────────────────────────*/
+.br-track {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 16%;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  perspective: 1000px;
+}
+.br-track::-webkit-scrollbar {
+  display: none;
+}
+.br-track:focus-visible {
+  outline: 2px solid var(--br-wine);
+  outline-offset: 2px;
+}
+
+.br-slide {
+  flex: 0 0 68%;
+  scroll-snap-align: center;
+  transform: scale(0.85);
+  opacity: 0.55;
+  transition:
+    transform 400ms ease-out,
+    opacity 400ms ease-out;
+}
+.br-slide[data-pos="active"] {
+  transform: none;
+  opacity: 1;
+}
+.br-slide[data-pos="before"] {
+  transform: scale(0.85) rotateY(35deg);
+}
+.br-slide[data-pos="after"] {
+  transform: scale(0.85) rotateY(-35deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .br-slide,
+  .br-slide[data-pos] {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* ── Lì xì ──────────────────────────────────────────────────────────────────*/
+.br-lixi {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.br-lixi-flap {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transition: transform 400ms ease-out;
+}
+.br-lixi:is(:hover, :active, :focus-visible) .br-lixi-flap {
+  transform: scaleY(0.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .br-lixi-flap {
+    transition: none;
+    transform: none !important;
+  }
+}

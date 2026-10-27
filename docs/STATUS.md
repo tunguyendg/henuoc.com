@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-27 (chuẩn bị theme blush-rose: hoa Redouté + brief)
+> Cập nhật lần cuối: 2026-10-27 (theme blush-rose dựng xong, catalog live, chờ Tony test iPhone + Zalo)
 
 ## Đang ở đâu
 
@@ -39,7 +39,7 @@
 
 1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
 2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu live + intro + ≥ 3 FAQ). Sửa 2026-10-27: `status` live / preview (6 mẫu cũ, nút "Sắp ra mắt") / planned (14 mẫu mới: ẩn khỏi trang công khai + sitemap, `/mau-thiep-cuoi/<slug>` 404 thật qua `proxy.ts`, chỉ hiện ở `/admin/mau-thiep`). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
-   - blush-rose (chuẩn bị, CHƯA code): brief `docs/themes/blush-rose.md`, hoa chính `rosa-carolina-corymbosa` (CC0 Cleveland Museum, `src/content/ornaments/redoute.json` chỉ 1 tranh), `npm run ornaments:fetch` (cần `brew install webp`). Chờ Tony: 9 hay 11 section, giữ đếm ngược?, sửa catalog (palette/tên) khi code
+   - ✅ blush-rose (2026-10-27): `src/themes/blush-rose/` (phong bì tự vẽ + dấu sáp, tên Great Vibes, thẻ lễ âm lịch, coverflow, lịch trái tim `month-grid.ts` + 19 test, dress code, bao lì xì → GiftSheet, credit Redouté CC0). Option `palette`: `do-do` (mặc định) / `hong-nhat`. Manifest `published`, catalog `live`. Còn: Tony test iPhone + Zalo, `thumb.webp`/`og.webp`, commit ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` (Tony quyết), CSS module bị rule `*.css` trong next.config biến thành global (theme dùng `theme.css` tiền tố `br-`).
 3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
 4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 

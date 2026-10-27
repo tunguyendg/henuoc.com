@@ -10,6 +10,8 @@ import type { GuestContext, ThemeProps, WeddingContent } from "./types";
 
 // "server-only" only means something inside the Next bundler → empty module in Vitest
 vi.mock("server-only", () => ({}));
+// next/font/google only works inside the Next compiler; here it is replaced by empty class names.
+vi.mock("./blush-rose/fonts", () => ({ fontVariables: "" }));
 
 const entries = Object.entries(themeRegistry);
 
@@ -169,6 +171,45 @@ describe("placeholder theme: hành trình khách", () => {
     });
     expect(html).not.toContain("Bật nhạc");
     expect(html).not.toContain("There is Romance Kevin MacLeod");
+  });
+});
+
+describe("blush-rose theme", () => {
+  async function render(options: unknown = {}) {
+    const entry = themeRegistry["blush-rose"];
+    if (!entry) throw new Error("blush-rose theme missing");
+    const { default: Theme } = await entry.load();
+    const content = await getDemoContent();
+    return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo" }));
+  }
+
+  it("các section có data-section đúng thứ tự (demo không có tiệc vẫn có phần reception)", async () => {
+    const html = await render({ dressCode: ["#4A161A"] });
+    const names = [...html.matchAll(/data-section="([a-z-]+)"/g)].map((m) => m[1]);
+    expect(names).toEqual([
+      "cover",
+      "names",
+      "ceremony",
+      "album",
+      "reception",
+      "venue",
+      "dress-code",
+      "gift",
+      "thanks",
+    ]);
+  });
+
+  it("palette mặc định do-do; hong-nhat được áp lên wrapper; không có dressCode thì ẩn section", async () => {
+    expect(await render({})).toContain('data-palette="do-do"');
+    const pink = await render({ palette: "hong-nhat" });
+    expect(pink).toContain('data-palette="hong-nhat"');
+    expect(pink).not.toContain('data-section="dress-code"');
+  });
+
+  it("luôn có credit Redouté và lịch trái tim khoanh đúng ngày", async () => {
+    const html = await render({});
+    expect(html).toContain("Pierre-Joseph Redouté");
+    expect(html).toContain("Tháng 10 năm 2027, ngày 17 được khoanh");
   });
 });
 

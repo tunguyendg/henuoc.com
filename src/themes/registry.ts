@@ -1,4 +1,5 @@
 import { createElement } from "react";
+import { manifest as blushRoseManifest } from "./blush-rose/manifest";
 import { manifest as placeholderManifest } from "./placeholder/manifest";
 import type { ThemeManifest, ThemeModule, ThemeProps } from "./types";
 
@@ -45,6 +46,7 @@ function defineTheme<TOptions>(
 
 // Dynamic import → each theme is its own chunk; a wedding page only loads the theme it uses.
 export const themeRegistry: Readonly<Record<string, ThemeEntry>> = Object.freeze({
+  "blush-rose": defineTheme(blushRoseManifest, () => import("./blush-rose")),
   placeholder: defineTheme(placeholderManifest, () => import("./placeholder")),
 });
 
