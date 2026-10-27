@@ -28,6 +28,13 @@ Manifest: `src/content/cam-nang/images.json`, mảng các object:
 
 Component tự lấy alt và credit từ manifest, chỉ tra ảnh thuộc bài hiện tại. Mỗi ảnh hiển thị `figure`, ảnh responsive và caption: ảnh Unsplash có link tác giả / Unsplash; ảnh tự chụp dùng `caption` riêng.
 
+## Nguồn ảnh — luật cho agent
+
+- Mỗi ảnh Unsplash (`cdnPath`) chỉ dùng **một lần** trong manifest: bìa không trùng bìa bài khác, cũng không trùng ảnh trong bài. `tests/seo.test.ts` kiểm luật này.
+- Agent (Claude, Codex, subagent) **KHÔNG chép, tạo, ghi đè hay xoá file trong `public/images/`**, kể cả `CREDITS.md`. Ảnh chỉ vào thư mục đó qua script dưới đây, do Tony chạy.
+- Bài mới cần ảnh: agent chọn ảnh Unsplash (giấy phép Unsplash, không phải Unsplash+) chưa dùng ở đâu trong dự án, đúng nội dung bài, rồi chỉ sửa `images.json`. Thiếu mạng hoặc chưa tìm được ảnh phù hợp → để trống entry, báo Tony; test ảnh bìa đỏ là đúng, không "chữa" bằng cách chép file.
+- Đổi ảnh của một bài đã có: script giữ file cũ và không ghi lại credit trùng marker, nên Tony xoá file `.webp` cũ và khối credit `<!-- image: … -->` tương ứng trong `CREDITS.md` trước khi chạy lại.
+
 Chạy bằng Node 22:
 
 ```bash

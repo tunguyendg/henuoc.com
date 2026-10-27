@@ -261,4 +261,72 @@ export const articles: Article[] = [
     ],
     publishedAt: "2026-10-25",
   },
+  {
+    slug: "cau-chuc-dam-cuoi-hay",
+    category: "thiep-loi-moi",
+    title: "Câu chúc đám cưới hay theo từng mối quan hệ · Hẹn Ước",
+    description:
+      "Câu chúc đám cưới hay cho bạn thân, đồng nghiệp và họ hàng, kèm mẫu tự biên soạn, cách viết thiệp mừng và lưu ý chọn lời chúc đúng người nhận.",
+    h1: "Câu chúc đám cưới hay cho bạn thân, đồng nghiệp và họ hàng",
+    keyword: "câu chúc đám cưới hay",
+    breadcrumb: "Câu chúc đám cưới",
+    publishedAt: "2026-10-26",
+    related: [
+      "/mau-thiep-cuoi",
+      "/tinh-nang/loi-moi-rieng",
+      "/cam-nang/loi-moi-dam-cuoi-hay",
+      "/tao-thiep",
+    ],
+  },
+  {
+    slug: "cach-xep-cho-ngoi-tiec-cuoi",
+    category: "khach-moi",
+    title: "Cách xếp chỗ ngồi tiệc cưới cho từng nhóm khách · Hẹn Ước",
+    description:
+      "Cách xếp chỗ ngồi tiệc cưới cho hai họ, khách VIP, trẻ em và người lớn tuổi; hướng dẫn đọc sơ đồ sảnh, ghép bàn và xử lý thay đổi sát giờ.",
+    h1: "Cách xếp chỗ ngồi tiệc cưới cho hai họ, khách VIP và trẻ em",
+    keyword: "cách xếp chỗ ngồi tiệc cưới",
+    breadcrumb: "Xếp chỗ ngồi tiệc cưới",
+    publishedAt: "2026-10-26",
+    related: [
+      "/mau-thiep-cuoi",
+      "/tinh-nang/quan-ly-khach-moi",
+      "/cam-nang/cach-tinh-so-luong-khach-moi",
+      "/tao-thiep",
+    ],
+  },
+  {
+    slug: "bai-phat-bieu-dai-dien-hai-ho",
+    category: "phong-tuc",
+    title: "Bài phát biểu đại diện hai họ: khung và mẫu · Hẹn Ước",
+    description:
+      "Bài phát biểu đại diện hai họ với khung nhà trai, nhà gái và hai mẫu ngắn tự chỉnh; cách chọn danh xưng, chốt lời thưa và tập đọc trước buổi lễ.",
+    h1: "Bài phát biểu đại diện hai họ: khung nhà trai, nhà gái và hai mẫu ngắn",
+    keyword: "bài phát biểu đại diện hai họ",
+    breadcrumb: "Phát biểu đại diện hai họ",
+    publishedAt: "2026-10-26",
+    related: [
+      "/mau-thiep-cuoi",
+      "/tinh-nang/checklist-dam-cuoi",
+      "/cam-nang/lich-trinh-ngay-cuoi",
+      "/tao-thiep",
+    ],
+  },
+  {
+    slug: "cach-chon-ngay-cuoi",
+    category: "phong-tuc",
+    title: "Cách chọn ngày cưới: lịch thực tế và tập quán · Hẹn Ước",
+    description:
+      "Cách chọn ngày cưới theo lịch hai bạn, thời tiết, địa điểm và lịch khách; gợi ý trao đổi tập quán xem ngày trung tính, không phán ngày tốt hay xấu.",
+    h1: "Cách chọn ngày cưới theo lịch thực tế và tập quán gia đình",
+    keyword: "cách chọn ngày cưới",
+    breadcrumb: "Chọn ngày cưới",
+    publishedAt: "2026-10-26",
+    related: [
+      "/mau-thiep-cuoi",
+      "/tinh-nang/checklist-dam-cuoi",
+      "/cam-nang/gui-thiep-cuoi-truoc-bao-lau",
+      "/tao-thiep",
+    ],
+  },
 ];

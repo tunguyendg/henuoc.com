@@ -199,11 +199,11 @@
     "slug": "le-an-hoi-can-chuan-bi-gi",
     "role": "cover",
     "file": "cover.webp",
-    "cdnPath": "photo-1656726855515-37d1390ad212",
-    "photographer": "Nguyễn Hiệp",
-    "photographerUrl": "https://unsplash.com/@hieptltb97",
-    "unsplashUrl": "https://unsplash.com/photos/yh9lcTWQUcs",
-    "alt": "Cô dâu áo dài đỏ và chú rể cầm nhang trước mâm lễ có hoa, trái cây và bánh kẹo"
+    "cdnPath": "photo-1791276091619-4c4ca13dfa69",
+    "photographer": "HACA Wedding Film",
+    "photographerUrl": "https://unsplash.com/@hacawedding",
+    "unsplashUrl": "https://unsplash.com/photos/f6TRG-Jx4xA",
+    "alt": "Đoàn nhà trai mặc áo dài đỏ và xanh bưng mâm quả đi trên phố sang nhà gái"
   },
   {
     "slug": "co-nen-dung-thiep-cuoi-online",
@@ -224,5 +224,45 @@
     "photographerUrl": "https://unsplash.com/@adhitya_2505",
     "unsplashUrl": "https://unsplash.com/photos/a-thank-you-card-and-lit-candle-on-a-table-pKniW7hUNFo",
     "alt": "Tấm thiệp cảm ơn đặt cạnh ngọn nến đang cháy trên bàn tiệc"
+  },
+  {
+    "slug": "cau-chuc-dam-cuoi-hay",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1788628956218-ecfc2231bec7",
+    "photographer": "Andrii Solok",
+    "photographerUrl": "https://unsplash.com/@getslower",
+    "unsplashUrl": "https://unsplash.com/photos/-c1aGTIArh8",
+    "alt": "Khách viết lời chúc vào sổ lưu bút đám cưới, bên cạnh là ảnh chụp lấy liền"
+  },
+  {
+    "slug": "cach-xep-cho-ngoi-tiec-cuoi",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1710587385270-08f30d66bf31",
+    "photographer": "Kari Bjorn Photography",
+    "photographerUrl": "https://unsplash.com/@karibjorn",
+    "unsplashUrl": "https://unsplash.com/photos/dE7LITitV-s",
+    "alt": "Chỗ ngồi tiệc cưới bày đĩa, dao nĩa, thực đơn và bình hoa trên khăn bàn vàng"
+  },
+  {
+    "slug": "bai-phat-bieu-dai-dien-hai-ho",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1791276091564-bb2a5c5f1821",
+    "photographer": "HACA Wedding Film",
+    "photographerUrl": "https://unsplash.com/@hacawedding",
+    "unsplashUrl": "https://unsplash.com/photos/wICyVMDsDTQ",
+    "alt": "Cô dâu chú rể đứng giữa sân khấu tiệc cưới, bố mẹ hai bên đứng cạnh"
+  },
+  {
+    "slug": "cach-chon-ngay-cuoi",
+    "role": "cover",
+    "file": "cover.webp",
+    "cdnPath": "photo-1717435860330-f9fc106809c3",
+    "photographer": "Shoham Avisrur",
+    "photographerUrl": "https://unsplash.com/@shoham_avisrur",
+    "unsplashUrl": "https://unsplash.com/photos/0AO1S25tSwM",
+    "alt": "Thiệp cưới in ngày cưới bằng chữ số lớn đặt trên khăn vải trắng"
   }
 ]

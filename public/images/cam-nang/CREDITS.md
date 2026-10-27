@@ -64,3 +64,15 @@ Nguồn: Unsplash · https://unsplash.com/license
 
 <!-- image: loi-cam-on-sau-dam-cuoi/cover.webp -->
 - `loi-cam-on-sau-dam-cuoi/cover.webp`: Tấm thiệp cảm ơn đặt cạnh ngọn nến đang cháy trên bàn tiệc — Ảnh: [Adhitya Sibikumar](<https://unsplash.com/@adhitya_2505>) / [Unsplash](<https://unsplash.com/photos/a-thank-you-card-and-lit-candle-on-a-table-pKniW7hUNFo>).
+
+<!-- image: cau-chuc-dam-cuoi-hay/cover.webp -->
+- `cau-chuc-dam-cuoi-hay/cover.webp`: Thiệp cưới trắng chữ in đặt trên phong bì lót đen, giữa khay mạ vàng có tem cũ, ruy băng lụa và hoa trắng — Ảnh: [Fiona Murray-deGraaff](<https://unsplash.com/@fionamurrayphoto>) / [Unsplash](<https://unsplash.com/photos/a0BlHWem6l0>).
+
+<!-- image: cach-xep-cho-ngoi-tiec-cuoi/cover.webp -->
+- `cach-xep-cho-ngoi-tiec-cuoi/cover.webp`: Sảnh tiệc với bàn tròn phủ khăn trắng, khăn ăn vàng, hoa giữa bàn và ghế trắng — Ảnh: [Karaz Pro](<https://unsplash.com/@karazpro>) / [Unsplash](<https://unsplash.com/photos/XAoHCa1GIns>).
+
+<!-- image: bai-phat-bieu-dai-dien-hai-ho/cover.webp -->
+- `bai-phat-bieu-dai-dien-hai-ho/cover.webp`: Cô dâu mặc áo dài trắng cầm hoa, đứng cạnh chú rể mặc vest nâu bên tường cây xanh — Ảnh: [Bin Thieu](<https://unsplash.com/@binthieu>) / [Unsplash](<https://unsplash.com/photos/LSmdKx6xS8s>).
+
+<!-- image: cach-chon-ngay-cuoi/cover.webp -->
+- `cach-chon-ngay-cuoi/cover.webp`: Điện thoại mở ứng dụng lịch đặt cạnh bó hoa trắng và nhẫn cưới — Ảnh: [McFollis](<https://unsplash.com/@thisismcfollis>) / [Unsplash](<https://unsplash.com/photos/Tm6KjTh7EqM>).

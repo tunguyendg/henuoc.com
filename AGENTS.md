@@ -57,6 +57,7 @@ tests/  e2e/
 - Tên file kebab-case; component PascalCase; hàm camelCase. UI text tiếng Việt, code + comment tiếng Anh.
 - Ngày giờ lưu UTC trong DB, hiển thị `Asia/Ho_Chi_Minh`.
 - Tiền tệ lưu số nguyên VND.
+- **Ảnh trong `public/images/` là của Tony.** Agent KHÔNG chép, tạo, ghi đè hay xoá file trong đó (kể cả chép ảnh bài cũ sang bài mới cho test xanh). Ảnh cẩm nang mới: chỉ thêm entry vào `src/content/cam-nang/images.json` với ảnh Unsplash chưa dùng trong dự án; thiếu mạng hoặc chưa tìm được ảnh → để trống, báo Tony, Tony chạy `npm run images:cam-nang` (docs/11-ARTICLE-IMAGES.md).
 
 ## 4. Bảo mật & riêng tư — không thương lượng
 
