@@ -15,7 +15,8 @@ let root: string;
 let manifestPath: string;
 let outputDir: string;
 const first = manifest[0]!;
-const sample = [first, manifest[1]!];
+// Manifest thật chỉ có 1 tranh; nhân bản để test tải nhiều ảnh.
+const sample = [first, { ...first, file: `${first.file}-2` }];
 
 beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), "henuoc-ornaments-"));
@@ -38,11 +39,10 @@ function options(
   return { manifestPath, outputDir, fetchImpl, convert, converted, report: vi.fn() };
 }
 
-it("parses the real manifest: 8 images, 4 do-do and 4 hong", () => {
+it("parses the real manifest: only the blush-rose main flower", () => {
   const items = parseOrnamentManifest(manifest);
-  expect(items).toHaveLength(8);
-  expect(items.filter((i) => i.palette === "do-do")).toHaveLength(4);
-  expect(items.filter((i) => i.palette === "hong")).toHaveLength(4);
+  expect(items.map((i) => i.file)).toEqual(["rosa-carolina-corymbosa"]);
+  expect(items[0]?.palette).toBe("hong");
 });
 
 it("rejects bad license, hosts, scheme, duplicates and non-kebab files", () => {
