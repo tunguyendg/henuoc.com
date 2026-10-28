@@ -8,7 +8,8 @@ import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
 import { Watermark } from "../_shared/Watermark";
-import type { FamilySide, ThemeProps } from "../types";
+import { eventTitle, partiesInSideOrder, sideLabel, visibleEvents } from "../_shared/side";
+import type { ThemeProps } from "../types";
 import { Countdown } from "./Countdown";
 import { Experience } from "./Experience";
 import type { PlaceholderOptions } from "./manifest";
@@ -24,19 +25,22 @@ const weddingDateFormat = new Intl.DateTimeFormat("vi-VN", {
   timeZone: "Asia/Ho_Chi_Minh",
 });
 
-const sideLabel: Record<FamilySide, string> = { "nha-trai": "Nhà trai", "nha-gai": "Nhà gái" };
-
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h2 className="text-xs font-bold tracking-[0.16em] text-rose-700 uppercase">{children}</h2>
   );
 }
 
-export default function Theme({ content, guest, options, mode }: ThemeProps<PlaceholderOptions>) {
-  const { couple, sections } = content;
-  const [first, second] = couple.brideFirst
-    ? [couple.bride, couple.groom]
-    : [couple.groom, couple.bride];
+export default function Theme({
+  content,
+  guest,
+  options,
+  mode,
+  side,
+}: ThemeProps<PlaceholderOptions>) {
+  const { sections } = content;
+  const parties = partiesInSideOrder(content, side);
+  const [first, second] = [parties[0].person, parties[1].person];
 
   // Resolve only enabled catalog tracks; raw content URLs never reach the client player.
   const selectedTrack = options.musicSlug
@@ -44,14 +48,13 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
     : getTracks({ enabled: true }).find((track) => track.src === content.music?.src);
   const track = selectedTrack?.enabled ? selectedTrack : undefined;
   const names = `${first.shortName} & ${second.shortName}`;
-  const dateLabel = content.weddingDate
-    ? weddingDateFormat.format(new Date(content.weddingDate))
-    : undefined;
 
-  // Events this guest may see. No guest (public page / demo) → every event.
-  const events = guest
-    ? content.events.filter((e) => guest.invitedEventIds.includes(e.id))
-    : content.events;
+  // Events of this side (plus shared ones), narrowed to the guest's invitation when there is one.
+  const events = visibleEvents(content.events, side, guest);
+  // Dates come from this side's main event (§2.1), not the wedding-wide weddingDate.
+  const mainEvent = events.find((e) => e.startsAt === content.weddingDate) ?? events.at(-1);
+  const mainDate = mainEvent?.startsAt ?? content.weddingDate;
+  const dateLabel = mainDate ? weddingDateFormat.format(new Date(mainDate)) : undefined;
   // RSVP needs a token in production. The demo has no guest, so it gets made-up limits and the
   // form's fake submit. We pass fields one by one: never the whole guest (it holds the token).
   const showRsvp = sections.rsvp && events.length > 0 && (guest !== undefined || mode === "demo");
@@ -99,12 +102,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
 
         {sections.couple && (
           <section className="grid gap-6 text-center sm:grid-cols-2">
-            {(
-              [
-                { role: "bride", label: "Cô dâu", person: couple.bride },
-                { role: "groom", label: "Chú rể", person: couple.groom },
-              ] as const
-            ).map(({ role, label, person }) => (
+            {parties.map(({ role, label, person }) => (
               <div key={role} className="flex flex-col gap-1">
                 <p className="text-xs text-muted">{label}</p>
                 <p className="text-lg font-semibold break-words">{person.fullName}</p>
@@ -120,8 +118,10 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
             <ul className="flex flex-col gap-4">
               {events.map((event) => (
                 <li key={event.id} className="rounded-2xl border border-border bg-surface p-5">
-                  {event.side && <p className="text-xs text-muted">{sideLabel[event.side]}</p>}
-                  <h3 className="mt-1 text-lg font-semibold">{event.title}</h3>
+                  {event.side !== "chung" && (
+                    <p className="text-xs text-muted">{sideLabel[event.side]}</p>
+                  )}
+                  <h3 className="mt-1 text-lg font-semibold">{eventTitle(event, side)}</h3>
                   <p className="mt-2">
                     {event.timeLabel} · {event.dateLabel}
                   </p>
@@ -138,10 +138,10 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
           </section>
         )}
 
-        {sections.countdown && content.weddingDate && (
+        {sections.countdown && mainDate && (
           <section className="flex flex-col gap-4">
             <SectionTitle>Đếm ngược</SectionTitle>
-            <Countdown date={content.weddingDate} />
+            <Countdown date={mainDate} />
           </section>
         )}
 
@@ -176,11 +176,11 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Plac
               invitedEventIds={events.map((e) => e.id)}
               maxAttendees={guest?.maxAttendees ?? DEMO_MAX_ATTENDEES}
               rsvp={guest?.rsvp}
-              events={events.map(({ id, title, dateLabel, timeLabel }) => ({
-                id,
-                title,
-                dateLabel,
-                timeLabel,
+              events={events.map((event) => ({
+                id: event.id,
+                title: eventTitle(event, side),
+                dateLabel: event.dateLabel,
+                timeLabel: event.timeLabel,
               }))}
             />
           </section>

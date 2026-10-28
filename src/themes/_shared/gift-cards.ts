@@ -11,10 +11,7 @@ export interface GiftCard {
   qrSvg?: string;
 }
 
-export const giftSideLabel: Record<FamilySide, string> = {
-  "nha-trai": "Nhà trai",
-  "nha-gai": "Nhà gái",
-};
+export { sideLabel as giftSideLabel } from "./side";
 
 const SIDE_ORDER: FamilySide[] = ["nha-trai", "nha-gai"];
 

@@ -12,7 +12,7 @@ vi.mock("@/lib/env.client", () => ({
 vi.mock("server-only", () => ({}));
 
 describe("Venue với key Google Maps", () => {
-  const main = demoContent.events.find((e) => e.kind === "tiec");
+  const main = demoContent.events.find((e) => e.id === "demo-tiec-nha-trai");
 
   it("nhúng iframe có title, lazy, referrerPolicy và chỉ chứa venue + địa chỉ", () => {
     const html = renderToStaticMarkup(

@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "../../_shared/Reveal";
+import { eventTitle, partiesInSideOrder, sideLabel, sideWording } from "../../_shared/side";
 import type { EventView, FamilySide, WeddingContent } from "../../types";
 import { eventDateParts, lunarLine } from "../event-date";
 import { FlowerSprig, SectionHeading, WaxSeal } from "../ornaments";
 import { s } from "../styles";
 import { card, DateBlock, Section } from "./layout";
-
-const sideLabel: Record<FamilySide, string> = { "nha-trai": "Nhà trai", "nha-gai": "Nhà gái" };
 
 function ParentsColumn({
   label,
@@ -35,17 +34,17 @@ function ParentsColumn({
   );
 }
 
-function CeremonyEvent({ event }: { event: EventView }): ReactNode {
+function CeremonyEvent({ event, side }: { event: EventView; side: FamilySide }): ReactNode {
   const parts = eventDateParts(event.startsAt);
   const lunar = lunarLine(event.startsAt);
   return (
     <div>
-      {event.side && (
+      {event.side !== "chung" && (
         <p className={cn(s.title, "text-xs font-semibold tracking-[0.2em] uppercase")}>
           {sideLabel[event.side]}
         </p>
       )}
-      <h3 className={cn(s.title, "mt-1 text-xl font-semibold")}>{event.title}</h3>
+      <h3 className={cn(s.title, "mt-1 text-xl font-semibold")}>{eventTitle(event, side)}</h3>
       <p className="mt-1 text-lg font-semibold">
         {event.timeLabel}
         {parts && ` · ${parts.weekday}`}
@@ -65,26 +64,22 @@ export function Ceremony({
   content,
   events,
   initials,
+  side,
 }: {
   content: WeddingContent;
+  side: FamilySide;
   events: EventView[];
   initials: readonly [string, string];
 }) {
-  const { couple, families } = content;
-  const [first, second] = couple.brideFirst
-    ? [couple.bride, couple.groom]
-    : [couple.groom, couple.bride];
-  // Groom's family is always on the left (traditional layout), whatever `brideFirst` says.
-  const groomParents = families.groomParents ?? couple.groom.parents;
-  const brideParents = families.brideParents ?? couple.bride.parents;
-  const columns = [
-    groomParents || families.groomAddr
-      ? { key: "trai", label: "Nhà trai", parents: groomParents, addr: families.groomAddr }
-      : null,
-    brideParents || families.brideAddr
-      ? { key: "gai", label: "Nhà gái", parents: brideParents, addr: families.brideAddr }
-      : null,
-  ].flatMap((column) => (column ? [column] : []));
+  const parties = partiesInSideOrder(content, side);
+  const [first, second] = [parties[0].person, parties[1].person];
+  // Both families always shown, host family on the left.
+  const columns = parties.map((party) => ({
+    key: party.role,
+    label: sideLabel[party.side],
+    parents: party.parents,
+    addr: party.addr,
+  }));
 
   return (
     <Section name="ceremony">
@@ -105,9 +100,7 @@ export function Ceremony({
                 ))}
               </div>
             )}
-            <p className="mx-auto max-w-[18rem] text-pretty">
-              Trân trọng báo tin lễ thành hôn của con chúng tôi
-            </p>
+            <p className="mx-auto max-w-[18rem] text-pretty">{sideWording[side].announcement}</p>
             <div>
               <p className={cn(s.script, "text-4xl")}>{first.fullName}</p>
               {first.birthOrder && <p className="text-sm text-muted">{first.birthOrder}</p>}
@@ -120,7 +113,7 @@ export function Ceremony({
             <ul role="list" className="flex flex-col gap-8">
               {events.map((event) => (
                 <li key={event.id}>
-                  <CeremonyEvent event={event} />
+                  <CeremonyEvent event={event} side={side} />
                 </li>
               ))}
             </ul>

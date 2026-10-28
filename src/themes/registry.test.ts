@@ -6,7 +6,7 @@ import { isAllowedImageUrl, isAllowedMapUrl, isAllowedMusicUrl } from "@/lib/url
 import { crc16Ccitt } from "@/lib/vietqr";
 import { demoContent, getDemoContent } from "./_demo/content";
 import { getThemeEntry, themeRegistry, themeSlugs } from "./registry";
-import type { GuestContext, ThemeProps, WeddingContent } from "./types";
+import type { EventView, FamilySide, GuestContext, ThemeProps, WeddingContent } from "./types";
 
 // "server-only" only means something inside the Next bundler → empty module in Vitest
 vi.mock("server-only", () => ({}));
@@ -14,6 +14,25 @@ vi.mock("server-only", () => ({}));
 vi.mock("./blush-rose/fonts", () => ({ fontVariables: "" }));
 
 const entries = Object.entries(themeRegistry);
+const sides: FamilySide[] = ["nha-gai", "nha-trai"];
+
+async function renderBlush(side: FamilySide, contentPatch: Partial<WeddingContent> = {}) {
+  const { default: Theme } = await themeRegistry["blush-rose"]!.load();
+  const content = { ...(await getDemoContent()), ...contentPatch };
+  return renderToStaticMarkup(createElement(Theme, { content, options: {}, mode: "demo", side }));
+}
+
+async function renderPlaceholder(
+  side: FamilySide,
+  overrides: Partial<ThemeProps> = {},
+  contentPatch: Partial<WeddingContent> = {},
+) {
+  const { default: Theme } = await themeRegistry["placeholder"]!.load();
+  const content = { ...(await getDemoContent()), ...contentPatch };
+  return renderToStaticMarkup(
+    createElement(Theme, { content, options: {}, mode: "demo", side, ...overrides }),
+  );
+}
 
 describe("themeRegistry", () => {
   it("có ít nhất một theme và themeSlugs khớp key registry", () => {
@@ -54,7 +73,7 @@ describe("themeRegistry", () => {
       const { default: Theme } = await entry.load();
       const content = await getDemoContent();
       const html = renderToStaticMarkup(
-        createElement(Theme, { content, options: "sai-kieu", mode: "demo" }),
+        createElement(Theme, { content, options: "sai-kieu", mode: "demo", side: "nha-gai" }),
       );
       expect(html).toContain("Minh Anh");
       // qrPayload never leaves the server; account numbers only appear once the gift sheet opens.
@@ -82,7 +101,7 @@ describe("placeholder theme: hành trình khách", () => {
     const { default: Theme } = await entry.load();
     const content = { ...(await getDemoContent()), ...contentPatch };
     return renderToStaticMarkup(
-      createElement(Theme, { content, options: {}, mode: "demo", ...overrides }),
+      createElement(Theme, { content, options: {}, mode: "demo", side: "nha-gai", ...overrides }),
     );
   }
 
@@ -105,7 +124,7 @@ describe("placeholder theme: hành trình khách", () => {
   it("khách có token: hiện danh xưng, không lộ token", async () => {
     const guest: GuestContext = {
       salutation: "Trân trọng kính mời Anh Minh & Gia đình",
-      invitedEventIds: ["demo-thanh-hon"],
+      invitedEventIds: ["demo-vu-quy"],
       maxAttendees: 2,
       token: "tok_SECRET_123",
     };
@@ -175,12 +194,16 @@ describe("placeholder theme: hành trình khách", () => {
 });
 
 describe("blush-rose theme", () => {
-  async function render(options: unknown = {}, contentPatch: Partial<WeddingContent> = {}) {
+  async function render(
+    options: unknown = {},
+    contentPatch: Partial<WeddingContent> = {},
+    side: FamilySide = "nha-gai",
+  ) {
     const entry = themeRegistry["blush-rose"];
     if (!entry) throw new Error("blush-rose theme missing");
     const { default: Theme } = await entry.load();
     const content = { ...(await getDemoContent()), ...contentPatch };
-    return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo" }));
+    return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo", side }));
   }
 
   it("11 section có data-section đúng thứ tự", async () => {
@@ -210,10 +233,8 @@ describe("blush-rose theme", () => {
     expect(pink).not.toContain('data-section="dress-code"');
   });
 
-  it("luôn có credit Redouté; lịch trái tim khoanh đúng ngày tiệc", async () => {
-    const html = await render({});
-    expect(html).toContain("Pierre-Joseph Redouté");
-    expect(html).toContain("Tháng 10 năm 2027, ngày 17 được khoanh");
+  it("luôn có credit Redouté", async () => {
+    expect(await render({})).toContain("Pierre-Joseph Redouté");
   });
 
   it("thẻ lễ cưới: thứ bậc, âm lịch tính từ startsAt", async () => {
@@ -221,8 +242,8 @@ describe("blush-rose theme", () => {
     expect(html).toContain("Trưởng nam");
     expect(html).toContain("Út nữ");
     expect(html).toContain("(Tức ngày 17 tháng 9 năm Đinh Mùi)");
-    expect(html).toContain("(Tức ngày 18 tháng 9 năm Đinh Mùi)");
-    expect(html).toContain("Trân trọng báo tin lễ thành hôn của con chúng tôi");
+    expect(html).not.toContain("(Tức ngày 18 tháng 9 năm Đinh Mùi)");
+    expect(html).toContain("Trân trọng báo tin lễ vu quy của con chúng tôi");
     expect(html).toContain("Đón khách");
     expect(html).toContain("Khai tiệc");
   });
@@ -253,10 +274,140 @@ describe("blush-rose theme", () => {
   });
 });
 
+describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
+  const isGai = side === "nha-gai";
+  const render = (patch: Partial<WeddingContent> = {}) => renderBlush(side, patch);
+  const own = isGai
+    ? {
+        hostFirst: "Minh Anh & Hoàng Nam",
+        hostParents: "Ông Nguyễn Văn Hùng · Bà Lê Thị Thu",
+        otherParents: "Ông Trần Quốc Bảo · Bà Phạm Thị Lan",
+        rite: "Lễ Vu Quy",
+        otherRite: "Lễ Tân Hôn",
+        announcement: "Trân trọng báo tin lễ vu quy của con chúng tôi",
+        otherAnnouncement: "lễ tân hôn",
+        venue: "Ngọc Lan",
+        otherVenue: "Hồng Ngà",
+        otherHome: "Tư gia nhà trai",
+        day: 16,
+      }
+    : {
+        hostFirst: "Hoàng Nam & Minh Anh",
+        hostParents: "Ông Trần Quốc Bảo · Bà Phạm Thị Lan",
+        otherParents: "Ông Nguyễn Văn Hùng · Bà Lê Thị Thu",
+        rite: "Lễ Tân Hôn",
+        otherRite: "Lễ Vu Quy",
+        announcement: "Trân trọng báo tin lễ tân hôn của con chúng tôi",
+        otherAnnouncement: "lễ vu quy",
+        venue: "Hồng Ngà",
+        otherVenue: "Ngọc Lan",
+        otherHome: "Tư gia nhà gái",
+        day: 17,
+      };
+
+  it("tên trong <h1> đặt người của nhà mình trước", async () => {
+    const html = await render();
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1];
+    expect(h1).toBe(own.hostFirst.replace("&", "&amp;"));
+  });
+
+  it("cột bố mẹ đặt nhà mình trước nhưng luôn có đủ hai họ", async () => {
+    const html = await render();
+    const host = html.indexOf(own.hostParents);
+    const other = html.indexOf(own.otherParents);
+    expect(host).toBeGreaterThan(-1);
+    expect(other).toBeGreaterThan(-1);
+    expect(host).toBeLessThan(other);
+  });
+
+  it("tên lễ và lời báo tin theo bên mình, không lẫn lễ của bên kia", async () => {
+    const html = await render();
+    expect(html).toContain(own.rite);
+    expect(html).toContain(own.announcement);
+    expect(html).not.toContain(own.otherRite);
+    expect(html).not.toContain(own.otherAnnouncement);
+  });
+
+  it("không lộ nơi tổ chức của bên kia, chỉ có nơi của mình", async () => {
+    const html = await render();
+    expect(html).toContain(own.venue);
+    expect(html).not.toContain(own.otherVenue);
+    expect(html).not.toContain(own.otherHome);
+  });
+
+  it("lịch trái tim khoanh đúng ngày của bên mình", async () => {
+    expect(await render()).toContain(`Tháng 10 năm 2027, ngày ${own.day} được khoanh`);
+  });
+
+  it("trang bìa không in dòng ngày tháng", async () => {
+    const html = await render();
+    const cover = html.match(/data-section="cover"[\s\S]*?(?=data-section="names")/)?.[0] ?? "";
+    const text = cover.replace(/<[^>]*>/g, " ");
+    expect(text).toContain("Thiệp cưới");
+    expect(text).not.toMatch(/2027|Tháng|\d{1,2}[./]\d{1,2}/);
+  });
+});
+
+describe("placeholder theme theo bên", () => {
+  const eventsOf = (html: string) => [...html.matchAll(/<h3[^>]*>([^<]*)<\/h3>/g)].map((m) => m[1]);
+
+  it.each(sides)(
+    "thiệp %s hiện đúng sự kiện của mình, đúng thứ tự, không lẫn bên kia",
+    async (side) => {
+      const html = await renderPlaceholder(side);
+      const titles = eventsOf(html);
+      expect(titles).toEqual(
+        side === "nha-gai"
+          ? ["Lễ Vu Quy", "Tiệc Cưới Nhà Gái"]
+          : ["Lễ Tân Hôn", "Tiệc Cưới Nhà Trai"],
+      );
+      expect(html).not.toContain(side === "nha-gai" ? "Hồng Ngà" : "Ngọc Lan");
+    },
+  );
+
+  it.each(sides)("thiệp %s: tên người nhà mình đứng trước", async (side) => {
+    const html = await renderPlaceholder(side);
+    const a = html.indexOf("Minh Anh");
+    const b = html.indexOf("Hoàng Nam");
+    expect(a).toBeGreaterThan(-1);
+    expect(b).toBeGreaterThan(-1);
+    expect(side === "nha-gai" ? a < b : b < a).toBe(true);
+  });
+
+  it.each(sides)("thiệp %s vẫn render khi có sự kiện chung của cả hai họ", async (side) => {
+    const base = await getDemoContent();
+    const chung: EventView = {
+      ...base.events[0]!,
+      id: "demo-chung",
+      kind: "an-hoi",
+      title: "Tiệc Chung Vui",
+      side: "chung",
+    };
+    const html = await renderPlaceholder(side, {}, { events: [...base.events, chung] });
+    expect(eventsOf(html)).toContain("Tiệc Chung Vui");
+  });
+
+  it("khách chỉ được mời sự kiện của bên kia thì sự kiện đó bị ẩn", async () => {
+    const guest: GuestContext = {
+      salutation: "Anh Bình",
+      invitedEventIds: ["demo-vu-quy", "demo-tan-hon"],
+      maxAttendees: 2,
+      token: "tok_X",
+    };
+    const html = await renderPlaceholder("nha-gai", { guest });
+    expect(eventsOf(html)).toEqual(["Lễ Vu Quy"]);
+    expect(html).not.toContain("Lễ Tân Hôn");
+  });
+});
+
 describe("demoContent", () => {
-  it("có đúng 3 sự kiện: vu quy, thành hôn, tiệc", () => {
-    expect(demoContent.events).toHaveLength(3);
-    expect(demoContent.events.map((e) => e.kind)).toEqual(["vu-quy", "thanh-hon", "tiec"]);
+  it("có đúng 4 sự kiện: vu quy + tiệc nhà gái, tân hôn + tiệc nhà trai", () => {
+    expect(demoContent.events.map((e) => [e.kind, e.side])).toEqual([
+      ["vu-quy", "nha-gai"],
+      ["tiec", "nha-gai"],
+      ["tan-hon", "nha-trai"],
+      ["tiec", "nha-trai"],
+    ]);
   });
 
   it("có ít nhất 3 ảnh album, mỗi ảnh có alt không rỗng và kích thước dương", () => {

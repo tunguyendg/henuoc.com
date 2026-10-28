@@ -28,7 +28,10 @@ export type SectionKey =
   | "timeline"
   | "dressCode";
 
+/** Which family's invitation this is. One wedding renders two invitations: nhà trai and nhà gái. */
 export type FamilySide = "nha-trai" | "nha-gai";
+/** Mirrors the DB `Side` enum (NHA_TRAI | NHA_GAI | CHUNG). "chung" events appear on both invitations. */
+export type EventSide = FamilySide | "chung";
 
 export interface ImageView {
   // Zod at the input boundary must force https + an allowlisted host (own CDN/R2 or /public path).
@@ -66,7 +69,7 @@ export interface EventView {
   mapUrl?: string;
   // Internal route only (e.g. /api/…/ics); reject absolute/external URLs.
   icsUrl?: string;
-  side?: FamilySide;
+  side: EventSide;
 }
 
 export type TimelineIcon = "camera" | "rings" | "glasses" | "cake" | "music";
@@ -77,6 +80,8 @@ export interface TimelineItem {
   title: string;
   description?: string;
   icon?: TimelineIcon;
+  /** The event this step belongs to; the step is hidden when that event is not shown. None → shared. */
+  eventId?: string;
 }
 
 export interface GiftView {
@@ -111,7 +116,8 @@ export interface ThemeManifest<TOptions = unknown> {
 // Free text (inviteMessage, names, salutation…) is rendered as plain text only:
 // dangerouslySetInnerHTML is forbidden anywhere under src/themes/**.
 export interface WeddingContent {
-  couple: { bride: Person; groom: Person; brideFirst: boolean };
+  // Display order is never stored here: it follows `ThemeProps.side` (src/themes/_shared/side.ts).
+  couple: { bride: Person; groom: Person };
   families: {
     brideParents?: string;
     groomParents?: string;
@@ -151,6 +157,8 @@ export interface ThemeProps<TOptions = unknown> {
   content: WeddingContent;
   guest?: GuestContext; // undefined on /thiepcuoi/[slug] and demo
   options: TOptions;
+  /** Whose invitation: decides name/family order, ceremony wording and which events are shown. */
+  side: FamilySide;
   mode: "live" | "preview" | "demo"; // preview = builder: no music, no RSVP submit
 }
 

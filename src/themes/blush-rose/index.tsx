@@ -5,6 +5,7 @@ import { Gift } from "../_shared/Gift";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
+import { eventTitle, partiesInSideOrder, timelineForEvents, visibleEvents } from "../_shared/side";
 import { Watermark } from "../_shared/Watermark";
 import type { EventView, Person, ThemeProps } from "../types";
 import { Experience } from "./Experience";
@@ -28,8 +29,8 @@ import "./theme.css";
 // Only Experience (envelope + music) and Album are client leaves of the theme.
 
 const DEMO_MAX_ATTENDEES = 4;
-const CEREMONY_KINDS: readonly EventView["kind"][] = ["vu-quy", "thanh-hon", "an-hoi"];
-const RECEPTION_KINDS: readonly EventView["kind"][] = ["tiec", "tan-hon"];
+const CEREMONY_KINDS: readonly EventView["kind"][] = ["vu-quy", "thanh-hon", "tan-hon", "an-hoi"];
+const RECEPTION_KINDS: readonly EventView["kind"][] = ["tiec"];
 
 const weddingDateFormat = new Intl.DateTimeFormat("vi-VN", {
   dateStyle: "long",
@@ -51,12 +52,17 @@ function pickMainEvent(events: EventView[], weddingDate?: string): EventView | u
   return events.at(-1);
 }
 
-export default function Theme({ content, guest, options, mode }: ThemeProps<BlushRoseOptions>) {
-  const { couple, sections } = content;
+export default function Theme({
+  content,
+  guest,
+  options,
+  mode,
+  side,
+}: ThemeProps<BlushRoseOptions>) {
+  const { sections } = content;
   const palette = options.palette ?? "do-do";
-  const [first, second] = couple.brideFirst
-    ? [couple.bride, couple.groom]
-    : [couple.groom, couple.bride];
+  const parties = partiesInSideOrder(content, side);
+  const [first, second] = [parties[0].person, parties[1].person];
   const names = `${first.shortName} & ${second.shortName}`;
   const initials = [initialOf(first), initialOf(second)] as const;
 
@@ -66,25 +72,21 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
     : getTracks({ enabled: true }).find((track) => track.src === content.music?.src);
   const track = selectedTrack?.enabled ? selectedTrack : undefined;
 
-  const dateLabel = content.weddingDate
-    ? weddingDateFormat.format(new Date(content.weddingDate))
-    : undefined;
-
-  // Events this guest may see. No guest (public page / demo) → every event.
-  const events = guest
-    ? content.events.filter((e) => guest.invitedEventIds.includes(e.id))
-    : content.events;
+  // Events of this side (plus shared ones), narrowed to the guest's invitation when there is one.
+  const events = visibleEvents(content.events, side, guest);
   const ceremonies = sections.events ? events.filter((e) => CEREMONY_KINDS.includes(e.kind)) : [];
   const receptions = sections.events ? events.filter((e) => RECEPTION_KINDS.includes(e.kind)) : [];
   const mainEvent = pickMainEvent(events, content.weddingDate);
-  const showCalendar = sections.events && Boolean(content.weddingDate);
+  const mainDate = mainEvent?.startsAt ?? content.weddingDate;
+  const dateLabel = mainDate ? weddingDateFormat.format(new Date(mainDate)) : undefined;
+  const showCalendar = sections.events && Boolean(mainEvent);
   const showVenue =
     sections.events && events.length > 0 && events.some((e) => e.mapUrl || e.id === mainEvent?.id);
   // RSVP needs a token in production. The demo has no guest, so it gets made-up limits and the
   // form's fake submit. Fields are passed one by one: never the whole guest (it holds the token).
   const showRsvp = sections.rsvp && events.length > 0 && (guest !== undefined || mode === "demo");
   const showReception = receptions.length > 0 || showCalendar;
-  const timeline = sections.timeline ? (content.timeline ?? []) : [];
+  const timeline = sections.timeline ? timelineForEvents(content.timeline ?? [], events) : [];
   const dressCode = sections.dressCode ? options.dressCode : undefined;
 
   return (
@@ -127,7 +129,6 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
               Thiệp cưới
             </p>
             <h1 className={cn(s.script, "max-w-full text-5xl")}>{names}</h1>
-            {dateLabel && <p className={cn(s.title, "text-lg")}>{dateLabel}</p>}
           </header>
         )}
 
@@ -145,24 +146,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
             )}
             {sections.couple && (
               <div className="flex flex-col items-center gap-2">
-                {(
-                  [
-                    {
-                      person: first,
-                      label: couple.brideFirst ? "Cô dâu" : "Chú rể",
-                      parents: couple.brideFirst
-                        ? content.families.brideParents
-                        : content.families.groomParents,
-                    },
-                    {
-                      person: second,
-                      label: couple.brideFirst ? "Chú rể" : "Cô dâu",
-                      parents: couple.brideFirst
-                        ? content.families.groomParents
-                        : content.families.brideParents,
-                    },
-                  ] as const
-                ).map(({ person, label, parents }, index) => (
+                {parties.map(({ person, label, parents }, index) => (
                   <div key={label} className="flex w-full flex-col items-center gap-2">
                     {index === 1 && (
                       <p aria-hidden="true" className={cn(s.script, "text-3xl")}>
@@ -194,7 +178,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
         )}
 
         {ceremonies.length > 0 && (
-          <Ceremony content={content} events={ceremonies} initials={initials} />
+          <Ceremony content={content} side={side} events={ceremonies} initials={initials} />
         )}
 
         {sections.album && content.album.length > 0 && (
@@ -210,7 +194,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
           <Reception
             receptions={receptions}
             fallbackEvent={mainEvent}
-            weddingDate={content.weddingDate}
+            weddingDate={mainEvent?.startsAt}
             names={names}
             showRsvpLink={showRsvp}
           />
@@ -238,11 +222,11 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
                   invitedEventIds={events.map((e) => e.id)}
                   maxAttendees={guest?.maxAttendees ?? DEMO_MAX_ATTENDEES}
                   rsvp={guest?.rsvp}
-                  events={events.map(({ id, title, dateLabel: date, timeLabel }) => ({
-                    id,
-                    title,
-                    dateLabel: date,
-                    timeLabel,
+                  events={events.map((event) => ({
+                    id: event.id,
+                    title: eventTitle(event, side),
+                    dateLabel: event.dateLabel,
+                    timeLabel: event.timeLabel,
                   }))}
                   className="border-0 bg-transparent p-0"
                 />

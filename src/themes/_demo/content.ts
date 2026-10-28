@@ -5,9 +5,10 @@ import { findBankByBin } from "@/data/banks";
 import { qrSvgDataUri } from "@/lib/qr";
 import { buildVietQrPayload } from "@/lib/vietqr";
 import demoAlbum from "@/content/demo-album/images.json";
-import type { GiftView, ImageView, WeddingContent } from "../types";
+import type { GiftView, ImageView, TimelineItem, WeddingContent } from "../types";
 
-// Shared sample data for /demo/[slug] and theme QA.
+// Shared sample data for /demo/[slug] (nhà gái) and /demo/[slug]/nha-trai, and theme QA.
+// Each side has its own rite + reception; the theme shows only the side's events (_shared/side.ts).
 // ENTIRELY FICTIONAL: people, addresses and bank accounts are made up. The account numbers and QR
 // payloads are placeholders only and must never be used for real transfers.
 
@@ -59,7 +60,41 @@ const mapSearch = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 const BRIDE_ADDR = "Phường Đức Nhuận, TP. Hồ Chí Minh";
 const GROOM_ADDR = "Phường Gia Định, TP. Hồ Chí Minh";
-const RECEPTION_ADDR = "Đường Nguyễn Văn Trỗi, Phường Phú Nhuận, TP. Hồ Chí Minh";
+const BRIDE_RECEPTION_ADDR = "Đường Phan Xích Long, Phường Cầu Kiệu, TP. Hồ Chí Minh";
+const GROOM_RECEPTION_ADDR = "Đường Nguyễn Văn Trỗi, Phường Phú Nhuận, TP. Hồ Chí Minh";
+
+const RECEPTION_STEPS: Omit<TimelineItem, "id" | "eventId">[] = [
+  {
+    timeLabel: "17:30",
+    title: "Đón khách & chụp ảnh",
+    description: "Chúng mình đón bạn ở sảnh, chụp một tấm ảnh kỷ niệm trước khi vào tiệc.",
+    icon: "camera",
+  },
+  {
+    timeLabel: "18:00",
+    title: "Lễ cưới trên sân khấu",
+    description: "Hai đứa trao nhẫn và đọc lời hứa trước sự chứng kiến của hai họ.",
+    icon: "rings",
+  },
+  {
+    timeLabel: "18:30",
+    title: "Khai tiệc",
+    description: "Cả nhà nâng ly chúc mừng và bắt đầu bữa tiệc.",
+    icon: "glasses",
+  },
+  {
+    timeLabel: "19:30",
+    title: "Cắt bánh cưới",
+    description: "Khoảnh khắc ngọt ngào của cô dâu chú rể, mời bạn cùng chụp ảnh.",
+    icon: "cake",
+  },
+  {
+    timeLabel: "20:30",
+    title: "Giao lưu & tiễn khách",
+    description: "Chút nhạc, vài câu chuyện và lời cảm ơn trước khi chia tay.",
+    icon: "music",
+  },
+];
 
 export const demoContent: WeddingContent = {
   couple: {
@@ -75,7 +110,6 @@ export const demoContent: WeddingContent = {
       parents: "Ông Trần Quốc Bảo · Bà Phạm Thị Lan",
       birthOrder: "Trưởng nam",
     },
-    brideFirst: true,
   },
   families: {
     brideParents: "Ông Nguyễn Văn Hùng · Bà Lê Thị Thu",
@@ -97,9 +131,23 @@ export const demoContent: WeddingContent = {
       side: "nha-gai",
     },
     {
-      id: "demo-thanh-hon",
-      kind: "thanh-hon",
-      title: "Lễ Thành Hôn",
+      id: "demo-tiec-nha-gai",
+      kind: "tiec",
+      title: "Tiệc Cưới Nhà Gái",
+      startsAt: "2027-10-16T11:00:00.000Z",
+      dateLabel: "Thứ Bảy, 16.10.2027",
+      timeLabel: "18:00",
+      arrivalTimeLabel: "17:30",
+      banquetTimeLabel: "18:30",
+      venue: "Nhà hàng tiệc cưới Ngọc Lan",
+      address: BRIDE_RECEPTION_ADDR,
+      mapUrl: mapSearch(`Nhà hàng tiệc cưới Ngọc Lan, ${BRIDE_RECEPTION_ADDR}`),
+      side: "nha-gai",
+    },
+    {
+      id: "demo-tan-hon",
+      kind: "tan-hon",
+      title: "Lễ Tân Hôn",
       startsAt: "2027-10-17T03:00:00.000Z",
       dateLabel: "Chủ Nhật, 17.10.2027",
       timeLabel: "10:00",
@@ -109,56 +157,24 @@ export const demoContent: WeddingContent = {
       side: "nha-trai",
     },
     {
-      id: "demo-tiec",
+      id: "demo-tiec-nha-trai",
       kind: "tiec",
-      title: "Tiệc Cưới",
+      title: "Tiệc Cưới Nhà Trai",
       startsAt: "2027-10-17T11:00:00.000Z",
       dateLabel: "Chủ Nhật, 17.10.2027",
       timeLabel: "18:00",
       arrivalTimeLabel: "17:30",
       banquetTimeLabel: "18:30",
       venue: "Trung tâm tiệc cưới Hồng Ngà",
-      address: RECEPTION_ADDR,
-      mapUrl: mapSearch(`Trung tâm tiệc cưới Hồng Ngà, ${RECEPTION_ADDR}`),
+      address: GROOM_RECEPTION_ADDR,
+      mapUrl: mapSearch(`Trung tâm tiệc cưới Hồng Ngà, ${GROOM_RECEPTION_ADDR}`),
+      side: "nha-trai",
     },
   ],
-  timeline: [
-    {
-      id: "demo-tl-1",
-      timeLabel: "17:30",
-      title: "Đón khách & chụp ảnh",
-      description: "Chúng mình đón bạn ở sảnh, chụp một tấm ảnh kỷ niệm trước khi vào tiệc.",
-      icon: "camera",
-    },
-    {
-      id: "demo-tl-2",
-      timeLabel: "18:00",
-      title: "Lễ cưới trên sân khấu",
-      description: "Hai đứa trao nhẫn và đọc lời hứa trước sự chứng kiến của hai họ.",
-      icon: "rings",
-    },
-    {
-      id: "demo-tl-3",
-      timeLabel: "18:30",
-      title: "Khai tiệc",
-      description: "Cả nhà nâng ly chúc mừng và bắt đầu bữa tiệc.",
-      icon: "glasses",
-    },
-    {
-      id: "demo-tl-4",
-      timeLabel: "19:30",
-      title: "Cắt bánh cưới",
-      description: "Khoảnh khắc ngọt ngào của cô dâu chú rể, mời bạn cùng chụp ảnh.",
-      icon: "cake",
-    },
-    {
-      id: "demo-tl-5",
-      timeLabel: "20:30",
-      title: "Giao lưu & tiễn khách",
-      description: "Chút nhạc, vài câu chuyện và lời cảm ơn trước khi chia tay.",
-      icon: "music",
-    },
-  ],
+  // Same evening programme at each family's reception.
+  timeline: ["demo-tiec-nha-gai", "demo-tiec-nha-trai"].flatMap((eventId) =>
+    RECEPTION_STEPS.map((step, index) => ({ ...step, id: `${eventId}-tl-${index + 1}`, eventId })),
+  ),
   inviteMessage:
     "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình trong ngày trọng đại. Sự hiện diện của bạn là niềm vui lớn nhất với chúng mình.",
   cover: album.find((image) => image.src.endsWith("/hero.jpg")) ?? album[0],

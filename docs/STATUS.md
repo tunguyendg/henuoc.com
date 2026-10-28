@@ -1,7 +1,7 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-28 (blush-rose đợt sửa 1: thẻ lễ/tiệc, timeline, Maps Embed, dress code chấm màu)
+> Cập nhật lần cuối: 2026-10-28 (thiệp theo bên nhà trai / nhà gái, quy tắc docs/07 §2.1)
 
 ## Đang ở đâu
 
@@ -41,6 +41,7 @@
 2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu live + intro + ≥ 3 FAQ). Sửa 2026-10-27: `status` live / preview (6 mẫu cũ, nút "Sắp ra mắt") / planned (14 mẫu mới: ẩn khỏi trang công khai + sitemap, `/mau-thiep-cuoi/<slug>` 404 thật qua `proxy.ts`, chỉ hiện ở `/admin/mau-thiep`). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
    - ✅ blush-rose (2026-10-27): `src/themes/blush-rose/` (phong bì tự vẽ + dấu sáp, tên Great Vibes, thẻ lễ âm lịch, coverflow, lịch trái tim `month-grid.ts` + 19 test, dress code, bao lì xì → GiftSheet, credit Redouté CC0). Option `palette`: `do-do` (mặc định) / `hong-nhat`. Manifest `published`, catalog `live`. Còn: Tony test iPhone + Zalo, `thumb.webp`/`og.webp`, commit ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` (Tony quyết), CSS module bị rule `*.css` trong next.config biến thành global (theme dùng `theme.css` tiền tố `br-`).
    - ✅ blush-rose đợt sửa 1 (2026-10-28): thẻ "Thông tin lễ cưới" (cha mẹ 2 cột, Trưởng nam/Út nữ, khối ngày lớn, âm lịch từ `lunar.ts`), thẻ "Thông tin tiệc cưới" (đón khách/khai tiệc, lịch tim, thêm lịch, nút → `#xac-nhan`), lịch trình đỏ đô 5 mốc icon tự vẽ, Địa điểm nhúng Google Maps Embed (`src/lib/maps-embed.ts`, env `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` optional, GitHub Variables), dress code chỉ chấm màu + aria tên màu. Contract: `birthOrder`, `arrivalTimeLabel`/`banquetTimeLabel`, `timeline?`, SectionKey `timeline`/`dressCode`. Demo: 3 sự kiện TP.HCM (địa chỉ mới sau bỏ quận), album 3 ảnh Bin Thieu cùng cặp đôi + `npm run demo-album:fetch` (Tony thêm ID vào `src/content/demo-album/images.json`). Rủi ro: khi thêm CSP cần `frame-src https://www.google.com`.
+   - ✅ Thiệp theo BÊN (2026-10-28): `ThemeProps.side` ("nha-trai"/"nha-gai"), `EventView.side` thêm "chung" (khớp enum DB `Side`), bỏ `couple.brideFirst` khỏi contract theme (dashboard/DB vẫn giữ: khi nối DB cần map `Wedding.brideFirst` → không dùng nữa hoặc bỏ cột, Tony quyết). Helper `src/themes/_shared/side.ts` (+19 test): thứ tự tên/ông bà, "Lễ Vu Quy"/"Lễ Tân Hôn", câu báo tin, lọc sự kiện + timeline theo bên. Áp cho blush-rose + placeholder. Demo tĩnh: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` (render chung `src/components/themes/demo-render.tsx`, pill chuyển bản). Quy tắc bắt buộc mọi theme: docs/07 §2.1.
 3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
 4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
 

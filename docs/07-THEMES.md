@@ -42,7 +42,7 @@ export interface ThemeManifest<TOptions = unknown> {
 }
 
 export interface WeddingContent {
-  couple: { bride: Person; groom: Person; brideFirst: boolean };
+  couple: { bride: Person; groom: Person };   // thứ tự hiển thị theo ThemeProps.side, không lưu ở đây
   families: { brideParents?: string; groomParents?: string; brideAddr?: string; groomAddr?: string };
   events: EventView[];          // đã kèm lunarLabel, dateLabel, timeLabel, icsUrl, mapUrl
   inviteMessage: string;
@@ -67,9 +67,32 @@ export interface ThemeProps<TOptions = unknown> {
   content: WeddingContent;
   guest?: GuestContext;         // undefined ở /thiepcuoi/[slug] và demo
   options: TOptions;
+  side: FamilySide;             // "nha-trai" | "nha-gai": thiệp của bên nào (§2.1)
   mode: "live" | "preview" | "demo";   // preview = trong builder (không phát nhạc, không submit RSVP)
 }
+
+// EventView.side: EventSide = FamilySide | "chung"  (khớp enum DB Side: NHA_TRAI | NHA_GAI | CHUNG)
+// TimelineItem.eventId?: mốc gắn với 1 sự kiện; sự kiện bị ẩn thì mốc cũng ẩn. Không có → dùng chung.
 ```
+
+### 2.1 Thiệp theo bên (bắt buộc với MỌI theme)
+
+Một đám cưới có 2 thiệp: **nhà gái** và **nhà trai**. Theme nhận `side` và lấy thứ tự, câu chữ, sự kiện từ
+`src/themes/_shared/side.ts`. Không theme nào được gán cứng "chú rể trước", tên lễ hay câu báo tin.
+
+| | `side = "nha-gai"` | `side = "nha-trai"` |
+|---|---|---|
+| Tên, ông bà (cột trái), chữ cái đầu | cô dâu + nhà gái trước | chú rể + nhà trai trước |
+| Lễ chính (`eventTitle`) | "Lễ Vu Quy" | "Lễ Tân Hôn" |
+| Câu báo tin (`sideWording`) | "Trân trọng báo tin lễ vu quy của con chúng tôi" | "…lễ tân hôn…" |
+| Sự kiện (`visibleEvents`) | của nhà gái + `chung` | của nhà trai + `chung` |
+
+- Ông bà **hai bên luôn hiện**, chỉ đổi thứ tự (`partiesInSideOrder`).
+- Mọi phần dùng sự kiện (thẻ lễ, thẻ tiệc, lịch tim, "Thêm vào lịch", bản đồ, lịch trình, RSVP) chỉ dùng
+  `visibleEvents(content.events, side, guest)`. Có `guest` thì lọc tiếp theo `invitedEventIds`.
+- Ngày trên bìa/phong bì, lịch tim lấy từ sự kiện chính **của bên đó**, không lấy `content.weddingDate`.
+- Demo: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` = nhà trai, cả 2 là trang tĩnh (không query
+  string). Link nhỏ "Xem bản nhà trai / nhà gái" do trang demo vẽ, không nằm trong theme.
 
 `src/themes/registry.ts`: map `slug → { manifest, load: () => import("./hong-pastel") }` — **dynamic import**, mỗi thiệp chỉ tải JS của đúng theme đó.
 
@@ -178,6 +201,7 @@ Ví dụ: không dùng chữ trắng trên ảnh sáng không overlay; không ho
 - [ ] 1 sự kiện và 4 sự kiện đều đẹp; thiếu ảnh album vẫn đẹp; không có QR vẫn đẹp
 - [ ] Danh xưng guest dài "Trân trọng kính mời Cô Chú Năm Hoà & Gia đình" hiển thị tốt
 - [ ] Âm lịch hiển thị đúng
+- [ ] Cả 2 bản `/demo/<slug>` (nhà gái) và `/demo/<slug>/nha-trai` đúng §2.1: thứ tự tên/ông bà, tên lễ, chỉ sự kiện của bên đó
 
 **Thiết bị**
 - [ ] iPhone SE (375), iPhone 15 (393), Android 412, desktop 1280 (thiệp căn giữa max-width ~480px)

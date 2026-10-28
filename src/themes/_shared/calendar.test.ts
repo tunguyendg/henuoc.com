@@ -18,6 +18,7 @@ const event: EventView = {
   timeLabel: "10:00",
   venue: "Nhà hàng Hoa Sen",
   address: "12 Lê Lợi, Quận 1, TP. Hồ Chí Minh",
+  side: "chung",
 };
 
 const now = new Date("2026-10-23T01:02:03.456Z");
