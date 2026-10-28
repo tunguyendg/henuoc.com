@@ -1,0 +1,35 @@
+[
+  {
+    "file": "hero",
+    "existing": "/images/wedding/hero.jpg",
+    "unsplashId": "ADsHesTIq-M",
+    "photographer": "Bin Thieu",
+    "photographerUrl": "https://unsplash.com/@binthieu",
+    "unsplashUrl": "https://unsplash.com/photos/ADsHesTIq-M",
+    "alt": "Cô dâu và chú rể trong ngày cưới",
+    "width": 1600,
+    "height": 1067
+  },
+  {
+    "file": "album-1",
+    "existing": "/images/wedding/album-1.jpg",
+    "unsplashId": "YljccDnjRno",
+    "photographer": "Bin Thieu",
+    "photographerUrl": "https://unsplash.com/@binthieu",
+    "unsplashUrl": "https://unsplash.com/photos/YljccDnjRno",
+    "alt": "Ảnh đen trắng chú rể hôn cô dâu trên đồi, cô dâu cầm bó hoa",
+    "width": 1600,
+    "height": 2400
+  },
+  {
+    "file": "album-6",
+    "existing": "/images/wedding/album-6.jpg",
+    "unsplashId": "5PHiAPTtM5k",
+    "photographer": "Bin Thieu",
+    "photographerUrl": "https://unsplash.com/@binthieu",
+    "unsplashUrl": "https://unsplash.com/photos/5PHiAPTtM5k",
+    "alt": "Cô dâu chú rể đứng trên đồi cát nhìn về phía chân trời",
+    "width": 1600,
+    "height": 1067
+  }
+]

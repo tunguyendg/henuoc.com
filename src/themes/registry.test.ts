@@ -175,15 +175,15 @@ describe("placeholder theme: hành trình khách", () => {
 });
 
 describe("blush-rose theme", () => {
-  async function render(options: unknown = {}) {
+  async function render(options: unknown = {}, contentPatch: Partial<WeddingContent> = {}) {
     const entry = themeRegistry["blush-rose"];
     if (!entry) throw new Error("blush-rose theme missing");
     const { default: Theme } = await entry.load();
-    const content = await getDemoContent();
+    const content = { ...(await getDemoContent()), ...contentPatch };
     return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo" }));
   }
 
-  it("các section có data-section đúng thứ tự (demo không có tiệc vẫn có phần reception)", async () => {
+  it("11 section có data-section đúng thứ tự", async () => {
     const html = await render({ dressCode: ["#4A161A"] });
     const names = [...html.matchAll(/data-section="([a-z-]+)"/g)].map((m) => m[1]);
     expect(names).toEqual([
@@ -192,11 +192,15 @@ describe("blush-rose theme", () => {
       "ceremony",
       "album",
       "reception",
+      "timeline",
       "venue",
       "dress-code",
+      "rsvp",
       "gift",
       "thanks",
     ]);
+    expect(html).toContain('id="xac-nhan"');
+    expect(html).toContain('href="#xac-nhan"');
   });
 
   it("palette mặc định do-do; hong-nhat được áp lên wrapper; không có dressCode thì ẩn section", async () => {
@@ -206,21 +210,57 @@ describe("blush-rose theme", () => {
     expect(pink).not.toContain('data-section="dress-code"');
   });
 
-  it("luôn có credit Redouté và lịch trái tim khoanh đúng ngày", async () => {
+  it("luôn có credit Redouté; lịch trái tim khoanh đúng ngày tiệc", async () => {
     const html = await render({});
     expect(html).toContain("Pierre-Joseph Redouté");
     expect(html).toContain("Tháng 10 năm 2027, ngày 17 được khoanh");
   });
+
+  it("thẻ lễ cưới: thứ bậc, âm lịch tính từ startsAt", async () => {
+    const html = await render({});
+    expect(html).toContain("Trưởng nam");
+    expect(html).toContain("Út nữ");
+    expect(html).toContain("(Tức ngày 17 tháng 9 năm Đinh Mùi)");
+    expect(html).toContain("(Tức ngày 18 tháng 9 năm Đinh Mùi)");
+    expect(html).toContain("Trân trọng báo tin lễ thành hôn của con chúng tôi");
+    expect(html).toContain("Đón khách");
+    expect(html).toContain("Khai tiệc");
+  });
+
+  it("dress code chỉ có chấm màu, không in mã hex, có aria-label tên màu", async () => {
+    const html = await render({ dressCode: ["#4A161A", "#E8B9C3", "#F3EDE3"] });
+    expect(html).not.toContain(">#4A161A<");
+    expect(html).toContain('aria-label="Gợi ý màu trang phục: đỏ đô, hồng nhạt, kem"');
+    expect(html).toContain('aria-label="hồng nhạt"');
+  });
+
+  it("sections.dressCode=false ẩn dress code; sections.timeline=false ẩn lịch trình", async () => {
+    const base = await getDemoContent();
+    const noDress = await render(
+      { dressCode: ["#4A161A"] },
+      { sections: { ...base.sections, dressCode: false } },
+    );
+    expect(noDress).not.toContain('data-section="dress-code"');
+    const noTimeline = await render({}, { sections: { ...base.sections, timeline: false } });
+    expect(noTimeline).not.toContain('data-section="timeline"');
+    expect(await render({})).toContain("Giao lưu &amp; tiễn khách");
+  });
+
+  it("không có key Maps thì không nhúng iframe, vẫn có nút Chỉ đường", async () => {
+    const html = await render({});
+    expect(html).not.toContain("<iframe");
+    expect(html).toContain("Chỉ đường");
+  });
 });
 
 describe("demoContent", () => {
-  it("có đúng 2 sự kiện: vu quy và thành hôn", () => {
-    expect(demoContent.events).toHaveLength(2);
-    expect(demoContent.events.map((e) => e.kind)).toEqual(["vu-quy", "thanh-hon"]);
+  it("có đúng 3 sự kiện: vu quy, thành hôn, tiệc", () => {
+    expect(demoContent.events).toHaveLength(3);
+    expect(demoContent.events.map((e) => e.kind)).toEqual(["vu-quy", "thanh-hon", "tiec"]);
   });
 
-  it("có 8 ảnh album, mỗi ảnh có alt không rỗng và kích thước dương", () => {
-    expect(demoContent.album).toHaveLength(8);
+  it("có ít nhất 3 ảnh album, mỗi ảnh có alt không rỗng và kích thước dương", () => {
+    expect(demoContent.album.length).toBeGreaterThanOrEqual(3);
     for (const image of demoContent.album) {
       expect(image.alt.trim()).not.toBe("");
       expect(image.width).toBeGreaterThan(0);

@@ -1,45 +1,40 @@
 import Image from "next/image";
-import { MapPin } from "lucide-react";
-import type { ReactNode } from "react";
 import { getTrack, getTracks } from "@/data/music";
 import { cn } from "@/lib/utils";
-import { AddToCalendar } from "../_shared/AddToCalendar";
 import { Gift } from "../_shared/Gift";
-import { MapButton } from "../_shared/MapButton";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
 import { Watermark } from "../_shared/Watermark";
-import type { EventView, FamilySide, Person, ThemeProps } from "../types";
+import type { EventView, Person, ThemeProps } from "../types";
 import { Experience } from "./Experience";
 import { fontVariables } from "./fonts";
 import type { BlushRoseOptions } from "./manifest";
 import { FlowerSprig, SectionHeading, WaxSeal } from "./ornaments";
 import { Album } from "./sections/Album";
+import { Ceremony } from "./sections/Ceremony";
 import { DressCodeDots } from "./sections/DressCode";
-import { HeartCalendar } from "./sections/HeartCalendar";
+import { card, Section } from "./sections/layout";
 import { LiXiArt, LiXiFlower } from "./sections/LiXi";
+import { Reception } from "./sections/Reception";
+import { Timeline } from "./sections/Timeline";
+import { Venue } from "./sections/Venue";
 import { s } from "./styles";
 import "./theme.css";
 
 // Blush Rose: ivory paper, wine red, gold hairlines, one Redouté painting.
 // Guest journey (docs/themes/blush-rose.md §6): envelope cover → names → ceremony → album →
-// reception + heart calendar + RSVP → venues → dress code → gift → thanks.
+// reception + heart calendar → timeline → venue → dress code → RSVP → gift → thanks.
 // Only Experience (envelope + music) and Album are client leaves of the theme.
 
 const DEMO_MAX_ATTENDEES = 4;
-const CEREMONY_KINDS: readonly EventView["kind"][] = ["vu-quy", "thanh-hon"];
-const RECEPTION_KINDS: readonly EventView["kind"][] = ["tiec", "an-hoi", "tan-hon"];
+const CEREMONY_KINDS: readonly EventView["kind"][] = ["vu-quy", "thanh-hon", "an-hoi"];
+const RECEPTION_KINDS: readonly EventView["kind"][] = ["tiec", "tan-hon"];
 
 const weddingDateFormat = new Intl.DateTimeFormat("vi-VN", {
   dateStyle: "long",
   timeZone: "Asia/Ho_Chi_Minh",
 });
-
-const sideLabel: Record<FamilySide, string> = { "nha-trai": "Nhà trai", "nha-gai": "Nhà gái" };
-
-const card =
-  "relative overflow-hidden border border-(--br-gold) bg-(--br-card) px-6 pt-10 pb-12 text-center";
 
 function initialOf(person: Person): string {
   const [first] = Array.from(person.shortName.trim());
@@ -54,39 +49,6 @@ function pickMainEvent(events: EventView[], weddingDate?: string): EventView | u
     if (match) return match;
   }
   return events.at(-1);
-}
-
-function EventDateBlock({ event }: { event: EventView }) {
-  return (
-    <>
-      {event.side && (
-        <p className={cn(s.title, "text-xs font-semibold tracking-[0.2em] uppercase")}>
-          {sideLabel[event.side]}
-        </p>
-      )}
-      <h3 className={cn(s.title, "mt-2 text-xl font-semibold")}>{event.title}</h3>
-      <p className={cn(s.title, "mt-4 text-2xl")}>{event.dateLabel}</p>
-      <p className="mt-1 text-xl font-semibold">{event.timeLabel}</p>
-      {event.lunarLabel && <p className="mt-1">Tức {event.lunarLabel.replace(/^Ngày/, "ngày")}</p>}
-      <p className="mt-3 font-semibold break-words">{event.venue}</p>
-    </>
-  );
-}
-
-function Section({
-  name,
-  children,
-  className,
-}: {
-  name: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <section data-section={name} className={cn("flex flex-col gap-6", className)}>
-      {children}
-    </section>
-  );
 }
 
 export default function Theme({ content, guest, options, mode }: ThemeProps<BlushRoseOptions>) {
@@ -114,14 +76,16 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
     : content.events;
   const ceremonies = sections.events ? events.filter((e) => CEREMONY_KINDS.includes(e.kind)) : [];
   const receptions = sections.events ? events.filter((e) => RECEPTION_KINDS.includes(e.kind)) : [];
-  const venues = sections.events ? events.filter((e) => e.mapUrl) : [];
   const mainEvent = pickMainEvent(events, content.weddingDate);
   const showCalendar = sections.events && Boolean(content.weddingDate);
+  const showVenue =
+    sections.events && events.length > 0 && events.some((e) => e.mapUrl || e.id === mainEvent?.id);
   // RSVP needs a token in production. The demo has no guest, so it gets made-up limits and the
   // form's fake submit. Fields are passed one by one: never the whole guest (it holds the token).
   const showRsvp = sections.rsvp && events.length > 0 && (guest !== undefined || mode === "demo");
-  const showReception = receptions.length > 0 || showCalendar || showRsvp;
-  const eventSummary = (event: EventView) => `Đám cưới ${names} · ${event.title}`;
+  const showReception = receptions.length > 0 || showCalendar;
+  const timeline = sections.timeline ? (content.timeline ?? []) : [];
+  const dressCode = sections.dressCode ? options.dressCode : undefined;
 
   return (
     <div
@@ -230,31 +194,7 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
         )}
 
         {ceremonies.length > 0 && (
-          <Section name="ceremony">
-            <SectionHeading>Lễ cưới</SectionHeading>
-            <ul role="list" className="flex flex-col gap-6">
-              {ceremonies.map((event, index) => (
-                <li key={event.id}>
-                  <Reveal>
-                    <article className={card}>
-                      <FlowerSprig
-                        corner={index % 2 === 0 ? "tr" : "tl"}
-                        inset={[18, 18]}
-                        width={150}
-                        rotate={index % 2 === 0 ? 12 : -12}
-                        flip={index % 2 === 1}
-                      />
-                      <EventDateBlock event={event} />
-                      <WaxSeal
-                        initials={initials}
-                        className="absolute bottom-3 left-1/2 size-9 -translate-x-1/2 opacity-90"
-                      />
-                    </article>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </Section>
+          <Ceremony content={content} events={ceremonies} initials={initials} />
         )}
 
         {sections.album && content.album.length > 0 && (
@@ -267,92 +207,46 @@ export default function Theme({ content, guest, options, mode }: ThemeProps<Blus
         )}
 
         {showReception && (
-          <Section name="reception">
-            <SectionHeading>{receptions.length > 0 ? "Tiệc cưới" : "Ngày vui"}</SectionHeading>
-            {receptions.map((event, index) => (
-              <Reveal key={event.id}>
-                <article className={card}>
-                  <FlowerSprig
-                    corner="tl"
-                    inset={[18, 22]}
-                    width={150}
-                    rotate={-16 + index * 8}
-                    focus="leaves"
-                  />
-                  <EventDateBlock event={event} />
-                </article>
-              </Reveal>
-            ))}
-            {showCalendar && content.weddingDate && (
-              <Reveal>
-                <HeartCalendar weddingDate={content.weddingDate} />
-              </Reveal>
-            )}
-            {showCalendar && mainEvent && (
-              <AddToCalendar
-                event={mainEvent}
-                summary={eventSummary(mainEvent)}
-                className="flex-col"
-                itemClassName="w-full bg-transparent"
-              />
-            )}
-            {showRsvp && (
-              <Reveal>
-                <div className="flex flex-col gap-4 border border-(--br-gold) bg-(--br-card) p-5">
-                  <h3 className={cn(s.title, "text-center text-lg font-semibold")}>
-                    Xác nhận tham dự
-                  </h3>
-                  <RsvpForm
-                    mode={mode}
-                    invitedEventIds={events.map((e) => e.id)}
-                    maxAttendees={guest?.maxAttendees ?? DEMO_MAX_ATTENDEES}
-                    rsvp={guest?.rsvp}
-                    events={events.map(({ id, title, dateLabel: date, timeLabel }) => ({
-                      id,
-                      title,
-                      dateLabel: date,
-                      timeLabel,
-                    }))}
-                    className="border-0 bg-transparent p-0"
-                  />
-                </div>
-              </Reveal>
-            )}
-          </Section>
+          <Reception
+            receptions={receptions}
+            fallbackEvent={mainEvent}
+            weddingDate={content.weddingDate}
+            names={names}
+            showRsvpLink={showRsvp}
+          />
         )}
 
-        {venues.length > 0 && (
-          <Section name="venue">
-            <SectionHeading>Địa điểm</SectionHeading>
+        {timeline.length > 0 && <Timeline items={timeline} />}
+
+        {showVenue && <Venue events={events} mainEvent={mainEvent} />}
+
+        {dressCode && dressCode.length > 0 && (
+          <Section name="dress-code">
             <Reveal>
-              <div className={cn(card, "pt-8 pb-8 text-left")}>
-                <FlowerSprig corner="br" inset={[14, 14]} width={120} rotate={-20} flip />
-                <ul role="list" className="flex flex-col gap-6">
-                  {venues.map((event) => (
-                    <li key={event.id} className="relative flex flex-col gap-2">
-                      <div className="flex items-start gap-3">
-                        <MapPin
-                          aria-hidden="true"
-                          className="mt-1 size-5 shrink-0 stroke-(--br-gold)"
-                        />
-                        <div className="min-w-0">
-                          <p className={cn(s.title, "font-semibold break-words")}>{event.venue}</p>
-                          <p className="text-base break-words">{event.address}</p>
-                        </div>
-                      </div>
-                      <MapButton url={event.mapUrl} className="w-full bg-transparent" />
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <DressCodeDots colors={dressCode} />
             </Reveal>
           </Section>
         )}
 
-        {options.dressCode && (
-          <Section name="dress-code">
+        {showRsvp && (
+          <Section name="rsvp" id="xac-nhan">
+            <SectionHeading>Xác nhận tham dự</SectionHeading>
             <Reveal>
-              <DressCodeDots colors={options.dressCode} />
+              <div className={cn(card, "px-5 py-6 text-left")}>
+                <RsvpForm
+                  mode={mode}
+                  invitedEventIds={events.map((e) => e.id)}
+                  maxAttendees={guest?.maxAttendees ?? DEMO_MAX_ATTENDEES}
+                  rsvp={guest?.rsvp}
+                  events={events.map(({ id, title, dateLabel: date, timeLabel }) => ({
+                    id,
+                    title,
+                    dateLabel: date,
+                    timeLabel,
+                  }))}
+                  className="border-0 bg-transparent p-0"
+                />
+              </div>
             </Reveal>
           </Section>
         )}

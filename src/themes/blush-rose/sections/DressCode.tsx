@@ -1,25 +1,27 @@
 import type { DressCode } from "../../_shared/dress-code";
-import { cn } from "@/lib/utils";
+import { colorName } from "../color-name";
 import { SectionHeading } from "../ornaments";
-import { s } from "../styles";
 
-/** Server Component. Colour is never the only signal: each dot also prints its hex code. */
+/** Server Component. Dots only: each one is an image with a Vietnamese colour name, no hex text. */
 export function DressCodeDots({ colors }: { colors: DressCode }) {
+  const names = colors.map(colorName);
   return (
-    <div className="flex flex-col items-center gap-5 text-center">
-      <SectionHeading>Gợi ý trang phục</SectionHeading>
-      <p>Gợi ý màu trang phục: {colors.map((c) => c.toUpperCase()).join(", ")}</p>
-      <ul role="list" className="flex flex-wrap justify-center gap-2">
-        {colors.map((color) => (
-          <li key={color} className="flex w-14 flex-col items-center gap-1.5">
+    <div className="flex flex-col items-center gap-4 text-center">
+      <SectionHeading>Dress code</SectionHeading>
+      <p>Trang phục dự tiệc</p>
+      <ul
+        role="list"
+        aria-label={`Gợi ý màu trang phục: ${names.join(", ")}`}
+        className="flex flex-wrap justify-center gap-3"
+      >
+        {colors.map((color, index) => (
+          <li key={`${color}-${index}`}>
             <span
-              aria-hidden="true"
-              className="size-10 rounded-full border border-(--br-wine)/35 shadow-sm"
+              role="img"
+              aria-label={names[index]}
+              className="block size-11 rounded-full border border-(--br-wine)/35 shadow-sm"
               style={{ backgroundColor: color }}
             />
-            <span aria-hidden="true" className={cn(s.title, "text-xs tracking-wide")}>
-              {color.toUpperCase()}
-            </span>
           </li>
         ))}
       </ul>

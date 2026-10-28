@@ -359,6 +359,8 @@ export const themes: Theme[] = [
       "Nhạc nền",
       "Lịch âm dương",
       "Album ảnh",
+      "Lịch trình",
+      "Bản đồ",
       "Dress code",
       "QR mừng cưới",
       "RSVP",

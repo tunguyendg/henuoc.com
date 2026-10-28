@@ -20,7 +20,10 @@ export type StyleSlug =
 
 export type SectionKey =
   | "cover" | "invitation" | "couple" | "events" | "countdown"
-  | "album" | "gift" | "rsvp" | "thanks";
+  | "album" | "gift" | "rsvp" | "thanks" | "timeline" | "dressCode";
+// Trường optional thêm 2026-10-28 (đợt sửa 1 blush-rose): Person.birthOrder,
+// EventView.arrivalTimeLabel / banquetTimeLabel, WeddingContent.timeline?: TimelineItem[]
+// (lưu DB làm sau cùng WeddingEvent). Nguồn chuẩn: src/themes/types.ts.
 
 export interface ThemeManifest<TOptions = unknown> {
   slug: string;                 // "hong-pastel"

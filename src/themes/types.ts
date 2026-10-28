@@ -16,7 +16,17 @@ export type StyleSlug =
   | "de-thuong";
 
 export type SectionKey =
-  "cover" | "invitation" | "couple" | "events" | "countdown" | "album" | "gift" | "rsvp" | "thanks";
+  | "cover"
+  | "invitation"
+  | "couple"
+  | "events"
+  | "countdown"
+  | "album"
+  | "gift"
+  | "rsvp"
+  | "thanks"
+  | "timeline"
+  | "dressCode";
 
 export type FamilySide = "nha-trai" | "nha-gai";
 
@@ -33,6 +43,8 @@ export interface Person {
   fullName: string;
   shortName: string;
   parents?: string;
+  /** Birth-order line under the name, plain text: "Trưởng nam", "Út nữ"… */
+  birthOrder?: string;
   photo?: ImageView;
 }
 
@@ -44,6 +56,10 @@ export interface EventView {
   dateLabel: string;
   timeLabel: string;
   lunarLabel?: string;
+  /** Time guests are welcomed, e.g. "17:30" (reception). */
+  arrivalTimeLabel?: string;
+  /** Time the banquet starts, e.g. "18:30". */
+  banquetTimeLabel?: string;
   venue: string;
   address: string;
   // Zod must force https + allowlisted map hosts (Google Maps…); never pass user URLs through raw.
@@ -51,6 +67,16 @@ export interface EventView {
   // Internal route only (e.g. /api/…/ics); reject absolute/external URLs.
   icsUrl?: string;
   side?: FamilySide;
+}
+
+export type TimelineIcon = "camera" | "rings" | "glasses" | "cake" | "music";
+
+export interface TimelineItem {
+  id: string;
+  timeLabel: string;
+  title: string;
+  description?: string;
+  icon?: TimelineIcon;
 }
 
 export interface GiftView {
@@ -93,6 +119,8 @@ export interface WeddingContent {
     groomAddr?: string;
   };
   events: EventView[];
+  // Wedding-day schedule. Stored in the DB later, together with WeddingEvent.
+  timeline?: TimelineItem[];
   inviteMessage: string;
   cover?: ImageView;
   album: ImageView[];

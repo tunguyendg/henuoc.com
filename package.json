@@ -15,7 +15,8 @@
     "format:check": "prettier --check .",
     "postinstall": "prisma generate",
     "music:fetch": "node scripts/fetch-music.mjs",
-    "ornaments:fetch": "node scripts/fetch-ornaments.mjs"
+    "ornaments:fetch": "node scripts/fetch-ornaments.mjs",
+    "demo-album:fetch": "node scripts/fetch-demo-album.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "3.1.1",

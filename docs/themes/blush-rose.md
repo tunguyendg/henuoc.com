@@ -192,10 +192,19 @@ Cấu trúc client: một lá `Experience.tsx` (`"use client"`) giữ `useMusic`
 
 ### Để sau
 
-- Lịch trình (timeline) trong ngày.
-- Bản đồ nhúng (iframe/Maps embed).
 - Sổ lưu bút.
 - Lightbox cho album; đếm ngược; UI chọn màu dress code trong builder.
+
+## Đợt sửa 1 (2026-10-28)
+
+- Contract: `Person.birthOrder`, `EventView.arrivalTimeLabel/banquetTimeLabel`, `WeddingContent.timeline` (`TimelineItem`, `TimelineIcon`), `SectionKey` thêm `timeline` và `dressCode`.
+- Thứ tự section mới (11): cover → names → ceremony → album → reception → timeline → venue → dress-code → rsvp → gift → thanks.
+- **ceremony** "Thông tin lễ cưới": một thẻ gồm hai họ (nhà trai luôn bên trái), lời báo tin, tên đầy đủ + thứ bậc, các lễ vu quy/thành hôn/ăn hỏi với khối ngày lớn và dòng âm lịch tính từ `startsAt` (`event-date.ts`, không còn dùng `lunarLabel`). Không nút bản đồ.
+- **reception** "Thông tin tiệc cưới": thẻ riêng cho `tiec`/`tan-hon`, giờ đón khách và khai tiệc, lịch trái tim, thêm vào lịch, nút `#xac-nhan`.
+- **timeline** "Lịch trình ngày cưới": thẻ đỏ đô, trục vàng, icon SVG tự vẽ (`sections/timeline-icons.tsx`); hoa tràn ra ngoài mép thẻ.
+- **venue**: bản đồ nhúng Google (`mapEmbedUrl` + `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`) cho sự kiện chính, không key thì chỉ danh sách + nút "Chỉ đường". Query chỉ gồm tên địa điểm + địa chỉ.
+- **dress-code**: chỉ chấm màu, không in mã hex; `aria-label` tên màu tiếng Việt từ `color-name.ts`. Cần `sections.dressCode` và `options.dressCode`.
+- **rsvp**: section riêng `id="xac-nhan"` tách khỏi reception.
 
 ## 8. QA checklist (tóm tắt)
 

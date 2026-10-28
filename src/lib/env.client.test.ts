@@ -10,6 +10,7 @@ describe("clientEnv", () => {
   beforeEach(() => {
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://henuoc.com");
     vi.stubEnv("NEXT_PUBLIC_ALLOW_INDEXING", "");
+    vi.stubEnv("NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY", "");
   });
 
   afterEach(() => {
@@ -47,5 +48,27 @@ describe("clientEnv", () => {
 
     vi.stubEnv("NEXT_PUBLIC_ALLOW_INDEXING", undefined);
     expect((await loadClientEnv()).NEXT_PUBLIC_ALLOW_INDEXING).toBe(false);
+  });
+
+  it("GOOGLE_MAPS_EMBED_KEY: rỗng hoặc thiếu → undefined", async () => {
+    expect((await loadClientEnv()).NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY).toBeUndefined();
+    vi.stubEnv("NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY", undefined);
+    expect((await loadClientEnv()).NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY).toBeUndefined();
+  });
+
+  it("GOOGLE_MAPS_EMBED_KEY: key hợp lệ được giữ nguyên", async () => {
+    const key = "AIzaSyA-fake_key_0123456789abcdefghij";
+    vi.stubEnv("NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY", key);
+    expect((await loadClientEnv()).NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY).toBe(key);
+  });
+
+  it("GOOGLE_MAPS_EMBED_KEY: có ký tự lạ hoặc quá ngắn → throw, không lộ giá trị", async () => {
+    for (const bad of ["AIza&q=evil&padding0123456789", "ngan", "AIza key co khoang trang 12345"]) {
+      vi.stubEnv("NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY", bad);
+      const error = await loadClientEnv().catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(Error);
+      expect((error as Error).message).toContain("NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY");
+      expect((error as Error).message).not.toContain(bad);
+    }
   });
 });
