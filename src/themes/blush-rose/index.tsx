@@ -132,51 +132,6 @@ export default function Theme({
           </header>
         )}
 
-        {(sections.couple || sections.invitation) && (
-          <Section name="names" className="items-center text-center">
-            {sections.invitation && (
-              <Reveal className="flex flex-col items-center gap-3">
-                {guest && (
-                  <p className={cn(s.title, "text-lg font-semibold break-words")}>
-                    {guest.salutation}
-                  </p>
-                )}
-                <p className="max-w-[24rem] text-pretty">{content.inviteMessage}</p>
-              </Reveal>
-            )}
-            {sections.couple && (
-              <div className="flex flex-col items-center gap-2">
-                {parties.map(({ person, label, parents }, index) => (
-                  <div key={label} className="flex w-full flex-col items-center gap-2">
-                    {index === 1 && (
-                      <p aria-hidden="true" className={cn(s.script, "text-3xl")}>
-                        &amp;
-                      </p>
-                    )}
-                    <Reveal
-                      delayMs={index === 0 ? 0 : 150}
-                      className="flex w-full flex-col items-center"
-                    >
-                      <p
-                        className={cn(s.title, "text-xs font-semibold tracking-[0.2em] uppercase")}
-                      >
-                        {label}
-                      </p>
-                      <h2 className={cn(s.script, "max-w-full text-5xl")}>{person.shortName}</h2>
-                      <p className={cn(s.title, "text-base break-words")}>{person.fullName}</p>
-                      {(person.parents ?? parents) && (
-                        <p className="mt-1 max-w-[22rem] text-base break-words">
-                          {person.parents ?? parents}
-                        </p>
-                      )}
-                    </Reveal>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Section>
-        )}
-
         {ceremonies.length > 0 && (
           <Ceremony content={content} side={side} events={ceremonies} initials={initials} />
         )}
