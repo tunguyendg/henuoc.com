@@ -206,12 +206,11 @@ describe("blush-rose theme", () => {
     return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo", side }));
   }
 
-  it("11 section có data-section đúng thứ tự", async () => {
+  it("10 section có data-section đúng thứ tự", async () => {
     const html = await render({ dressCode: ["#4A161A"] });
     const names = [...html.matchAll(/data-section="([a-z-]+)"/g)].map((m) => m[1]);
     expect(names).toEqual([
       "cover",
-      "names",
       "ceremony",
       "album",
       "reception",
@@ -313,8 +312,9 @@ describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
 
   it("cột bố mẹ đặt nhà mình trước nhưng luôn có đủ hai họ", async () => {
     const html = await render();
-    const host = html.indexOf(own.hostParents);
-    const other = html.indexOf(own.otherParents);
+    // Ceremony card prints each parent on its own line (split on "·"): match the first name.
+    const host = html.indexOf(own.hostParents.split(" · ")[0]!);
+    const other = html.indexOf(own.otherParents.split(" · ")[0]!);
     expect(host).toBeGreaterThan(-1);
     expect(other).toBeGreaterThan(-1);
     expect(host).toBeLessThan(other);
@@ -341,7 +341,7 @@ describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
 
   it("trang bìa không in dòng ngày tháng", async () => {
     const html = await render();
-    const cover = html.match(/data-section="cover"[\s\S]*?(?=data-section="names")/)?.[0] ?? "";
+    const cover = html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
     const text = cover.replace(/<[^>]*>/g, " ");
     expect(text).toContain("Thiệp cưới");
     expect(text).not.toMatch(/2027|Tháng|\d{1,2}[./]\d{1,2}/);

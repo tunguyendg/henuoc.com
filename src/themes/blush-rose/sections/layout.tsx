@@ -3,8 +3,14 @@ import { cn } from "@/lib/utils";
 import { eventDateParts } from "../event-date";
 import { s } from "../styles";
 
-/** Paper card with a gold hairline. Sections add their own corner flower inside. */
-export const card =
+/**
+ * Solid wine card (theme.css .br-card). No overflow-hidden and no flower inside: the section puts a
+ * FlowerSprig as a sibling BEFORE it so the flower peeks out from behind onto the paper.
+ */
+export const card = cn(s.card, "px-6 pt-10 pb-12 text-center");
+
+/** Previous paper look with a gold hairline: Venue list, RSVP wrapper, thanks. */
+export const paperCard =
   "relative overflow-hidden border border-(--br-gold) bg-(--br-card) px-6 pt-10 pb-12 text-center";
 
 /** One top-level block of the invitation; `name` becomes data-section (used by tests and QA). */
@@ -37,7 +43,7 @@ export function DateBlock({ startsAt, fallback }: { startsAt: string; fallback: 
   return (
     <div className="mt-3 flex items-center justify-center gap-4">
       <span className={cn(s.title, "text-7xl leading-none font-semibold")}>{parts.day}</span>
-      <span aria-hidden="true" className="h-14 w-px bg-(--br-gold)" />
+      <span aria-hidden="true" className="h-14 w-px bg-(--br-card-accent)" />
       <span className="flex flex-col text-left">
         <span className={cn(s.title, "text-sm font-semibold tracking-[0.2em] uppercase")}>
           Tháng {parts.month}

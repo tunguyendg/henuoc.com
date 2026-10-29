@@ -15,7 +15,7 @@ import { FlowerSprig, SectionHeading, WaxSeal } from "./ornaments";
 import { Album } from "./sections/Album";
 import { Ceremony } from "./sections/Ceremony";
 import { DressCodeDots } from "./sections/DressCode";
-import { card, Section } from "./sections/layout";
+import { paperCard, Section } from "./sections/layout";
 import { LiXiArt, LiXiFlower } from "./sections/LiXi";
 import { Reception } from "./sections/Reception";
 import { Timeline } from "./sections/Timeline";
@@ -171,7 +171,7 @@ export default function Theme({
           <Section name="rsvp" id="xac-nhan">
             <SectionHeading>Xác nhận tham dự</SectionHeading>
             <Reveal>
-              <div className={cn(card, "px-5 py-6 text-left")}>
+              <div className={cn(paperCard, "px-5 py-6 text-left")}>
                 <RsvpForm
                   mode={mode}
                   invitedEventIds={events.map((e) => e.id)}
@@ -215,7 +215,7 @@ export default function Theme({
         {sections.thanks && (
           <Section name="thanks" className="items-center text-center">
             <Reveal>
-              <div className={cn(card, "border-0 bg-transparent")}>
+              <div className={cn(paperCard, "border-0 bg-transparent")}>
                 <FlowerSprig corner="tl" inset={[10, 40]} width={150} rotate={10} flip />
                 <p className={cn(s.script, "text-6xl")}>Cảm ơn</p>
                 <p className="mt-2">Rất mong được đón bạn trong ngày vui của chúng mình.</p>

@@ -1,5 +1,5 @@
 /* Blush Rose: palette, paper texture, and the few things Tailwind utilities cannot express
-   (transitions driven by data attributes, scroll-snap coverflow).
+   (transitions driven by data attributes, transform-stack coverflow).
    Plain global CSS with a br- prefix, NOT a CSS module: next.config.ts routes every *.css through the
    Tailwind loader as plain CSS, which strips CSS-module hashing (class map comes out empty). */
 
@@ -12,6 +12,12 @@
   --br-card: #ece5da;
   --br-wine: #4a161a;
   --br-gold: #c4a257;
+  /* Solid wine card (.br-card). ink/bg 12.69 · accent/bg 6.09 (accent works as text)
+     muted = ink 90% trên bg: 10.49 */
+  --br-card-bg: #4a161a;
+  --br-card-ink: #f3ede3;
+  --br-card-accent: #c4a257;
+  --br-card-accent-text: #c4a257;
 }
 
 /* ── Palette "hong-nhat" ─────────────────────────────────────────────────────
@@ -25,6 +31,13 @@
   --br-card: #f6e3e7;
   --br-wine: #5c2233;
   --br-gold: #cc919f;
+  /* Solid rose-wine card (.br-card). ink/bg 5.70 · accent/bg 3.75 (non-text: hairlines, dots, icons ONLY)
+     accent-text/bg 4.57 (any accent-coloured text)
+     muted = ink 90% trên bg: 4.97 (không hạ dưới 90%: 85% = 4.62, 80% = 4.30 trượt) */
+  --br-card-bg: #8c4a5a;
+  --br-card-ink: #f8eef0;
+  --br-card-accent: #e8b9c3;
+  --br-card-accent-text: #f3d0d7;
 }
 
 /* Re-skin the shared design tokens inside the theme so RsvpForm, AddToCalendar, MapButton,
@@ -51,6 +64,29 @@
   font-variant-numeric: lining-nums;
   font-size: 1.125rem;
   line-height: 1.6;
+}
+
+/* Solid wine card: re-skins the shared tokens so AddToCalendar / MapButton / text-muted inside read
+   cream-on-wine. position: relative so it paints above a sibling FlowerSprig placed before it. */
+.br-card {
+  --color-ink: var(--br-card-ink);
+  --color-muted: color-mix(in srgb, var(--br-card-ink) 90%, var(--br-card-bg));
+  --color-border: color-mix(in srgb, var(--br-card-ink) 45%, var(--br-card-bg));
+  --color-surface: color-mix(in srgb, var(--br-card-ink) 10%, var(--br-card-bg));
+  --color-rose-50: var(--br-card-bg);
+  --color-rose-100: var(--br-card-bg);
+  --color-rose-500: var(--br-card-ink);
+  --color-rose-600: var(--br-card-ink);
+  --color-rose-700: var(--br-card-ink);
+
+  position: relative;
+  background-color: var(--br-card-bg);
+  color: var(--br-card-ink);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgb(74 22 26 / 0.22);
+}
+.br-card :focus-visible {
+  outline-color: var(--br-card-ink);
 }
 
 /* One static texture layer: no animation, no filter on the scrolling element itself. */
@@ -160,66 +196,86 @@
 }
 
 /* ── Heart calendar ─────────────────────────────────────────────────────────
-   Visible by default (SSR, no JS, reduced motion). Reveal marks data-reveal="hidden" only when the
-   card is below the fold, then "shown" → the stroke draws itself. */
+   Filled heart, visible by default (SSR, no JS, reduced motion). Reveal marks data-reveal="hidden"
+   only when the card is below the fold, then "shown" → the heart scales/fades in. */
 .br-heart {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 800ms ease-out 250ms;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 600ms ease-out 250ms,
+    opacity 600ms ease-out 250ms;
 }
 [data-reveal="hidden"] .br-heart {
-  stroke-dashoffset: 1;
+  transform: scale(0.6);
+  opacity: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .br-heart {
     transition: none;
-    stroke-dashoffset: 0 !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 }
 
-/* ── Coverflow album ────────────────────────────────────────────────────────*/
-.br-track {
-  display: flex;
-  overflow-x: auto;
-  padding: 1rem 16%;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
+/* ── Coverflow album ────────────────────────────────────────────────────────
+   Slides are stacked absolutely; coverflow.ts computes transform/opacity/z-index per slide.
+   perspective lives on the stage only. pan-y keeps vertical page scroll free. */
+.br-coverflow {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
   perspective: 1000px;
+  touch-action: pan-y;
 }
-.br-track::-webkit-scrollbar {
-  display: none;
+.br-coverflow-slide {
+  position: absolute;
+  top: 9%;
+  left: 24%;
+  width: 52%;
+  aspect-ratio: 4 / 5;
+  transition:
+    transform 600ms ease,
+    opacity 600ms ease;
+  will-change: transform, opacity;
 }
-.br-track:focus-visible {
+.br-coverflow-slide[data-side="true"] {
+  cursor: pointer;
+}
+.br-coverflow-region:focus-visible {
   outline: 2px solid var(--br-wine);
   outline-offset: 2px;
 }
-
-.br-slide {
-  flex: 0 0 68%;
-  scroll-snap-align: center;
-  transform: scale(0.85);
-  opacity: 0.55;
+.br-coverflow-dot {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+}
+.br-coverflow-dot::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--br-wine) 40%, transparent);
   transition:
-    transform 400ms ease-out,
-    opacity 400ms ease-out;
+    background-color 200ms ease,
+    transform 200ms ease;
 }
-.br-slide[data-pos="active"] {
-  transform: none;
-  opacity: 1;
+.br-coverflow-dot[aria-current="true"]::before {
+  background: var(--br-wine);
+  transform: scale(1.4);
 }
-.br-slide[data-pos="before"] {
-  transform: scale(0.85) rotateY(35deg);
-}
-.br-slide[data-pos="after"] {
-  transform: scale(0.85) rotateY(-35deg);
+.br-coverflow-dot:focus-visible,
+.br-coverflow-toggle:focus-visible {
+  outline: 2px solid var(--br-wine);
+  outline-offset: -4px;
+  border-radius: 9999px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .br-slide,
-  .br-slide[data-pos] {
-    transform: none;
-    opacity: 1;
+  .br-coverflow-slide,
+  .br-coverflow-dot::before {
     transition: none;
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarPlus, Download } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { EventView } from "../types";
 import { buildIcs, googleCalendarUrl, icsFileName, type CalendarOptions } from "./calendar";
@@ -15,6 +15,10 @@ export interface AddToCalendarProps {
   className?: string;
   /** Applied to both actions so themes can restyle them. */
   itemClassName?: string;
+  /** Override the visible labels (defaults: "Google Calendar" / "Tải file .ics"). */
+  labels?: { google?: string; ics?: string };
+  /** Rendered between the two actions (aria-hidden), e.g. "·". Nothing by default. */
+  separator?: ReactNode;
 }
 
 const itemBase =
@@ -28,6 +32,8 @@ export function AddToCalendar({
   durationHours,
   className,
   itemClassName,
+  labels,
+  separator,
 }: AddToCalendarProps) {
   const opts: CalendarOptions = { summary, description, durationHours };
   const revokeTimer = useRef<number | undefined>(undefined);
@@ -65,11 +71,12 @@ export function AddToCalendar({
         className={cn(itemBase, itemClassName)}
       >
         <CalendarPlus aria-hidden="true" />
-        Google Calendar
+        {labels?.google ?? "Google Calendar"}
       </a>
+      {separator != null && <span aria-hidden="true">{separator}</span>}
       <button type="button" onClick={downloadIcs} className={cn(itemBase, itemClassName)}>
         <Download aria-hidden="true" />
-        Tải file .ics
+        {labels?.ics ?? "Tải file .ics"}
       </button>
     </div>
   );

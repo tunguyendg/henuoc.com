@@ -8,6 +8,10 @@ import { s } from "../styles";
 import { HeartCalendar } from "./HeartCalendar";
 import { card, DateBlock, Section } from "./layout";
 
+// Small underlined text link; tailwind-merge drops the shared button chrome, icons hidden.
+const calendarLink =
+  "rounded-none border-0 bg-transparent px-2 font-normal underline underline-offset-4 hover:bg-transparent [&_svg]:hidden";
+
 function TimeCell({ label, value }: { label: string; value: string }) {
   return (
     <div>
@@ -38,54 +42,55 @@ function ReceptionCard({
   ].flatMap((time) => (time ? [time] : []));
 
   return (
-    <Reveal>
-      <article className={card}>
-        <FlowerSprig
-          corner="tl"
-          inset={[18, 22]}
-          width={140}
-          rotate={-16 + index * 8}
-          focus="leaves"
-        />
-        {/* pt-12: keeps the venue name clear of the corner sprig. */}
-        <div className="relative flex flex-col items-center gap-6 pt-12">
-          <div>
-            <h3 className={cn(s.title, "text-xl font-semibold break-words")}>{event.venue}</h3>
-            <p className="mt-1 text-lg font-semibold">
-              {event.timeLabel}
-              {parts && ` · ${parts.weekday}`}
-            </p>
-            <DateBlock startsAt={event.startsAt} fallback={event.dateLabel} />
-            {lunar && <p className="mt-3">{lunar}</p>}
-          </div>
-          {times.length > 0 && (
-            <div
-              className={cn(
-                "grid w-full gap-4 border-y border-(--br-gold) py-4",
-                times.length === 2 ? "grid-cols-2" : "grid-cols-1",
-              )}
-            >
-              {times.map((time) => (
-                <TimeCell key={time.label} {...time} />
-              ))}
+    // Flower = sibling BEFORE the card, outside Reveal (no opacity/transform ancestor → multiply hits the paper).
+    <div className="relative">
+      <FlowerSprig
+        corner="tl"
+        inset={[36, 6]}
+        width={150}
+        rotate={-16 + index * 8}
+        focus="leaves"
+      />
+      <Reveal>
+        <article className={card}>
+          <div className="flex flex-col items-center gap-6">
+            <div>
+              <h3 className={cn(s.title, "text-xl font-semibold break-words")}>{event.venue}</h3>
+              <p className="mt-1 text-lg font-semibold">
+                {event.timeLabel}
+                {parts && ` · ${parts.weekday}`}
+              </p>
+              <DateBlock startsAt={event.startsAt} fallback={event.dateLabel} />
+              {lunar && <p className="mt-3">{lunar}</p>}
             </div>
-          )}
-          {showCalendar && <HeartCalendar weddingDate={event.startsAt} />}
-          <div className="flex w-full flex-col gap-2">
-            <p className={cn(s.title, "text-xs font-semibold tracking-[0.2em] uppercase")}>
-              Thêm vào lịch
-            </p>
-            <AddToCalendar
-              event={event}
-              summary={summary}
-              className="flex-col"
-              itemClassName="w-full bg-transparent"
-            />
+            {times.length > 0 && (
+              <div
+                className={cn(
+                  "grid w-full gap-4 border-y border-(--br-card-accent) py-4",
+                  times.length === 2 ? "grid-cols-2" : "grid-cols-1",
+                )}
+              >
+                {times.map((time) => (
+                  <TimeCell key={time.label} {...time} />
+                ))}
+              </div>
+            )}
+            {showCalendar && <HeartCalendar weddingDate={event.startsAt} variant="tile" />}
+            <div role="group" aria-label="Thêm vào lịch">
+              <AddToCalendar
+                event={event}
+                summary={summary}
+                labels={{ ics: "Tải .ics" }}
+                separator="·"
+                className="flex-nowrap items-center justify-center gap-1"
+                itemClassName={calendarLink}
+              />
+            </div>
+            {showRsvpLink && <RsvpLink />}
           </div>
-          {showRsvpLink && <RsvpLink />}
-        </div>
-      </article>
-    </Reveal>
+        </article>
+      </Reveal>
+    </div>
   );
 }
 
@@ -93,7 +98,7 @@ function RsvpLink() {
   return (
     <a
       href="#xac-nhan"
-      className="inline-flex min-h-11 w-full items-center justify-center bg-(--br-wine) px-4 text-sm font-semibold tracking-[0.18em] text-(--br-paper) uppercase transition-colors duration-200 hover:bg-rose-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--br-wine)"
+      className="inline-flex min-h-11 items-center justify-center rounded-full bg-(--br-card-ink) px-8 text-sm font-semibold tracking-[0.18em] text-(--br-card-bg) uppercase transition-opacity duration-200 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--br-card-ink)"
     >
       Xác nhận tham dự
     </a>

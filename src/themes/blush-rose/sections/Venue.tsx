@@ -7,7 +7,7 @@ import { Reveal } from "../../_shared/Reveal";
 import type { EventView } from "../../types";
 import { FlowerSprig, SectionHeading } from "../ornaments";
 import { s } from "../styles";
-import { card, Section } from "./layout";
+import { paperCard, Section } from "./layout";
 
 /**
  * Server Component. The main event (the reception) gets an embedded map when the public Maps key is
@@ -50,7 +50,7 @@ export function Venue({ events, mainEvent }: { events: EventView[]; mainEvent?: 
       )}
       {others.length > 0 && (
         <Reveal>
-          <div className={cn(card, "pt-8 pb-8 text-left")}>
+          <div className={cn(paperCard, "pt-8 pb-8 text-left")}>
             <FlowerSprig corner="br" inset={[14, 14]} width={120} rotate={-20} flip />
             <ul role="list" className="relative flex flex-col gap-6">
               {others.map((event) => (

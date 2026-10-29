@@ -84,43 +84,46 @@ export function Ceremony({
   return (
     <Section name="ceremony">
       <SectionHeading>Thông tin lễ cưới</SectionHeading>
-      <Reveal>
-        <article className={cn(card, "px-5")}>
-          <FlowerSprig corner="tr" inset={[16, 6]} width={140} rotate={12} />
-          <div className="relative flex flex-col gap-6">
-            {columns.length > 0 && (
-              <div
-                className={cn(
-                  "grid gap-4",
-                  columns.length === 2 ? "grid-cols-2" : "mx-auto max-w-[16rem] grid-cols-1",
-                )}
-              >
-                {columns.map(({ key, ...column }) => (
-                  <ParentsColumn key={key} {...column} />
-                ))}
+      {/* Flower is a sibling BEFORE the card (outside Reveal): multiply blends with the paper, the card paints above it. */}
+      <div className="relative">
+        <FlowerSprig corner="tr" inset={[36, 4]} width={150} rotate={12} />
+        <Reveal>
+          <article className={cn(card, "px-5")}>
+            <div className="flex flex-col gap-6">
+              {columns.length > 0 && (
+                <div
+                  className={cn(
+                    "grid gap-4",
+                    columns.length === 2 ? "grid-cols-2" : "mx-auto max-w-[16rem] grid-cols-1",
+                  )}
+                >
+                  {columns.map(({ key, ...column }) => (
+                    <ParentsColumn key={key} {...column} />
+                  ))}
+                </div>
+              )}
+              <p className="mx-auto max-w-[18rem] text-pretty">{sideWording[side].announcement}</p>
+              <div>
+                <p className={cn(s.script, "text-4xl")}>{first.fullName}</p>
+                {first.birthOrder && <p className="text-sm text-muted">{first.birthOrder}</p>}
+                <p aria-hidden="true" className={cn(s.script, "text-2xl")}>
+                  &amp;
+                </p>
+                <p className={cn(s.script, "text-4xl")}>{second.fullName}</p>
+                {second.birthOrder && <p className="text-sm text-muted">{second.birthOrder}</p>}
               </div>
-            )}
-            <p className="mx-auto max-w-[18rem] text-pretty">{sideWording[side].announcement}</p>
-            <div>
-              <p className={cn(s.script, "text-4xl")}>{first.fullName}</p>
-              {first.birthOrder && <p className="text-sm text-muted">{first.birthOrder}</p>}
-              <p aria-hidden="true" className={cn(s.script, "text-2xl")}>
-                &amp;
-              </p>
-              <p className={cn(s.script, "text-4xl")}>{second.fullName}</p>
-              {second.birthOrder && <p className="text-sm text-muted">{second.birthOrder}</p>}
+              <ul role="list" className="flex flex-col gap-8">
+                {events.map((event) => (
+                  <li key={event.id}>
+                    <CeremonyEvent event={event} side={side} />
+                  </li>
+                ))}
+              </ul>
+              <WaxSeal initials={initials} className="mx-auto size-9 opacity-90" />
             </div>
-            <ul role="list" className="flex flex-col gap-8">
-              {events.map((event) => (
-                <li key={event.id}>
-                  <CeremonyEvent event={event} side={side} />
-                </li>
-              ))}
-            </ul>
-            <WaxSeal initials={initials} className="mx-auto size-9 opacity-90" />
-          </div>
-        </article>
-      </Reveal>
+          </article>
+        </Reveal>
+      </div>
     </Section>
   );
 }

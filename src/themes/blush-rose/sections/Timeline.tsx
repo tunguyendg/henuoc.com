@@ -16,9 +16,9 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
     <Section name="timeline">
       <SectionHeading>Lịch trình ngày cưới</SectionHeading>
       <div className="relative mt-8">
-        {/* Sibling of the card, not a child: it blends with the paper behind, only its edge touches the wine. */}
+        {/* Before the card in the DOM: the card paints over it, so only the part on the paper shows (multiply on paper only). */}
         <FlowerSprig corner="tr" inset={[16, -38]} width={150} rotate={8} />
-        <div className="bg-(--br-wine) px-5 py-8 text-(--br-paper)">
+        <div className={cn(s.card, "px-5 py-8")}>
           <ol role="list" className="flex flex-col">
             {items.map((item, index) => (
               <li key={item.id}>
@@ -32,7 +32,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                   <p
                     className={cn(
                       s.title,
-                      "pt-0.5 text-right text-lg leading-snug font-semibold text-(--br-gold)",
+                      "pt-0.5 text-right text-lg leading-snug font-semibold text-(--br-card-accent-text)",
                     )}
                   >
                     {item.timeLabel}
@@ -41,7 +41,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                     {items.length > 1 && (
                       <span
                         className={cn(
-                          "absolute left-1/2 w-px -translate-x-1/2 bg-(--br-gold)",
+                          "absolute left-1/2 w-px -translate-x-1/2 bg-(--br-card-accent)",
                           index === 0
                             ? "top-3 bottom-0"
                             : index === last
@@ -50,14 +50,14 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                         )}
                       />
                     )}
-                    <span className="absolute top-2 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-(--br-gold)" />
+                    <span className="absolute top-2 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-(--br-card-accent)" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-start gap-2">
                       {item.icon && (
                         <TimelineGlyph
                           icon={item.icon}
-                          className="mt-0.5 size-6 shrink-0 text-(--br-gold)"
+                          className="mt-0.5 size-6 shrink-0 text-(--br-card-accent)"
                         />
                       )}
                       <h3 className={cn(s.title, "text-lg leading-snug font-semibold break-words")}>
@@ -65,9 +65,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                       </h3>
                     </div>
                     {item.description && (
-                      <p className="mt-1 text-base break-words text-(--br-paper)/85">
-                        {item.description}
-                      </p>
+                      <p className="mt-1 text-base break-words text-muted">{item.description}</p>
                     )}
                   </div>
                 </Reveal>
