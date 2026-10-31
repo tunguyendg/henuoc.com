@@ -39,6 +39,13 @@ export function inviteLine(
   };
 }
 
+/** Closing sentence of the thanks section, in the voice of whoever invites. */
+export function thanksLine(kind: InvitationKind): string {
+  return kind === "bao-hy"
+    ? "Rất mong được đón bạn trong ngày vui của chúng tôi."
+    : "Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi.";
+}
+
 /** The line on the closed envelope: no companion. */
 export function envelopeLine(guest: Pick<GuestContext, "honorific" | "name">): string {
   return join("Kính gửi:", guest.honorific, guest.name);

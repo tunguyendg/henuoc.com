@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getTrack, getTracks } from "@/data/music";
 import { cn } from "@/lib/utils";
 import { Gift } from "../_shared/Gift";
-import { envelopeLine, inviteLine } from "../_shared/invitation-wording";
+import { envelopeLine, inviteLine, thanksLine } from "../_shared/invitation-wording";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
@@ -231,7 +231,7 @@ export default function Theme({
               <div className={cn(paperCard, "border-0 bg-transparent")}>
                 <FlowerSprig corner="tl" inset={[10, 40]} width={150} rotate={10} flip />
                 <p className={cn(s.script, "text-6xl")}>Cảm ơn</p>
-                <p className="mt-2">Rất mong được đón bạn trong ngày vui của chúng mình.</p>
+                <p className="mt-2">{thanksLine(side)}</p>
                 <p className={cn(s.title, "mt-4 text-lg font-semibold")}>{names}</p>
                 <WaxSeal initials={initials} className="mx-auto mt-4 size-12" />
               </div>

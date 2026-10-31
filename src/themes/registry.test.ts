@@ -5,6 +5,7 @@ import { getTracks } from "@/data/music";
 import { isAllowedImageUrl, isAllowedMapUrl, isAllowedMusicUrl } from "@/lib/url-allowlist";
 import { crc16Ccitt } from "@/lib/vietqr";
 import { demoContent, demoGuests, getDemoContent } from "./_demo/content";
+import { thanksLine } from "./_shared/invitation-wording";
 import { getThemeEntry, themeRegistry, themeSlugs } from "./registry";
 import type {
   EventView,
@@ -302,6 +303,15 @@ describe("blush-rose theme", () => {
     const coverOf = (html: string) =>
       html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
     const esc = (text: string) => text.replace(/&/g, "&amp;");
+
+    it.each(kinds)("%s: câu cảm ơn theo loại thiệp, xưng 'chúng tôi' toàn thiệp", async (kind) => {
+      const html = await renderBlush(kind, {}, demoGuests[kind]);
+      const thanks = html.slice(html.indexOf('data-section="thanks"'));
+      expect(thanks).toContain(thanksLine(kind));
+      // Split so a repo-wide grep for the banned wording stays clean.
+      const banned = ["chúng", "mình"].join(" ");
+      expect(html.normalize("NFC").toLocaleLowerCase("vi")).not.toContain(banned);
+    });
 
     it("không có khách: không có dòng mời, dòng tới dự, phong bì, inviteMessage", async () => {
       const html = await render({});

@@ -44,7 +44,7 @@ export {
   type RsvpValues,
 } from "./rsvp-schema";
 
-export { announceLine, envelopeLine, inviteLine } from "./invitation-wording";
+export { announceLine, envelopeLine, inviteLine, thanksLine } from "./invitation-wording";
 export { HONORIFICS, parseGuestLine, type ParsedGuestLine } from "./guest-line";
 export { solarToLunar, formatLunarDate, type LunarDate } from "./lunar";
 export { buildEventIcs, type IcsEvent } from "./ics";

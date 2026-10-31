@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { getTrack, getTracks } from "@/data/music";
 import { AddToCalendar } from "../_shared/AddToCalendar";
 import { Gift } from "../_shared/Gift";
-import { envelopeLine, inviteLine } from "../_shared/invitation-wording";
+import { envelopeLine, inviteLine, thanksLine } from "../_shared/invitation-wording";
 import { MapButton } from "../_shared/MapButton";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
@@ -207,6 +207,7 @@ export default function Theme({
         {sections.thanks && (
           <footer className="text-center">
             <p className="font-serif text-2xl">Cảm ơn bạn!</p>
+            <p className="mt-2">{thanksLine(side)}</p>
             <p className="mt-2 text-sm text-muted">
               {first.shortName} &amp; {second.shortName}
             </p>

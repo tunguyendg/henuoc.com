@@ -75,7 +75,7 @@ const RECEPTION_STEPS: Omit<TimelineItem, "id" | "eventId">[] = [
   {
     timeLabel: "17:30",
     title: "Đón khách & chụp ảnh",
-    description: "Chúng mình đón bạn ở sảnh, chụp một tấm ảnh kỷ niệm trước khi vào tiệc.",
+    description: "Chúng tôi đón bạn ở sảnh, chụp một tấm ảnh kỷ niệm trước khi vào tiệc.",
     icon: "camera",
   },
   {
@@ -184,7 +184,7 @@ export const demoContent: WeddingContent = {
     RECEPTION_STEPS.map((step, index) => ({ ...step, id: `${eventId}-tl-${index + 1}`, eventId })),
   ),
   inviteMessage:
-    "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình trong ngày trọng đại. Sự hiện diện của bạn là niềm vui lớn nhất với chúng mình.",
+    "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày trọng đại. Sự hiện diện của bạn là niềm vui lớn nhất với chúng tôi.",
   cover: album.find((image) => image.src.endsWith("/hero.jpg")) ?? album[0],
   album,
   gifts: [

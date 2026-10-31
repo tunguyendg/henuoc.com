@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { announceLine, envelopeLine, inviteLine } from "./invitation-wording";
+import { announceLine, envelopeLine, inviteLine, thanksLine } from "./invitation-wording";
 
 describe("announceLine", () => {
   it.each([
@@ -50,6 +50,16 @@ describe("inviteLine", () => {
     );
     expect(invite).toBe("Trân trọng kính mời: Minh Anh & Người thương");
     expect(invite).not.toContain("  ");
+  });
+});
+
+describe("thanksLine", () => {
+  it.each([
+    ["nha-gai", "Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi."],
+    ["nha-trai", "Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi."],
+    ["bao-hy", "Rất mong được đón bạn trong ngày vui của chúng tôi."],
+  ] as const)("%s", (kind, expected) => {
+    expect(thanksLine(kind)).toBe(expected);
   });
 });
 

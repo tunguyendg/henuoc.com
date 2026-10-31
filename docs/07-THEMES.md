@@ -95,8 +95,8 @@ Một đám cưới có 2 thiệp: **nhà gái** và **nhà trai**. Theme nhận
 
 **Câu chữ lời mời** nằm ở `src/themes/_shared/invitation-wording.ts`; mọi theme dùng `announceLine(kind)`,
 `inviteLine(guest, kind)` (2 dòng: `invite` "Trân trọng kính mời: {danh xưng} {tên} {đi cùng}" và `attend`
-nhà gái "tới dự Lễ Vu Quy của hai con chúng tôi", nhà trai "tới dự Lễ Thành Hôn của hai con chúng tôi", báo hỷ "tới dự Lễ Thành Hôn của chúng tôi") và `envelopeLine(guest)` ("Kính gửi: {danh xưng} {tên}", không có người đi
-cùng). Không theme nào gán cứng câu chữ này. Chuỗi phong bì là prop `string` cho client component, không
+nhà gái "tới dự Lễ Vu Quy của hai con chúng tôi", nhà trai "tới dự Lễ Thành Hôn của hai con chúng tôi", báo hỷ "tới dự Lễ Thành Hôn của chúng tôi") `thanksLine(kind)` (nhà gái, nhà trai "Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi."; báo hỷ "Rất mong được đón bạn trong ngày vui của chúng tôi.") và `envelopeLine(guest)` ("Kính gửi: {danh xưng} {tên}", không có người đi
+cùng). Xưng "chúng tôi", không dùng "chúng mình". Không theme nào gán cứng câu chữ này. Chuỗi phong bì là prop `string` cho client component, không
 bao giờ truyền cả `guest`.
 
 **Khách có cấu trúc**: `{ honorific, name, companion? }`. Danh sách danh xưng: `HONORIFICS`
