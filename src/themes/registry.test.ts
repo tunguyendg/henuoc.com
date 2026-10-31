@@ -1,12 +1,30 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { getTracks } from "@/data/music";
 import { isAllowedImageUrl, isAllowedMapUrl, isAllowedMusicUrl } from "@/lib/url-allowlist";
 import { crc16Ccitt } from "@/lib/vietqr";
-import { demoContent, demoGuest, getDemoContent } from "./_demo/content";
+import { demoContent, demoGuests, getDemoContent } from "./_demo/content";
 import { getThemeEntry, themeRegistry, themeSlugs } from "./registry";
-import type { EventView, FamilySide, GuestContext, ThemeProps, WeddingContent } from "./types";
+import type {
+  EventView,
+  FamilySide,
+  GuestContext,
+  InvitationKind,
+  ThemeProps,
+  WeddingContent,
+} from "./types";
+
+// The envelope overlay renders only after hydration (useHydrated). Tests that check the envelope
+// text flip `hydration.on`; every other test sees the server render (no overlay).
+const hydration = vi.hoisted(() => ({ on: false }));
+vi.mock("./_shared/use-client-env", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./_shared/use-client-env")>()),
+  useHydrated: () => hydration.on,
+}));
+afterEach(() => {
+  hydration.on = false;
+});
 
 // "server-only" only means something inside the Next bundler → empty module in Vitest
 vi.mock("server-only", () => ({}));
@@ -15,20 +33,27 @@ vi.mock("./blush-rose/fonts", () => ({ fontVariables: "" }));
 
 const entries = Object.entries(themeRegistry);
 const sides: FamilySide[] = ["nha-gai", "nha-trai"];
+const kinds: InvitationKind[] = ["nha-gai", "nha-trai", "bao-hy"];
 
-async function renderBlush(side: FamilySide, contentPatch: Partial<WeddingContent> = {}) {
+async function renderBlush(
+  side: InvitationKind,
+  contentPatch: Partial<WeddingContent> = {},
+  guest?: GuestContext,
+) {
   const { default: Theme } = await themeRegistry["blush-rose"]!.load();
-  const content = { ...(await getDemoContent()), ...contentPatch };
-  return renderToStaticMarkup(createElement(Theme, { content, options: {}, mode: "demo", side }));
+  const content = { ...(await getDemoContent(side)), ...contentPatch };
+  return renderToStaticMarkup(
+    createElement(Theme, { content, options: {}, mode: "demo", side, guest }),
+  );
 }
 
 async function renderPlaceholder(
-  side: FamilySide,
+  side: InvitationKind,
   overrides: Partial<ThemeProps> = {},
   contentPatch: Partial<WeddingContent> = {},
 ) {
   const { default: Theme } = await themeRegistry["placeholder"]!.load();
-  const content = { ...(await getDemoContent()), ...contentPatch };
+  const content = { ...(await getDemoContent(side)), ...contentPatch };
   return renderToStaticMarkup(
     createElement(Theme, { content, options: {}, mode: "demo", side, ...overrides }),
   );
@@ -123,13 +148,17 @@ describe("placeholder theme: hành trình khách", () => {
 
   it("khách có token: hiện danh xưng, không lộ token", async () => {
     const guest: GuestContext = {
-      salutation: "Trân trọng kính mời Anh Minh & Gia đình",
+      honorific: "Anh",
+      name: "Minh",
+      companion: "& Gia đình",
       invitedEventIds: ["demo-vu-quy"],
       maxAttendees: 2,
       token: "tok_SECRET_123",
     };
+    hydration.on = true;
     const html = await render({ guest, mode: "live" });
-    expect(html).toContain("Anh Minh &amp; Gia đình");
+    expect(html).toContain("Kính gửi: Anh Minh");
+    expect(html).toContain("Trân trọng kính mời: Anh Minh &amp; Gia đình");
     expect(html).not.toContain("tok_SECRET_123");
     expect(html).not.toContain("SECRET");
   });
@@ -197,7 +226,7 @@ describe("blush-rose theme", () => {
   async function render(
     options: unknown = {},
     contentPatch: Partial<WeddingContent> = {},
-    side: FamilySide = "nha-gai",
+    side: InvitationKind = "nha-gai",
     guest?: GuestContext,
   ) {
     const entry = themeRegistry["blush-rose"];
@@ -245,7 +274,7 @@ describe("blush-rose theme", () => {
     expect(html).toContain("Út nữ");
     expect(html).toContain("(Tức ngày 17 tháng 9 năm Đinh Mùi)");
     expect(html).not.toContain("(Tức ngày 18 tháng 9 năm Đinh Mùi)");
-    expect(html).toContain("Trân trọng báo tin lễ vu quy của con chúng tôi");
+    expect(html).toContain("Trân trọng báo tin Lễ Vu Quy của hai con chúng tôi");
     expect(html).toContain("Đón khách");
     expect(html).toContain("Khai tiệc");
   });
@@ -272,37 +301,54 @@ describe("blush-rose theme", () => {
   describe("lời mời trên trang bìa", () => {
     const coverOf = (html: string) =>
       html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
-    const salutationHtml = demoGuest.salutation.replace(/&/g, "&amp;");
+    const esc = (text: string) => text.replace(/&/g, "&amp;");
 
-    it("không có khách: bìa không có lời mời, HTML không chứa inviteMessage", async () => {
+    it("không có khách: không có dòng mời, dòng tới dự, phong bì, inviteMessage", async () => {
       const html = await render({});
       expect(coverOf(html)).not.toContain(demoContent.inviteMessage);
       expect(html).not.toContain(demoContent.inviteMessage);
+      expect(html).not.toContain("Trân trọng kính mời:");
+      expect(html).not.toContain("tới dự Lễ Thành Hôn");
+      expect(html).not.toContain("Kính gửi:");
     });
 
-    it("có khách: lời chào đúng một lần ngay sau h1, rồi inviteMessage; không lộ token", async () => {
-      const html = await render({}, {}, "nha-gai", demoGuest);
-      const cover = coverOf(html);
-      const afterH1 = cover.slice(cover.indexOf("</h1>"));
-      expect(cover.split(salutationHtml)).toHaveLength(2);
-      expect(cover).not.toContain("Kính mời Trân trọng");
-      expect(afterH1.indexOf(salutationHtml)).toBeGreaterThan(-1);
-      expect(afterH1.indexOf(demoContent.inviteMessage)).toBeGreaterThan(
-        afterH1.indexOf(salutationHtml),
-      );
-      expect(html).not.toContain(demoGuest.token);
-    });
+    it.each(kinds)(
+      "có khách (%s): dòng mời rồi dòng tới dự ngay sau h1, rồi inviteMessage",
+      async (kind) => {
+        const guest = demoGuests[kind];
+        hydration.on = true;
+        const html = await renderBlush(kind, {}, guest);
+        const afterH1 = coverOf(html).slice(coverOf(html).indexOf("</h1>"));
+        const invite = esc(
+          `Trân trọng kính mời: ${[guest.honorific, guest.name, guest.companion].filter(Boolean).join(" ")}`,
+        );
+        const attend =
+          kind === "bao-hy"
+            ? "tới dự Lễ Thành Hôn của chúng tôi"
+            : "tới dự Lễ Thành Hôn của hai con chúng tôi";
+        const i = afterH1.indexOf(invite);
+        expect(i).toBeGreaterThan(-1);
+        expect(afterH1.indexOf(attend)).toBeGreaterThan(i);
+        expect(afterH1.indexOf(demoContent.inviteMessage)).toBeGreaterThan(afterH1.indexOf(attend));
+        // envelope line has no companion
+        expect(html).toContain(`Kính gửi: ${guest.honorific} ${guest.name}<`);
+        expect(html).not.toContain(
+          `Kính gửi: ${guest.honorific} ${guest.name} ${esc(guest.companion ?? "x")}`,
+        );
+        expect(html).not.toContain(guest.token);
+      },
+    );
 
-    it("có khách nhưng sections.invitation=false: bìa không có lời chào lẫn inviteMessage", async () => {
+    it("có khách nhưng sections.invitation=false: bìa không có dòng mời lẫn inviteMessage", async () => {
       const base = await getDemoContent();
-      const html = await render(
-        {},
-        { sections: { ...base.sections, invitation: false } },
+      const html = await renderBlush(
         "nha-gai",
-        demoGuest,
+        { sections: { ...base.sections, invitation: false } },
+        demoGuests["nha-gai"],
       );
       const cover = coverOf(html);
-      expect(cover).not.toContain(salutationHtml);
+      expect(cover).not.toContain("Trân trọng kính mời:");
+      expect(cover).not.toContain("tới dự Lễ Thành Hôn");
       expect(cover).not.toContain(demoContent.inviteMessage);
     });
   });
@@ -324,8 +370,8 @@ describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
         otherParents: "Ông Trần Quốc Bảo · Bà Phạm Thị Lan",
         rite: "Lễ Vu Quy",
         otherRite: "Lễ Tân Hôn",
-        announcement: "Trân trọng báo tin lễ vu quy của con chúng tôi",
-        otherAnnouncement: "lễ tân hôn",
+        announcement: "Trân trọng báo tin Lễ Vu Quy của hai con chúng tôi",
+        otherAnnouncement: "Lễ Tân Hôn",
         venue: "Ngọc Lan",
         otherVenue: "Hồng Ngà",
         otherHome: "Tư gia nhà trai",
@@ -337,8 +383,8 @@ describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
         otherParents: "Ông Nguyễn Văn Hùng · Bà Lê Thị Thu",
         rite: "Lễ Tân Hôn",
         otherRite: "Lễ Vu Quy",
-        announcement: "Trân trọng báo tin lễ tân hôn của con chúng tôi",
-        otherAnnouncement: "lễ vu quy",
+        announcement: "Trân trọng báo tin Lễ Tân Hôn của hai con chúng tôi",
+        otherAnnouncement: "Lễ Vu Quy",
         venue: "Hồng Ngà",
         otherVenue: "Ngọc Lan",
         otherHome: "Tư gia nhà gái",
@@ -392,6 +438,15 @@ describe.each(sides)("blush-rose theme, thiệp %s", (side) => {
 describe("placeholder theme theo bên", () => {
   const eventsOf = (html: string) => [...html.matchAll(/<h3[^>]*>([^<]*)<\/h3>/g)].map((m) => m[1]);
 
+  it("báo hỷ không in ông bà; thiệp theo bên vẫn in đủ hai họ", async () => {
+    const baoHy = await renderPlaceholder("bao-hy");
+    expect(baoHy).not.toContain("Ông Nguyễn Văn Hùng");
+    expect(baoHy).not.toContain("Ông Trần Quốc Bảo");
+    const nhaGai = await renderPlaceholder("nha-gai");
+    expect(nhaGai).toContain("Ông Nguyễn Văn Hùng");
+    expect(nhaGai).toContain("Ông Trần Quốc Bảo");
+  });
+
   it.each(sides)(
     "thiệp %s hiện đúng sự kiện của mình, đúng thứ tự, không lẫn bên kia",
     async (side) => {
@@ -430,7 +485,8 @@ describe("placeholder theme theo bên", () => {
 
   it("khách chỉ được mời sự kiện của bên kia thì sự kiện đó bị ẩn", async () => {
     const guest: GuestContext = {
-      salutation: "Anh Bình",
+      honorific: "Anh",
+      name: "Bình",
       invitedEventIds: ["demo-vu-quy", "demo-tan-hon"],
       maxAttendees: 2,
       token: "tok_X",
@@ -438,6 +494,45 @@ describe("placeholder theme theo bên", () => {
     const html = await renderPlaceholder("nha-gai", { guest });
     expect(eventsOf(html)).toEqual(["Lễ Vu Quy"]);
     expect(html).not.toContain("Lễ Tân Hôn");
+  });
+});
+
+describe("blush-rose theme, thiệp báo hỷ", () => {
+  const render = (patch: Partial<WeddingContent> = {}) => renderBlush("bao-hy", patch);
+
+  it("thẻ lễ: câu báo tin của chúng tôi, không có cột bố mẹ", async () => {
+    const html = await render();
+    expect(html).toContain("Trân trọng báo tin Lễ Thành Hôn của chúng tôi");
+    for (const name of ["Nguyễn Văn Hùng", "Lê Thị Thu", "Trần Quốc Bảo", "Phạm Thị Lan"]) {
+      expect(html).not.toContain(name);
+    }
+    expect(html).not.toContain("Nhà trai");
+    expect(html).not.toContain("Nhà gái");
+  });
+
+  it("không có sự kiện của bên nào khác", async () => {
+    const html = await render();
+    for (const text of ["Lễ Vu Quy", "Lễ Tân Hôn", "Ngọc Lan"]) expect(html).not.toContain(text);
+    expect(html).toContain("Lễ Thành Hôn");
+    expect(html).toContain("Hồng Ngà");
+  });
+
+  it("tên trong <h1> đặt chú rể trước", async () => {
+    const h1 = (await render()).match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1];
+    expect(h1).toBe("Hoàng Nam &amp; Minh Anh");
+  });
+});
+
+describe("placeholder theme: ba loại thiệp", () => {
+  it.each(kinds)("render được thiệp %s, có khách lẫn không", async (kind) => {
+    const plain = await renderPlaceholder(kind);
+    expect(plain).toContain("Minh Anh");
+    expect(plain).not.toContain("Trân trọng kính mời:");
+    hydration.on = true;
+    const html = await renderPlaceholder(kind, { guest: demoGuests[kind] });
+    expect(html).toContain("Trân trọng kính mời:");
+    expect(html).toContain("Kính gửi:");
+    expect(html).not.toContain(demoGuests[kind].token);
   });
 });
 
@@ -449,6 +544,15 @@ describe("demoContent", () => {
       ["tan-hon", "nha-trai"],
       ["tiec", "nha-trai"],
     ]);
+  });
+
+  it("báo hỷ: chỉ hai sự kiện chung, lịch trình gắn với tiệc chung", async () => {
+    const content = await getDemoContent("bao-hy");
+    expect(content.events.map((e) => [e.id, e.kind, e.side])).toEqual([
+      ["demo-thanh-hon", "thanh-hon", "chung"],
+      ["demo-tiec-chung", "tiec", "chung"],
+    ]);
+    expect(content.timeline?.every((i) => i.eventId === "demo-tiec-chung")).toBe(true);
   });
 
   it("có ít nhất 3 ảnh album, mỗi ảnh có alt không rỗng và kích thước dương", () => {

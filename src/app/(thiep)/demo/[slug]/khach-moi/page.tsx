@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DemoRender, demoMetadata } from "@/components/themes/demo-render";
-import { demoGuest } from "@/themes/_demo/content";
+import { demoGuests } from "@/themes/_demo/content";
 import { themeSlugs } from "@/themes/registry";
 
 export function generateStaticParams() {
@@ -14,5 +14,5 @@ export function generateMetadata({
 }
 
 export default function Page({ params }: PageProps<"/demo/[slug]/khach-moi">) {
-  return <DemoRender slugPromise={params} side="nha-gai" guest={demoGuest} />;
+  return <DemoRender slugPromise={params} kind="nha-gai" guest={demoGuests["nha-gai"]} />;
 }

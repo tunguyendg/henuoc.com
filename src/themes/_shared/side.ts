@@ -2,6 +2,7 @@ import type {
   EventView,
   FamilySide,
   GuestContext,
+  InvitationKind,
   Person,
   TimelineItem,
   WeddingContent,
@@ -18,15 +19,9 @@ export const sideLabel: Record<FamilySide, string> = {
 export const otherSide = (side: FamilySide): FamilySide =>
   side === "nha-gai" ? "nha-trai" : "nha-gai";
 
-export const sideWording: Record<FamilySide, { ceremonyTitle: string; announcement: string }> = {
-  "nha-gai": {
-    ceremonyTitle: "Lễ Vu Quy",
-    announcement: "Trân trọng báo tin lễ vu quy của con chúng tôi",
-  },
-  "nha-trai": {
-    ceremonyTitle: "Lễ Tân Hôn",
-    announcement: "Trân trọng báo tin lễ tân hôn của con chúng tôi",
-  },
+export const sideWording: Record<FamilySide, { ceremonyTitle: string }> = {
+  "nha-gai": { ceremonyTitle: "Lễ Vu Quy" },
+  "nha-trai": { ceremonyTitle: "Lễ Tân Hôn" },
 };
 
 export interface Party {
@@ -39,7 +34,7 @@ export interface Party {
 }
 
 /** Bride and groom with their families, host side first (left column, first name). */
-export function partiesInSideOrder(content: WeddingContent, side: FamilySide): [Party, Party] {
+export function partiesInSideOrder(content: WeddingContent, kind: InvitationKind): [Party, Party] {
   const { couple, families } = content;
   const bride: Party = {
     role: "bride",
@@ -57,18 +52,19 @@ export function partiesInSideOrder(content: WeddingContent, side: FamilySide): [
     parents: families.groomParents ?? couple.groom.parents,
     addr: families.groomAddr,
   };
-  return side === "nha-gai" ? [bride, groom] : [groom, bride];
+  return kind === "nha-gai" ? [bride, groom] : [groom, bride];
 }
 
-/** Events of this side plus the shared ("chung") ones, in the original order. */
-export function eventsForSide(events: readonly EventView[], side: FamilySide): EventView[] {
+/** Events of this side plus the shared ("chung") ones; "bao-hy" shows ONLY the shared ones. Original order. */
+export function eventsForSide(events: readonly EventView[], side: InvitationKind): EventView[] {
+  if (side === "bao-hy") return events.filter((event) => event.side === "chung");
   return events.filter((event) => event.side === side || event.side === "chung");
 }
 
 /** What this guest may see: the side's events, narrowed to the guest's invitation when there is one. */
 export function visibleEvents(
   events: readonly EventView[],
-  side: FamilySide,
+  side: InvitationKind,
   guest?: Pick<GuestContext, "invitedEventIds">,
 ): EventView[] {
   const own = eventsForSide(events, side);
@@ -77,9 +73,9 @@ export function visibleEvents(
 
 const MAIN_RITE_KINDS: readonly EventView["kind"][] = ["vu-quy", "thanh-hon", "tan-hon"];
 
-/** The side's own main rite is always named by the side (Vu Quy / Tân Hôn); other events keep their title. */
-export function eventTitle(event: EventView, side: FamilySide): string {
-  return event.side === side && MAIN_RITE_KINDS.includes(event.kind)
+/** The side's own main rite is always named by the side (Vu Quy / Tân Hôn); bao-hy and other events keep their title. */
+export function eventTitle(event: EventView, side: InvitationKind): string {
+  return side !== "bao-hy" && event.side === side && MAIN_RITE_KINDS.includes(event.kind)
     ? sideWording[side].ceremonyTitle
     : event.title;
 }

@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "../../_shared/Reveal";
-import { eventTitle, partiesInSideOrder, sideLabel, sideWording } from "../../_shared/side";
-import type { EventView, FamilySide, WeddingContent } from "../../types";
+import { announceLine } from "../../_shared/invitation-wording";
+import { eventTitle, partiesInSideOrder, sideLabel } from "../../_shared/side";
+import type { EventView, InvitationKind, WeddingContent } from "../../types";
 import { eventDateParts, lunarLine } from "../event-date";
 import { FlowerSprig, SectionHeading, WaxSeal } from "../ornaments";
 import { s } from "../styles";
@@ -34,7 +35,7 @@ function ParentsColumn({
   );
 }
 
-function CeremonyEvent({ event, side }: { event: EventView; side: FamilySide }): ReactNode {
+function CeremonyEvent({ event, side }: { event: EventView; side: InvitationKind }): ReactNode {
   const parts = eventDateParts(event.startsAt);
   const lunar = lunarLine(event.startsAt);
   return (
@@ -67,14 +68,14 @@ export function Ceremony({
   side,
 }: {
   content: WeddingContent;
-  side: FamilySide;
+  side: InvitationKind;
   events: EventView[];
   initials: readonly [string, string];
 }) {
   const parties = partiesInSideOrder(content, side);
   const [first, second] = [parties[0].person, parties[1].person];
-  // Both families always shown, host family on the left.
-  const columns = parties.map((party) => ({
+  // Both families always shown, host family on the left. Báo hỷ: the couple invite in their own name.
+  const columns = (side === "bao-hy" ? [] : parties).map((party) => ({
     key: party.role,
     label: sideLabel[party.side],
     parents: party.parents,
@@ -102,7 +103,7 @@ export function Ceremony({
                   ))}
                 </div>
               )}
-              <p className="mx-auto max-w-[18rem] text-pretty">{sideWording[side].announcement}</p>
+              <p className="mx-auto max-w-[18rem] text-pretty">{announceLine(side)}</p>
               <div>
                 <p className={cn(s.script, "text-4xl")}>{first.fullName}</p>
                 {first.birthOrder && <p className="text-sm text-muted">{first.birthOrder}</p>}

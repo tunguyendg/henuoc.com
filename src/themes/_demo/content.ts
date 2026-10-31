@@ -5,7 +5,15 @@ import { findBankByBin } from "@/data/banks";
 import { qrSvgDataUri } from "@/lib/qr";
 import { buildVietQrPayload } from "@/lib/vietqr";
 import demoAlbum from "@/content/demo-album/images.json";
-import type { GiftView, GuestContext, ImageView, TimelineItem, WeddingContent } from "../types";
+import type {
+  EventView,
+  GiftView,
+  GuestContext,
+  ImageView,
+  InvitationKind,
+  TimelineItem,
+  WeddingContent,
+} from "../types";
 
 // Shared sample data for /demo/[slug] (nhà gái) and /demo/[slug]/nha-trai, and theme QA.
 // Each side has its own rite + reception; the theme shows only the side's events (_shared/side.ts).
@@ -201,24 +209,86 @@ export const demoContent: WeddingContent = {
   showWatermark: true,
 };
 
+// Báo hỷ: the couple invite in their own name, so only "chung" events (nothing shared with the lists above).
+const BAO_HY_EVENTS: EventView[] = [
+  {
+    id: "demo-thanh-hon",
+    kind: "thanh-hon",
+    title: "Lễ Thành Hôn",
+    startsAt: "2027-10-17T03:00:00.000Z",
+    dateLabel: "Chủ Nhật, 17.10.2027",
+    timeLabel: "10:00",
+    venue: "Tư gia nhà trai",
+    address: GROOM_ADDR,
+    mapUrl: mapSearch(GROOM_ADDR),
+    side: "chung",
+  },
+  {
+    id: "demo-tiec-chung",
+    kind: "tiec",
+    title: "Tiệc Cưới",
+    startsAt: "2027-10-17T11:00:00.000Z",
+    dateLabel: "Chủ Nhật, 17.10.2027",
+    timeLabel: "18:00",
+    arrivalTimeLabel: "17:30",
+    banquetTimeLabel: "18:30",
+    venue: "Trung tâm tiệc cưới Hồng Ngà",
+    address: GROOM_RECEPTION_ADDR,
+    mapUrl: mapSearch(`Trung tâm tiệc cưới Hồng Ngà, ${GROOM_RECEPTION_ADDR}`),
+    side: "chung",
+  },
+];
+
+const BAO_HY_TIMELINE: TimelineItem[] = RECEPTION_STEPS.map((step, index) => ({
+  ...step,
+  id: `demo-tiec-chung-tl-${index + 1}`,
+  eventId: "demo-tiec-chung",
+}));
+
 /**
  * Demo content with `qrSvg` filled in from each gift's `qrPayload` (server-side, like production).
  * `cache` dedupes within one render pass; the QR output is deterministic so it is also safe to reuse.
+ * Nhà gái / nhà trai share one list; "bao-hy" swaps in its own two shared events.
  */
-export const getDemoContent = cache(async (): Promise<WeddingContent> => {
-  const gifts = await Promise.all(
-    demoContent.gifts.map(async (gift) => ({
-      ...gift,
-      qrSvg: await qrSvgDataUri(gift.qrPayload),
-    })),
-  );
-  return { ...demoContent, gifts };
-});
+export const getDemoContent = cache(
+  async (kind: InvitationKind = "nha-gai"): Promise<WeddingContent> => {
+    const gifts = await Promise.all(
+      demoContent.gifts.map(async (gift) => ({
+        ...gift,
+        qrSvg: await qrSvgDataUri(gift.qrPayload),
+      })),
+    );
+    if (kind === "bao-hy") {
+      return { ...demoContent, gifts, events: BAO_HY_EVENTS, timeline: BAO_HY_TIMELINE };
+    }
+    return { ...demoContent, gifts };
+  },
+);
 
-// A made-up guest for /demo/[slug]/khach-moi: fictional name, and the token is NOT a real secret.
-export const demoGuest: GuestContext = {
-  salutation: "Trân trọng kính mời Cô Chú Năm Hoà & Gia đình",
-  invitedEventIds: ["demo-vu-quy", "demo-tiec-nha-gai"],
-  maxAttendees: 2,
-  token: "demo-khong-phai-token-that",
+// Made-up guests for the /khach-moi demos: fictional names, and the token is NOT a real secret.
+const DEMO_TOKEN = "demo-khong-phai-token-that";
+export const demoGuests: Record<InvitationKind, GuestContext> = {
+  "nha-gai": {
+    honorific: "Cô Chú",
+    name: "Năm Hoà",
+    companion: "& Gia đình",
+    invitedEventIds: ["demo-vu-quy", "demo-tiec-nha-gai"],
+    maxAttendees: 2,
+    token: DEMO_TOKEN,
+  },
+  "nha-trai": {
+    honorific: "Anh",
+    name: "Minh Quân",
+    companion: "& Người thương",
+    invitedEventIds: ["demo-tan-hon", "demo-tiec-nha-trai"],
+    maxAttendees: 2,
+    token: DEMO_TOKEN,
+  },
+  "bao-hy": {
+    honorific: "Bạn",
+    name: "Thu Hà",
+    invitedEventIds: ["demo-thanh-hon", "demo-tiec-chung"],
+    maxAttendees: 2,
+    token: DEMO_TOKEN,
+  },
 };

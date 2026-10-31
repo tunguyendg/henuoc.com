@@ -55,8 +55,13 @@ export interface WeddingContent {
   showWatermark: boolean;
 }
 
+export type InvitationKind = FamilySide | "bao-hy";   // bao-hy = side "chung": cặp đôi tự mời
+export type GuestCompanion = "& Gia đình" | "& Người thương";
+
 export interface GuestContext {
-  salutation: string;           // "Trân trọng kính mời Anh Minh & Gia đình"
+  honorific: string;            // "Anh", "Cô Chú"… (từ danh sách hoặc gõ tay; có thể "")
+  name: string;                 // "Năm Hoà"
+  companion?: GuestCompanion;   // đi cùng; câu chữ ghép ở _shared/invitation-wording.ts
   invitedEventIds: string[];
   maxAttendees: number;
   rsvp?: { status: "ATTENDING" | "DECLINED"; attendeeCount: number; eventIds: string[]; message?: string };
@@ -67,7 +72,7 @@ export interface ThemeProps<TOptions = unknown> {
   content: WeddingContent;
   guest?: GuestContext;         // undefined ở /thiepcuoi/[slug] và demo
   options: TOptions;
-  side: FamilySide;             // "nha-trai" | "nha-gai": thiệp của bên nào (§2.1)
+  side: InvitationKind;         // "nha-trai" | "nha-gai" | "bao-hy": loại thiệp (§2.1)
   mode: "live" | "preview" | "demo";   // preview = trong builder (không phát nhạc, không submit RSVP)
 }
 
@@ -80,20 +85,34 @@ export interface ThemeProps<TOptions = unknown> {
 Một đám cưới có 2 thiệp: **nhà gái** và **nhà trai**. Theme nhận `side` và lấy thứ tự, câu chữ, sự kiện từ
 `src/themes/_shared/side.ts`. Không theme nào được gán cứng "chú rể trước", tên lễ hay câu báo tin.
 
-| | `side = "nha-gai"` | `side = "nha-trai"` |
-|---|---|---|
-| Tên, ông bà (cột trái), chữ cái đầu | cô dâu + nhà gái trước | chú rể + nhà trai trước |
-| Lễ chính (`eventTitle`) | "Lễ Vu Quy" | "Lễ Tân Hôn" |
-| Câu báo tin (`sideWording`) | "Trân trọng báo tin lễ vu quy của con chúng tôi" | "…lễ tân hôn…" |
-| Sự kiện (`visibleEvents`) | của nhà gái + `chung` | của nhà trai + `chung` |
+| | `side = "nha-gai"` | `side = "nha-trai"` | `side = "bao-hy"` |
+|---|---|---|---|
+| Tên, ông bà (cột trái), chữ cái đầu | cô dâu + nhà gái trước | chú rể + nhà trai trước | chú rể trước |
+| Lễ chính (`eventTitle`) | "Lễ Vu Quy" | "Lễ Tân Hôn" | tên gốc của sự kiện ("Lễ Thành Hôn") |
+| Câu báo tin (`announceLine`) | "Trân trọng báo tin Lễ Vu Quy của hai con chúng tôi" | "…Lễ Tân Hôn của hai con chúng tôi" | "Trân trọng báo tin Lễ Thành Hôn của chúng tôi" |
+| Sự kiện (`visibleEvents`) | của nhà gái + `chung` | của nhà trai + `chung` | **chỉ** `chung` |
+| Cột ông bà | hiện cả hai họ | hiện cả hai họ | **không có** (cặp đôi tự mời) |
+
+**Câu chữ lời mời** nằm ở `src/themes/_shared/invitation-wording.ts`; mọi theme dùng `announceLine(kind)`,
+`inviteLine(guest, kind)` (2 dòng: `invite` "Trân trọng kính mời: {danh xưng} {tên} {đi cùng}" và `attend`
+"tới dự Lễ Thành Hôn của …") và `envelopeLine(guest)` ("Kính gửi: {danh xưng} {tên}", không có người đi
+cùng). Không theme nào gán cứng câu chữ này. Chuỗi phong bì là prop `string` cho client component, không
+bao giờ truyền cả `guest`.
+
+**Khách có cấu trúc**: `{ honorific, name, companion? }`. Danh sách danh xưng: `HONORIFICS`
+(`_shared/guest-line.ts`). Dán/gõ một dòng thì `parseGuestLine(line)` tách ra (bỏ emoji/số điện thoại/số thứ
+tự, nhận "a/c", "gđ", "& người yêu"…, chuẩn hoá hoa-thường). Nó chỉ đoán: "Anh Thư" ra Anh + Thư, chủ thiệp
+sửa lại trên UI.
 
 - Ông bà **hai bên luôn hiện**, chỉ đổi thứ tự (`partiesInSideOrder`).
 - Mọi phần dùng sự kiện (thẻ lễ, thẻ tiệc, lịch tim, "Thêm vào lịch", bản đồ, lịch trình, RSVP) chỉ dùng
   `visibleEvents(content.events, side, guest)`. Có `guest` thì lọc tiếp theo `invitedEventIds`.
 - Ngày trên bìa/phong bì, lịch tim lấy từ sự kiện chính **của bên đó**, không lấy `content.weddingDate`.
-- Demo: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` = nhà trai, cả 2 là trang tĩnh (không query
-  string). Link nhỏ "Xem bản nhà trai / nhà gái" do trang demo vẽ, không nằm trong theme.
-  `/demo/[slug]/khach-moi` = biến thể có khách mời giả (nhà gái, `demoGuest`), vẫn tĩnh và `mode="demo"`.
+- Demo (đều tĩnh ○, không query string): `/demo/[slug]` (nhà gái), `/demo/[slug]/nha-trai`,
+  `/demo/[slug]/bao-hy`; biến thể có khách mời giả (`demoGuests[kind]`, `mode="demo"`):
+  `/demo/[slug]/khach-moi`, `/demo/[slug]/nha-trai/khach-moi`, `/demo/[slug]/bao-hy/khach-moi`.
+  Nút chuyển sang hai loại còn lại do trang demo vẽ (giữ nguyên biến thể có/không khách), không nằm trong theme.
+  Báo hỷ có sự kiện `chung` riêng (`getDemoContent("bao-hy")`).
 
 `src/themes/registry.ts`: map `slug → { manifest, load: () => import("./hong-pastel") }` — **dynamic import**, mỗi thiệp chỉ tải JS của đúng theme đó.
 
@@ -202,7 +221,7 @@ Ví dụ: không dùng chữ trắng trên ảnh sáng không overlay; không ho
 - [ ] 1 sự kiện và 4 sự kiện đều đẹp; thiếu ảnh album vẫn đẹp; không có QR vẫn đẹp
 - [ ] Danh xưng guest dài "Trân trọng kính mời Cô Chú Năm Hoà & Gia đình" hiển thị tốt
 - [ ] Âm lịch hiển thị đúng
-- [ ] Cả 2 bản `/demo/<slug>` (nhà gái) và `/demo/<slug>/nha-trai` đúng §2.1: thứ tự tên/ông bà, tên lễ, chỉ sự kiện của bên đó
+- [ ] Cả 3 loại `/demo/<slug>` (nhà gái), `/nha-trai`, `/bao-hy` và 3 biến thể `/khach-moi` đúng §2.1: thứ tự tên/ông bà, tên lễ, câu báo tin, chỉ sự kiện của loại đó, báo hỷ không có cột ông bà
 
 **Thiết bị**
 - [ ] iPhone SE (375), iPhone 15 (393), Android 412, desktop 1280 (thiệp căn giữa max-width ~480px)

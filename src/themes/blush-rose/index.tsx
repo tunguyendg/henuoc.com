@@ -2,10 +2,10 @@ import Image from "next/image";
 import { getTrack, getTracks } from "@/data/music";
 import { cn } from "@/lib/utils";
 import { Gift } from "../_shared/Gift";
+import { envelopeLine, inviteLine } from "../_shared/invitation-wording";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
 import { RsvpForm } from "../_shared/RsvpForm";
-import { inviteLine } from "../_shared/salutation";
 import { eventTitle, partiesInSideOrder, timelineForEvents, visibleEvents } from "../_shared/side";
 import { Watermark } from "../_shared/Watermark";
 import type { EventView, Person, ThemeProps } from "../types";
@@ -27,7 +27,8 @@ import "./theme.css";
 // Blush Rose: ivory paper, wine red, gold hairlines, one Redouté painting.
 // Guest journey (docs/themes/blush-rose.md §6): envelope cover → ceremony → album →
 // reception + heart calendar → timeline → venue → dress code → RSVP → gift → thanks.
-// With a guest (and sections.invitation) the cover also prints the salutation + inviteMessage as plain text.
+// With a guest (and sections.invitation) the cover also prints the two invite lines (inviteLine) + inviteMessage as plain text;
+// the closed envelope shows envelopeLine only (a string, never the whole guest).
 // Only Experience (envelope + music) and Album are client leaves of the theme.
 
 const DEMO_MAX_ATTENDEES = 4;
@@ -89,6 +90,7 @@ export default function Theme({
   const showRsvp = sections.rsvp && events.length > 0 && (guest !== undefined || mode === "demo");
   const showReception = receptions.length > 0 || showCalendar;
   const timeline = sections.timeline ? timelineForEvents(content.timeline ?? [], events) : [];
+  const invite = guest ? inviteLine(guest, side) : undefined;
   const dressCode = sections.dressCode ? options.dressCode : undefined;
 
   return (
@@ -103,7 +105,7 @@ export default function Theme({
         names={names}
         initials={initials}
         dateLabel={dateLabel}
-        salutation={guest?.salutation}
+        salutation={guest ? envelopeLine(guest) : undefined}
         photo={content.cover}
       />
 
@@ -131,11 +133,12 @@ export default function Theme({
               Thiệp cưới
             </p>
             <h1 className={cn(s.script, "max-w-full text-5xl")}>{names}</h1>
-            {guest && sections.invitation && (
+            {invite && sections.invitation && (
               <>
                 <p className={cn(s.title, "max-w-full font-semibold break-words")}>
-                  {inviteLine(guest.salutation)}
+                  {invite.invite}
                 </p>
+                <p className="max-w-full break-words">{invite.attend}</p>
                 <p className="max-w-[24rem] text-sm text-pretty">{content.inviteMessage}</p>
               </>
             )}

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getTrack, getTracks } from "@/data/music";
 import { AddToCalendar } from "../_shared/AddToCalendar";
 import { Gift } from "../_shared/Gift";
+import { envelopeLine, inviteLine } from "../_shared/invitation-wording";
 import { MapButton } from "../_shared/MapButton";
 import { MusicCredit } from "../_shared/MusicCredit";
 import { Reveal } from "../_shared/Reveal";
@@ -51,6 +52,7 @@ export default function Theme({
 
   // Events of this side (plus shared ones), narrowed to the guest's invitation when there is one.
   const events = visibleEvents(content.events, side, guest);
+  const invite = guest ? inviteLine(guest, side) : undefined;
   // Dates come from this side's main event (§2.1), not the wedding-wide weddingDate.
   const mainEvent = events.find((e) => e.startsAt === content.weddingDate) ?? events.at(-1);
   const mainDate = mainEvent?.startsAt ?? content.weddingDate;
@@ -66,7 +68,7 @@ export default function Theme({
           <p className="text-sm text-muted">Thiệp cưới</p>
           <p className="font-serif text-4xl leading-tight break-words">{names}</p>
           {dateLabel && <p className="text-sm text-muted">{dateLabel}</p>}
-          {guest && <p className="mt-2 font-semibold break-words">{guest.salutation}</p>}
+          {guest && <p className="mt-2 font-semibold break-words">{envelopeLine(guest)}</p>}
         </div>
       </Experience>
       <main className="mx-auto flex w-full max-w-[480px] flex-col gap-12 px-5 py-10">
@@ -95,7 +97,12 @@ export default function Theme({
         {sections.invitation && (
           <section className="flex flex-col gap-3 text-center">
             <SectionTitle>Lời mời</SectionTitle>
-            {guest && <p className="text-lg font-semibold break-words">{guest.salutation}</p>}
+            {invite && (
+              <>
+                <p className="text-lg font-semibold break-words">{invite.invite}</p>
+                <p className="break-words">{invite.attend}</p>
+              </>
+            )}
             <p className="text-muted">{content.inviteMessage}</p>
           </section>
         )}
@@ -106,7 +113,10 @@ export default function Theme({
               <div key={role} className="flex flex-col gap-1">
                 <p className="text-xs text-muted">{label}</p>
                 <p className="text-lg font-semibold break-words">{person.fullName}</p>
-                {person.parents && <p className="text-sm text-muted">{person.parents}</p>}
+                {/* Báo hỷ: the couple invite in their own name, no parents (§2.1). */}
+                {side !== "bao-hy" && person.parents && (
+                  <p className="text-sm text-muted">{person.parents}</p>
+                )}
               </div>
             ))}
           </section>

@@ -84,6 +84,25 @@ describe("eventsForSide", () => {
   });
 });
 
+describe("bao-hy (thiệp báo hỷ)", () => {
+  it("chỉ giữ sự kiện chung", () => {
+    expect(eventsForSide(events, "bao-hy").map((e) => e.id)).toEqual(["ch"]);
+    expect(
+      visibleEvents(events, "bao-hy", { invitedEventIds: ["ch", "vq"] }).map((e) => e.id),
+    ).toEqual(["ch"]);
+  });
+
+  it("chú rể đứng trước", () => {
+    expect(partiesInSideOrder(content, "bao-hy").map((p) => p.label)).toEqual(["Chú rể", "Cô dâu"]);
+  });
+
+  it("tên lễ giữ nguyên tên gốc", () => {
+    const e = ev("x", "thanh-hon", "chung", "Lễ Thành Hôn");
+    expect(eventTitle(e, "bao-hy")).toBe("Lễ Thành Hôn");
+    expect(eventTitle(events[0]!, "bao-hy")).toBe("Vu quy gốc");
+  });
+});
+
 describe("visibleEvents", () => {
   it("không có khách thì thấy mọi sự kiện của bên mình", () => {
     expect(visibleEvents(events, "nha-trai").map((e) => e.id)).toEqual(["ch", "th", "tt"]);

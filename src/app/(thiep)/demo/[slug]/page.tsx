@@ -11,5 +11,5 @@ export function generateMetadata({ params }: PageProps<"/demo/[slug]">): Promise
 }
 
 export default function Page({ params }: PageProps<"/demo/[slug]">) {
-  return <DemoRender slugPromise={params} side="nha-gai" />;
+  return <DemoRender slugPromise={params} kind="nha-gai" />;
 }

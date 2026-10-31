@@ -32,6 +32,10 @@ export type SectionKey =
 export type FamilySide = "nha-trai" | "nha-gai";
 /** Mirrors the DB `Side` enum (NHA_TRAI | NHA_GAI | CHUNG). "chung" events appear on both invitations. */
 export type EventSide = FamilySide | "chung";
+/** Which invitation is rendered: a family's, or "bao-hy" = the couple inviting in their own name (side "chung"). */
+export type InvitationKind = FamilySide | "bao-hy";
+/** Optional "+1" the host adds after the guest's name; fixed wording so every theme prints the same. */
+export type GuestCompanion = "& Gia đình" | "& Người thương";
 
 export interface ImageView {
   // Zod at the input boundary must force https + an allowlisted host (own CDN/R2 or /public path).
@@ -113,7 +117,7 @@ export interface ThemeManifest<TOptions = unknown> {
   assets: { file: string; source: string; license: string }[];
 }
 
-// Free text (inviteMessage, names, salutation…) is rendered as plain text only:
+// Free text (inviteMessage, names, honorific…) is rendered as plain text only:
 // dangerouslySetInnerHTML is forbidden anywhere under src/themes/**.
 export interface WeddingContent {
   // Display order is never stored here: it follows `ThemeProps.side` (src/themes/_shared/side.ts).
@@ -138,7 +142,10 @@ export interface WeddingContent {
 }
 
 export interface GuestContext {
-  salutation: string;
+  /** "Anh", "Cô Chú"… from the list or free text; may be "". Wording comes from _shared/invitation-wording.ts. */
+  honorific: string;
+  name: string;
+  companion?: GuestCompanion;
   invitedEventIds: string[];
   maxAttendees: number;
   rsvp?: {
@@ -158,7 +165,7 @@ export interface ThemeProps<TOptions = unknown> {
   guest?: GuestContext; // undefined on /thiepcuoi/[slug] and demo
   options: TOptions;
   /** Whose invitation: decides name/family order, ceremony wording and which events are shown. */
-  side: FamilySide;
+  side: InvitationKind;
   mode: "live" | "preview" | "demo"; // preview = builder: no music, no RSVP submit
 }
 
