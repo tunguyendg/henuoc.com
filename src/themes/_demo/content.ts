@@ -71,37 +71,13 @@ const GROOM_ADDR = "Phường Gia Định, TP. Hồ Chí Minh";
 const BRIDE_RECEPTION_ADDR = "Đường Phan Xích Long, Phường Cầu Kiệu, TP. Hồ Chí Minh";
 const GROOM_RECEPTION_ADDR = "Đường Nguyễn Văn Trỗi, Phường Phú Nhuận, TP. Hồ Chí Minh";
 
+// "Khai tiệc" matches banquetTimeLabel on the reception events.
 const RECEPTION_STEPS: Omit<TimelineItem, "id" | "eventId">[] = [
-  {
-    timeLabel: "17:30",
-    title: "Đón khách & chụp ảnh",
-    description: "Chúng tôi đón bạn ở sảnh, chụp một tấm ảnh kỷ niệm trước khi vào tiệc.",
-    icon: "camera",
-  },
-  {
-    timeLabel: "18:00",
-    title: "Lễ cưới trên sân khấu",
-    description: "Hai đứa trao nhẫn và đọc lời hứa trước sự chứng kiến của hai họ.",
-    icon: "rings",
-  },
-  {
-    timeLabel: "18:30",
-    title: "Khai tiệc",
-    description: "Cả nhà nâng ly chúc mừng và bắt đầu bữa tiệc.",
-    icon: "glasses",
-  },
-  {
-    timeLabel: "19:30",
-    title: "Cắt bánh cưới",
-    description: "Khoảnh khắc ngọt ngào của cô dâu chú rể, mời bạn cùng chụp ảnh.",
-    icon: "cake",
-  },
-  {
-    timeLabel: "20:30",
-    title: "Giao lưu & tiễn khách",
-    description: "Chút nhạc, vài câu chuyện và lời cảm ơn trước khi chia tay.",
-    icon: "music",
-  },
+  { timeLabel: "17:30", title: "Đón khách", icon: "camera" },
+  { timeLabel: "18:00", title: "Làm lễ", icon: "music" },
+  { timeLabel: "18:15", title: "Trao nhẫn cưới", icon: "rings" },
+  { timeLabel: "18:30", title: "Khai tiệc", icon: "glasses" },
+  { timeLabel: "19:30", title: "Cắt bánh & nâng ly", icon: "cake" },
 ];
 
 export const demoContent: WeddingContent = {
@@ -183,8 +159,6 @@ export const demoContent: WeddingContent = {
   timeline: ["demo-tiec-nha-gai", "demo-tiec-nha-trai"].flatMap((eventId) =>
     RECEPTION_STEPS.map((step, index) => ({ ...step, id: `${eventId}-tl-${index + 1}`, eventId })),
   ),
-  inviteMessage:
-    "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày trọng đại. Sự hiện diện của bạn là niềm vui lớn nhất với chúng tôi.",
   cover: album.find((image) => image.src.endsWith("/hero.jpg")) ?? album[0],
   album,
   gifts: [
@@ -239,6 +213,10 @@ const BAO_HY_EVENTS: EventView[] = [
   },
 ];
 
+// Only báo hỷ has a free-form message: on nhà gái / nhà trai the formal invite lines are enough.
+const BAO_HY_INVITE_MESSAGE =
+  "Chúng tôi rất mong bạn đến chung vui trong ngày trọng đại. Sự hiện diện của bạn là niềm vui lớn nhất với chúng tôi.";
+
 const BAO_HY_TIMELINE: TimelineItem[] = RECEPTION_STEPS.map((step, index) => ({
   ...step,
   id: `demo-tiec-chung-tl-${index + 1}`,
@@ -259,7 +237,13 @@ export const getDemoContent = cache(
       })),
     );
     if (kind === "bao-hy") {
-      return { ...demoContent, gifts, events: BAO_HY_EVENTS, timeline: BAO_HY_TIMELINE };
+      return {
+        ...demoContent,
+        gifts,
+        events: BAO_HY_EVENTS,
+        timeline: BAO_HY_TIMELINE,
+        inviteMessage: BAO_HY_INVITE_MESSAGE,
+      };
     }
     return { ...demoContent, gifts };
   },

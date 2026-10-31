@@ -45,7 +45,7 @@ export interface WeddingContent {
   couple: { bride: Person; groom: Person };   // thứ tự hiển thị theo ThemeProps.side, không lưu ở đây
   families: { brideParents?: string; groomParents?: string; brideAddr?: string; groomAddr?: string };
   events: EventView[];          // đã kèm lunarLabel, dateLabel, timeLabel, icsUrl, mapUrl
-  inviteMessage: string;
+  inviteMessage?: string;       // tuỳ chọn; không có thì theme ẩn hẳn đoạn này
   cover?: ImageView;
   album: ImageView[];
   gifts: GiftView[];            // đã kèm qrSvg

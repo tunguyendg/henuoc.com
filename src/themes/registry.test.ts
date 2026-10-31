@@ -131,8 +131,13 @@ describe("placeholder theme: hành trình khách", () => {
     );
   }
 
+  it("không có khách lẫn inviteMessage: ẩn hẳn mục Lời mời", async () => {
+    expect(await render()).not.toContain(">Lời mời<");
+    expect(await render({}, { inviteMessage: "Lời nhắn thử" })).toContain("Lời nhắn thử");
+  });
+
   it("các phần xuất hiện đúng thứ tự §10", async () => {
-    const html = await render();
+    const html = await render({}, { inviteMessage: "Lời nhắn thử" });
     const marks = [
       ">Lời mời<",
       ">Sự kiện<",
@@ -296,13 +301,20 @@ describe("blush-rose theme", () => {
     expect(noDress).not.toContain('data-section="dress-code"');
     const noTimeline = await render({}, { sections: { ...base.sections, timeline: false } });
     expect(noTimeline).not.toContain('data-section="timeline"');
-    expect(await render({})).toContain("Giao lưu &amp; tiễn khách");
+    expect(await render({})).toContain("Cắt bánh &amp; nâng ly");
   });
 
   describe("lời mời trên trang bìa", () => {
     const coverOf = (html: string) =>
       html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
     const esc = (text: string) => text.replace(/&/g, "&amp;");
+
+    it("phần cảm ơn: hoa nằm trước Reveal, không có overflow-hidden bọc hoa", async () => {
+      const html = await renderBlush("nha-gai");
+      const thanks = html.slice(html.indexOf('data-section="thanks"'));
+      expect(thanks.slice(0, thanks.indexOf("Cảm ơn"))).toContain("rosa-carolina-corymbosa");
+      expect(thanks.slice(0, thanks.indexOf("Cảm ơn"))).not.toContain("overflow-hidden");
+    });
 
     it.each(kinds)("%s: câu cảm ơn theo loại thiệp, xưng 'chúng tôi' toàn thiệp", async (kind) => {
       const html = await renderBlush(kind, {}, demoGuests[kind]);
@@ -314,9 +326,10 @@ describe("blush-rose theme", () => {
     });
 
     it("không có khách: không có dòng mời, dòng tới dự, phong bì, inviteMessage", async () => {
-      const html = await render({});
-      expect(coverOf(html)).not.toContain(demoContent.inviteMessage);
-      expect(html).not.toContain(demoContent.inviteMessage);
+      // Báo hỷ is the demo that has a message: it must stay hidden without a guest.
+      const message = (await getDemoContent("bao-hy")).inviteMessage!;
+      const html = await renderBlush("bao-hy");
+      expect(html).not.toContain(message);
       expect(html).not.toContain("Trân trọng kính mời:");
       expect(html).not.toContain("tới dự Lễ");
       expect(html).not.toContain("Kính gửi:");
@@ -340,7 +353,14 @@ describe("blush-rose theme", () => {
         const i = afterH1.indexOf(invite);
         expect(i).toBeGreaterThan(-1);
         expect(afterH1.indexOf(attend)).toBeGreaterThan(i);
-        expect(afterH1.indexOf(demoContent.inviteMessage)).toBeGreaterThan(afterH1.indexOf(attend));
+        const message = (await getDemoContent(kind)).inviteMessage;
+        if (kind === "bao-hy") {
+          expect(afterH1.indexOf(message!)).toBeGreaterThan(afterH1.indexOf(attend));
+        } else {
+          expect(message).toBeUndefined();
+          // Nothing follows the attend line in the cover.
+          expect(afterH1.slice(afterH1.indexOf(attend)).match(/<p/g)).toBeNull();
+        }
         // envelope line has no companion
         expect(html).toContain(`Kính gửi: ${guest.honorific} ${guest.name}<`);
         expect(html).not.toContain(
@@ -351,16 +371,16 @@ describe("blush-rose theme", () => {
     );
 
     it("có khách nhưng sections.invitation=false: bìa không có dòng mời lẫn inviteMessage", async () => {
-      const base = await getDemoContent();
+      const base = await getDemoContent("bao-hy");
       const html = await renderBlush(
-        "nha-gai",
+        "bao-hy",
         { sections: { ...base.sections, invitation: false } },
-        demoGuests["nha-gai"],
+        demoGuests["bao-hy"],
       );
       const cover = coverOf(html);
       expect(cover).not.toContain("Trân trọng kính mời:");
       expect(cover).not.toContain("tới dự Lễ");
-      expect(cover).not.toContain(demoContent.inviteMessage);
+      expect(cover).not.toContain(base.inviteMessage);
     });
   });
 
@@ -548,6 +568,30 @@ describe("placeholder theme: ba loại thiệp", () => {
 });
 
 describe("demoContent", () => {
+  it("lịch trình đúng 5 mốc ngắn, Khai tiệc khớp giờ khai tiệc trên thẻ", () => {
+    for (const eventId of ["demo-tiec-nha-gai", "demo-tiec-nha-trai"]) {
+      const steps = demoContent.timeline!.filter((step) => step.eventId === eventId);
+      expect(steps.map((step) => step.title)).toEqual([
+        "Đón khách",
+        "Làm lễ",
+        "Trao nhẫn cưới",
+        "Khai tiệc",
+        "Cắt bánh & nâng ly",
+      ]);
+      expect(steps.every((step) => step.description === undefined)).toBe(true);
+      const banquet = demoContent.events.find((event) => event.id === eventId)?.banquetTimeLabel;
+      expect(steps.find((step) => step.title === "Khai tiệc")?.timeLabel).toBe(banquet);
+    }
+  });
+
+  it("inviteMessage: nhà gái, nhà trai để trống; báo hỷ xưng chúng tôi, gọi khách bạn", async () => {
+    expect((await getDemoContent("nha-gai")).inviteMessage).toBeUndefined();
+    expect((await getDemoContent("nha-trai")).inviteMessage).toBeUndefined();
+    const message = (await getDemoContent("bao-hy")).inviteMessage;
+    expect(message).toContain("chúng tôi");
+    expect(message).toContain("bạn");
+  });
+
   it("có đúng 4 sự kiện: vu quy + tiệc nhà gái, tân hôn + tiệc nhà trai", () => {
     expect(demoContent.events.map((e) => [e.kind, e.side])).toEqual([
       ["vu-quy", "nha-gai"],

@@ -94,7 +94,7 @@ export default function Theme({
           </header>
         )}
 
-        {sections.invitation && (
+        {sections.invitation && (invite || content.inviteMessage) && (
           <section className="flex flex-col gap-3 text-center">
             <SectionTitle>Lời mời</SectionTitle>
             {invite && (
@@ -103,7 +103,7 @@ export default function Theme({
                 <p className="break-words">{invite.attend}</p>
               </>
             )}
-            <p className="text-muted">{content.inviteMessage}</p>
+            {content.inviteMessage && <p className="text-muted">{content.inviteMessage}</p>}
           </section>
         )}
 

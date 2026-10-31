@@ -131,7 +131,7 @@ export interface WeddingContent {
   events: EventView[];
   // Wedding-day schedule. Stored in the DB later, together with WeddingEvent.
   timeline?: TimelineItem[];
-  inviteMessage: string;
+  inviteMessage?: string; // optional: the formal invite lines stand on their own
   cover?: ImageView;
   album: ImageView[];
   gifts: GiftView[];

@@ -139,7 +139,9 @@ export default function Theme({
                   {invite.invite}
                 </p>
                 <p className="max-w-full break-words">{invite.attend}</p>
-                <p className="max-w-[24rem] text-sm text-pretty">{content.inviteMessage}</p>
+                {content.inviteMessage && (
+                  <p className="max-w-[24rem] text-sm text-pretty">{content.inviteMessage}</p>
+                )}
               </>
             )}
           </header>
@@ -227,15 +229,18 @@ export default function Theme({
 
         {sections.thanks && (
           <Section name="thanks" className="items-center text-center">
-            <Reveal>
-              <div className={cn(paperCard, "border-0 bg-transparent")}>
-                <FlowerSprig corner="tl" inset={[10, 40]} width={150} rotate={10} flip />
-                <p className={cn(s.script, "text-6xl")}>Cảm ơn</p>
-                <p className="mt-2">{thanksLine(side)}</p>
-                <p className={cn(s.title, "mt-4 text-lg font-semibold")}>{names}</p>
-                <WaxSeal initials={initials} className="mx-auto mt-4 size-12" />
-              </div>
-            </Reveal>
+            {/* Flower outside Reveal and with no overflow-hidden around it: multiply on paper, never clipped. */}
+            <div className="relative w-full">
+              <FlowerSprig corner="tl" inset={[56, 44]} width={140} rotate={10} flip />
+              <Reveal>
+                <div className="relative px-6 pt-10 pb-12">
+                  <p className={cn(s.script, "text-6xl")}>Cảm ơn</p>
+                  <p className="mt-2">{thanksLine(side)}</p>
+                  <p className={cn(s.title, "mt-4 text-lg font-semibold")}>{names}</p>
+                  <WaxSeal initials={initials} className="mx-auto mt-4 size-12" />
+                </div>
+              </Reveal>
+            </div>
           </Section>
         )}
 
