@@ -308,7 +308,7 @@ describe("blush-rose theme", () => {
       expect(coverOf(html)).not.toContain(demoContent.inviteMessage);
       expect(html).not.toContain(demoContent.inviteMessage);
       expect(html).not.toContain("Trân trọng kính mời:");
-      expect(html).not.toContain("tới dự Lễ Thành Hôn");
+      expect(html).not.toContain("tới dự Lễ");
       expect(html).not.toContain("Kính gửi:");
     });
 
@@ -322,10 +322,11 @@ describe("blush-rose theme", () => {
         const invite = esc(
           `Trân trọng kính mời: ${[guest.honorific, guest.name, guest.companion].filter(Boolean).join(" ")}`,
         );
-        const attend =
-          kind === "bao-hy"
-            ? "tới dự Lễ Thành Hôn của chúng tôi"
-            : "tới dự Lễ Thành Hôn của hai con chúng tôi";
+        const attend = {
+          "nha-gai": "tới dự Lễ Vu Quy của hai con chúng tôi",
+          "nha-trai": "tới dự Lễ Thành Hôn của hai con chúng tôi",
+          "bao-hy": "tới dự Lễ Thành Hôn của chúng tôi",
+        }[kind];
         const i = afterH1.indexOf(invite);
         expect(i).toBeGreaterThan(-1);
         expect(afterH1.indexOf(attend)).toBeGreaterThan(i);
@@ -348,7 +349,7 @@ describe("blush-rose theme", () => {
       );
       const cover = coverOf(html);
       expect(cover).not.toContain("Trân trọng kính mời:");
-      expect(cover).not.toContain("tới dự Lễ Thành Hôn");
+      expect(cover).not.toContain("tới dự Lễ");
       expect(cover).not.toContain(demoContent.inviteMessage);
     });
   });

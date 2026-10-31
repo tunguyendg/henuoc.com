@@ -22,6 +22,12 @@ export function announceLine(kind: InvitationKind): string {
   }
 }
 
+const ATTEND_LINE: Record<InvitationKind, string> = {
+  "nha-gai": "tới dự Lễ Vu Quy của hai con chúng tôi",
+  "nha-trai": "tới dự Lễ Thành Hôn của hai con chúng tôi",
+  "bao-hy": "tới dự Lễ Thành Hôn của chúng tôi",
+};
+
 /** Two cover lines for a guest: who is invited, then to what. */
 export function inviteLine(
   guest: GuestName,
@@ -29,10 +35,7 @@ export function inviteLine(
 ): { invite: string; attend: string } {
   return {
     invite: join("Trân trọng kính mời:", guest.honorific, guest.name, guest.companion),
-    attend:
-      kind === "bao-hy"
-        ? "tới dự Lễ Thành Hôn của chúng tôi"
-        : "tới dự Lễ Thành Hôn của hai con chúng tôi",
+    attend: ATTEND_LINE[kind],
   };
 }
 

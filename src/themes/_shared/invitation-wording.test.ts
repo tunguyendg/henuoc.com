@@ -14,10 +14,19 @@ describe("announceLine", () => {
 describe("inviteLine", () => {
   const guest = { honorific: "Cô Chú", name: "Năm Hoà", companion: "& Gia đình" } as const;
 
+  it.each([
+    ["nha-gai", "Trân trọng kính mời: Anh Minh tới dự Lễ Vu Quy của hai con chúng tôi"],
+    ["nha-trai", "Trân trọng kính mời: Anh Minh tới dự Lễ Thành Hôn của hai con chúng tôi"],
+    ["bao-hy", "Trân trọng kính mời: Anh Minh tới dự Lễ Thành Hôn của chúng tôi"],
+  ] as const)("câu đầy đủ %s", (kind, expected) => {
+    const { invite, attend } = inviteLine({ honorific: "Anh", name: "Minh" }, kind);
+    expect(`${invite} ${attend}`).toBe(expected);
+  });
+
   it("có người đi cùng: gắn vào cuối dòng mời", () => {
     expect(inviteLine(guest, "nha-gai")).toEqual({
       invite: "Trân trọng kính mời: Cô Chú Năm Hoà & Gia đình",
-      attend: "tới dự Lễ Thành Hôn của hai con chúng tôi",
+      attend: "tới dự Lễ Vu Quy của hai con chúng tôi",
     });
   });
 
