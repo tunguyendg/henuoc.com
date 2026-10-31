@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { getTracks } from "@/data/music";
 import { isAllowedImageUrl, isAllowedMapUrl, isAllowedMusicUrl } from "@/lib/url-allowlist";
 import { crc16Ccitt } from "@/lib/vietqr";
-import { demoContent, getDemoContent } from "./_demo/content";
+import { demoContent, demoGuest, getDemoContent } from "./_demo/content";
 import { getThemeEntry, themeRegistry, themeSlugs } from "./registry";
 import type { EventView, FamilySide, GuestContext, ThemeProps, WeddingContent } from "./types";
 
@@ -198,12 +198,15 @@ describe("blush-rose theme", () => {
     options: unknown = {},
     contentPatch: Partial<WeddingContent> = {},
     side: FamilySide = "nha-gai",
+    guest?: GuestContext,
   ) {
     const entry = themeRegistry["blush-rose"];
     if (!entry) throw new Error("blush-rose theme missing");
     const { default: Theme } = await entry.load();
     const content = { ...(await getDemoContent()), ...contentPatch };
-    return renderToStaticMarkup(createElement(Theme, { content, options, mode: "demo", side }));
+    return renderToStaticMarkup(
+      createElement(Theme, { content, options, mode: "demo", side, guest }),
+    );
   }
 
   it("10 section có data-section đúng thứ tự", async () => {
@@ -264,6 +267,44 @@ describe("blush-rose theme", () => {
     const noTimeline = await render({}, { sections: { ...base.sections, timeline: false } });
     expect(noTimeline).not.toContain('data-section="timeline"');
     expect(await render({})).toContain("Giao lưu &amp; tiễn khách");
+  });
+
+  describe("lời mời trên trang bìa", () => {
+    const coverOf = (html: string) =>
+      html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
+    const salutationHtml = demoGuest.salutation.replace(/&/g, "&amp;");
+
+    it("không có khách: bìa không có lời mời, HTML không chứa inviteMessage", async () => {
+      const html = await render({});
+      expect(coverOf(html)).not.toContain(demoContent.inviteMessage);
+      expect(html).not.toContain(demoContent.inviteMessage);
+    });
+
+    it("có khách: lời chào đúng một lần ngay sau h1, rồi inviteMessage; không lộ token", async () => {
+      const html = await render({}, {}, "nha-gai", demoGuest);
+      const cover = coverOf(html);
+      const afterH1 = cover.slice(cover.indexOf("</h1>"));
+      expect(cover.split(salutationHtml)).toHaveLength(2);
+      expect(cover).not.toContain("Kính mời Trân trọng");
+      expect(afterH1.indexOf(salutationHtml)).toBeGreaterThan(-1);
+      expect(afterH1.indexOf(demoContent.inviteMessage)).toBeGreaterThan(
+        afterH1.indexOf(salutationHtml),
+      );
+      expect(html).not.toContain(demoGuest.token);
+    });
+
+    it("có khách nhưng sections.invitation=false: bìa không có lời chào lẫn inviteMessage", async () => {
+      const base = await getDemoContent();
+      const html = await render(
+        {},
+        { sections: { ...base.sections, invitation: false } },
+        "nha-gai",
+        demoGuest,
+      );
+      const cover = coverOf(html);
+      expect(cover).not.toContain(salutationHtml);
+      expect(cover).not.toContain(demoContent.inviteMessage);
+    });
   });
 
   it("không có key Maps thì không nhúng iframe, vẫn có nút Chỉ đường", async () => {

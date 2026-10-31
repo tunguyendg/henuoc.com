@@ -44,6 +44,7 @@ export {
   type RsvpValues,
 } from "./rsvp-schema";
 
+export { inviteLine } from "./salutation";
 export { solarToLunar, formatLunarDate, type LunarDate } from "./lunar";
 export { buildEventIcs, type IcsEvent } from "./ics";
 export { dressCodeSchema, type DressCode } from "./dress-code";

@@ -3,29 +3,36 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDemoContent } from "@/themes/_demo/content";
 import { getThemeEntry } from "@/themes/registry";
-import type { FamilySide } from "@/themes/types";
+import type { FamilySide, GuestContext } from "@/themes/types";
 
-// Shared by /demo/[slug] (nhà gái) and /demo/[slug]/nha-trai. Pages stay thin: routing only.
+// Shared by /demo/[slug] (nhà gái), /demo/[slug]/nha-trai and /demo/[slug]/khach-moi (fake guest). Pages stay thin: routing only.
 // Demo pages are never indexed and not listed in the SEO registry or sitemap.
 
-export async function demoMetadata(slugPromise: Promise<{ slug: string }>, side: FamilySide) {
+export async function demoMetadata(
+  slugPromise: Promise<{ slug: string }>,
+  side: FamilySide,
+  titleSuffix?: string,
+) {
   const { slug } = await slugPromise;
   const entry = getThemeEntry(slug);
   const noIndex = { robots: { index: false, follow: false } } satisfies Metadata;
   if (!entry) return noIndex;
-  const title =
+  const base =
     side === "nha-trai"
       ? `Demo ${entry.manifest.name} · bản nhà trai`
       : `Demo ${entry.manifest.name}`;
+  const title = titleSuffix ? `${base} · ${titleSuffix}` : base;
   return { title, ...noIndex } satisfies Metadata;
 }
 
 export async function DemoRender({
   slugPromise,
   side,
+  guest,
 }: {
   slugPromise: Promise<{ slug: string }>;
   side: FamilySide;
+  guest?: GuestContext;
 }) {
   const { slug } = await slugPromise;
   const entry = getThemeEntry(slug);
@@ -52,7 +59,13 @@ export async function DemoRender({
         {switchTo.label}
       </Link>
       {/* The registry wrapper validates options (falls back to defaults), so no parse here. */}
-      <Theme content={content} options={manifest.defaultOptions} mode="demo" side={side} />
+      <Theme
+        content={content}
+        options={manifest.defaultOptions}
+        mode="demo"
+        side={side}
+        guest={guest}
+      />
     </>
   );
 }

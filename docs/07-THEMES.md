@@ -93,6 +93,7 @@ Một đám cưới có 2 thiệp: **nhà gái** và **nhà trai**. Theme nhận
 - Ngày trên bìa/phong bì, lịch tim lấy từ sự kiện chính **của bên đó**, không lấy `content.weddingDate`.
 - Demo: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` = nhà trai, cả 2 là trang tĩnh (không query
   string). Link nhỏ "Xem bản nhà trai / nhà gái" do trang demo vẽ, không nằm trong theme.
+  `/demo/[slug]/khach-moi` = biến thể có khách mời giả (nhà gái, `demoGuest`), vẫn tĩnh và `mode="demo"`.
 
 `src/themes/registry.ts`: map `slug → { manifest, load: () => import("./hong-pastel") }` — **dynamic import**, mỗi thiệp chỉ tải JS của đúng theme đó.
 

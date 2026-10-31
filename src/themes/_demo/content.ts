@@ -5,7 +5,7 @@ import { findBankByBin } from "@/data/banks";
 import { qrSvgDataUri } from "@/lib/qr";
 import { buildVietQrPayload } from "@/lib/vietqr";
 import demoAlbum from "@/content/demo-album/images.json";
-import type { GiftView, ImageView, TimelineItem, WeddingContent } from "../types";
+import type { GiftView, GuestContext, ImageView, TimelineItem, WeddingContent } from "../types";
 
 // Shared sample data for /demo/[slug] (nhà gái) and /demo/[slug]/nha-trai, and theme QA.
 // Each side has its own rite + reception; the theme shows only the side's events (_shared/side.ts).
@@ -214,3 +214,11 @@ export const getDemoContent = cache(async (): Promise<WeddingContent> => {
   );
   return { ...demoContent, gifts };
 });
+
+// A made-up guest for /demo/[slug]/khach-moi: fictional name, and the token is NOT a real secret.
+export const demoGuest: GuestContext = {
+  salutation: "Trân trọng kính mời Cô Chú Năm Hoà & Gia đình",
+  invitedEventIds: ["demo-vu-quy", "demo-tiec-nha-gai"],
+  maxAttendees: 2,
+  token: "demo-khong-phai-token-that",
+};
