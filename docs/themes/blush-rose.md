@@ -93,7 +93,7 @@ Cấu trúc client: một lá `Experience.tsx` (`"use client"`) giữ `useMusic`
 ### 6.1 Bìa — phong bì + ảnh cài, bấm mở
 
 - Mục đích: ấn tượng đầu, cú chạm mở khoá nhạc.
-- Dữ liệu: `content.cover` (ảnh cưới), `couple.*.shortName`, `weddingDate`/`events[0].dateLabel`, `guest?.salutation` (chỉ khi có token).
+- Dữ liệu: `content.cover` (ảnh cưới), `couple.*.shortName`, `weddingDate`/`events[0].dateLabel`, `envelopeLine(guest)` "Kính gửi: …" (chỉ khi có token).
 - Primitive: `useEnvelope({ onOpen: music.unlock })` (trạng thái `closed → opening → open`, `durationMs`, `reducedMotion`) để tự vẽ phong bì. Cách nhanh hơn: `<Envelope onOpen={music.unlock}>` (overlay tối giản có sẵn, chỉ truyền cover làm `children`). Vì phong bì ở đây là đồ hoạ riêng nên dùng hook và tự vẽ; `skip()` cho "Bỏ qua" nếu cần. `<MusicToggle music={music} hidden={!musicSrc || mode === "preview"} />`.
 - Hoa/đồ hoạ: phong bì SVG, con dấu sáp ở giữa nắp (bấm vào dấu = mở), ảnh cưới cài chéo trên mặt phong bì (khung giấy, bóng nhẹ, hơi nghiêng ~-3°), bông lớn `rosa-carolina-corymbosa` đặt cạnh phong bì (multiply trên nền kem, §4).
 - Hiệu ứng: nắp phong bì lật mở + ảnh nhô lên + phong bì trượt xuống/mờ dần để lộ thiệp, tổng ~900–1200ms. `reducedMotion` → fade 200ms, vẫn phải chạm để mở (gesture cho nhạc). `mode="preview"` mở được nhưng không phát nhạc.
@@ -101,6 +101,8 @@ Cấu trúc client: một lá `Experience.tsx` (`"use client"`) giữ `useMusic`
 - Mở xong: `useEnvelope` khoá cuộn lúc đóng, mở khoá khi open. Phía dưới phải SSR đầy đủ (progressive enhancement như `Envelope`).
 
 ### 6.2 Tên cô dâu chú rể
+
+> Đã bỏ khỏi thiệp (875df23): tên nằm ở `<h1>` bìa và thẻ lễ, lời mời nằm ở bìa khi có khách. Xem "Hiện trạng" cuối file.
 
 - Mục đích: tên là trung tâm, chữ viết tay lớn.
 - Dữ liệu: `couple.bride/groom.fullName` (+ `brideFirst` quyết thứ tự), `couple.*.photo` (nếu có), `families.*Parents`. Lời dẫn mời dùng `inviteMessage`, `guest?.salutation`.
@@ -198,13 +200,22 @@ Cấu trúc client: một lá `Experience.tsx` (`"use client"`) giữ `useMusic`
 ## Đợt sửa 1 (2026-10-28)
 
 - Contract: `Person.birthOrder`, `EventView.arrivalTimeLabel/banquetTimeLabel`, `WeddingContent.timeline` (`TimelineItem`, `TimelineIcon`), `SectionKey` thêm `timeline` và `dressCode`.
-- Thứ tự section mới (11): cover → names → ceremony → album → reception → timeline → venue → dress-code → rsvp → gift → thanks.
-- **ceremony** "Thông tin lễ cưới": một thẻ gồm hai họ (nhà trai luôn bên trái), lời báo tin, tên đầy đủ + thứ bậc, các lễ vu quy/thành hôn/ăn hỏi với khối ngày lớn và dòng âm lịch tính từ `startsAt` (`event-date.ts`, không còn dùng `lunarLabel`). Không nút bản đồ.
-- **reception** "Thông tin tiệc cưới": thẻ riêng cho `tiec`/`tan-hon`, giờ đón khách và khai tiệc, lịch trái tim, thêm vào lịch, nút `#xac-nhan`.
+- Thứ tự section khi đó (11, về sau bỏ `names`): cover → names → ceremony → album → reception → timeline → venue → dress-code → rsvp → gift → thanks.
+- **ceremony** "Thông tin lễ cưới": một thẻ gồm hai họ (thứ tự theo `side`, docs/07 §2.1), lời báo tin, tên đầy đủ + thứ bậc, các lễ vu quy/thành hôn/ăn hỏi với khối ngày lớn và dòng âm lịch tính từ `startsAt` (`event-date.ts`, không còn dùng `lunarLabel`). Không nút bản đồ.
+- **reception** "Thông tin tiệc cưới": thẻ riêng cho `tiec` (`tan-hon` nay là lễ, nằm ở thẻ lễ), giờ đón khách và khai tiệc, lịch trái tim, thêm vào lịch, nút `#xac-nhan`.
 - **timeline** "Lịch trình ngày cưới": thẻ đỏ đô, trục vàng, icon SVG tự vẽ (`sections/timeline-icons.tsx`); hoa tràn ra ngoài mép thẻ.
 - **venue**: bản đồ nhúng Google (`mapEmbedUrl` + `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`) cho sự kiện chính, không key thì chỉ danh sách + nút "Chỉ đường". Query chỉ gồm tên địa điểm + địa chỉ.
 - **dress-code**: chỉ chấm màu, không in mã hex; `aria-label` tên màu tiếng Việt từ `color-name.ts`. Cần `sections.dressCode` và `options.dressCode`.
 - **rsvp**: section riêng `id="xac-nhan"` tách khỏi reception.
+
+## Hiện trạng (2026-11-01, đè lên các mục trên nếu mâu thuẫn)
+
+- 10 section: cover → ceremony → album → reception → timeline → venue → dress-code → rsvp → gift → thanks.
+- 3 loại thiệp `nha-gai` / `nha-trai` / `bao-hy`; câu chữ, thứ tự và sự kiện theo docs/07-THEMES.md §2.1.
+- Thẻ lễ, tiệc, lịch trình nền đặc `.br-card`, không viền vàng. Hoa luôn nằm ngoài thẻ, không bọc `overflow-hidden`.
+- Bìa có khách: `inviteLine` + `inviteMessage` (nếu có). Phong bì: `envelopeLine`.
+- Lịch trình: một đường trục liền, icon `camera`, `candles`, `rings`, `glasses`, `cake`.
+- Album: coverflow tự chạy, logic ở `coverflow.ts`.
 
 ## 8. QA checklist (tóm tắt)
 

@@ -13,7 +13,8 @@ import {
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { copyText, formatAccountNumber, normalizeAccountNumber } from "./clipboard";
-import { SHEET_SWIPE_CLOSE_PX, giftSideLabel, type GiftCard } from "./gift-cards";
+import { SHEET_SWIPE_CLOSE_PX, type GiftCard } from "./gift-cards";
+import { sideLabel } from "./side";
 import { lockBodyScroll } from "./scroll-lock";
 import { useHydrated } from "./use-client-env";
 
@@ -178,7 +179,7 @@ function SheetPanel({ cards, onClose, title }: Omit<GiftSheetProps, "open"> & { 
                       : "text-muted hover:text-ink",
                   )}
                 >
-                  {giftSideLabel[c.side]}
+                  {sideLabel[c.side]}
                 </button>
               ))}
             </div>
@@ -203,7 +204,7 @@ function GiftCardView({ card, showSide }: { card: GiftCard; showSide: boolean })
   const numberRef = useRef<HTMLParagraphElement>(null);
   const timer = useRef<number | undefined>(undefined);
   const [notice, setNotice] = useState("");
-  const side = giftSideLabel[card.side];
+  const side = sideLabel[card.side];
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 

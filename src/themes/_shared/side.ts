@@ -16,10 +16,7 @@ export const sideLabel: Record<FamilySide, string> = {
   "nha-gai": "Nhà gái",
 };
 
-export const otherSide = (side: FamilySide): FamilySide =>
-  side === "nha-gai" ? "nha-trai" : "nha-gai";
-
-export const sideWording: Record<FamilySide, { ceremonyTitle: string }> = {
+const sideWording: Record<FamilySide, { ceremonyTitle: string }> = {
   "nha-gai": { ceremonyTitle: "Lễ Vu Quy" },
   "nha-trai": { ceremonyTitle: "Lễ Tân Hôn" },
 };

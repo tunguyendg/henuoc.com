@@ -309,6 +309,53 @@ describe("blush-rose theme", () => {
       html.match(/data-section="cover"[\s\S]*?(?=data-section="ceremony")/)?.[0] ?? "";
     const esc = (text: string) => text.replace(/&/g, "&amp;");
 
+    it("địa điểm: hoa nằm ngoài thẻ overflow-hidden của danh sách", async () => {
+      const html = await renderBlush("nha-gai");
+      const venue = html.slice(html.indexOf('data-section="venue"'));
+      // A flower inside the card would come after the card's overflow-hidden.
+      expect(venue.indexOf("rosa-carolina-corymbosa")).toBeLessThan(
+        venue.indexOf("overflow-hidden"),
+      );
+    });
+
+    it("địa điểm: tên lễ theo eventTitle của bên, không in title thô", async () => {
+      const base = await getDemoContent("nha-trai");
+      const events = base.events.map((event) =>
+        event.id === "demo-tan-hon" ? { ...event, title: "Lễ Tự Đặt" } : event,
+      );
+      const html = await renderBlush("nha-trai", { events });
+      expect(html).not.toContain("Lễ Tự Đặt");
+    });
+
+    it("thêm vào lịch: tên lễ theo eventTitle, kể cả khi không có tiệc", async () => {
+      const base = await getDemoContent("nha-trai");
+      const events = base.events
+        .filter((event) => event.kind !== "tiec")
+        .map((event) => ({ ...event, title: "Lễ Tự Đặt" }));
+      const html = await renderBlush("nha-trai", { events });
+      expect(html).not.toContain("Lễ Tự Đặt");
+    });
+
+    it("khách không có sự kiện nào: không hiện ngày chung ở bất kỳ đâu", async () => {
+      hydration.on = true;
+      const guest = { ...demoGuests["nha-gai"], invitedEventIds: [] };
+      const html = await renderBlush("nha-gai", {}, guest);
+      expect(html).toContain("Kính gửi:");
+      expect(html).not.toMatch(/tháng 10,? (năm )?2027/i);
+    });
+
+    it("lịch trình: một đường trục duy nhất phủ tới mốc cuối, không còn đoạn rời", async () => {
+      const html = await renderBlush("nha-gai");
+      const timeline = html.slice(
+        html.indexOf('data-section="timeline"'),
+        html.indexOf('data-section="venue"'),
+      );
+      expect(timeline.match(/grid-row:1 \/ \d+/g)).toEqual(["grid-row:1 / 5"]);
+      expect(timeline).not.toContain("top-3 bottom-0");
+      // The axis sits outside the list: every child of the <ol> is a real step.
+      expect(timeline.match(/<li/g)).toHaveLength(5);
+    });
+
     it("phần cảm ơn: hoa nằm trước Reveal, không có overflow-hidden bọc hoa", async () => {
       const html = await renderBlush("nha-gai");
       const thanks = html.slice(html.indexOf('data-section="thanks"'));
@@ -579,6 +626,7 @@ describe("demoContent", () => {
         "Cắt bánh & nâng ly",
       ]);
       expect(steps.every((step) => step.description === undefined)).toBe(true);
+      expect(steps.find((step) => step.title === "Làm lễ")?.icon).toBe("candles");
       const banquet = demoContent.events.find((event) => event.id === eventId)?.banquetTimeLabel;
       expect(steps.find((step) => step.title === "Khai tiệc")?.timeLabel).toBe(banquet);
     }

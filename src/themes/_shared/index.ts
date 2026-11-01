@@ -32,7 +32,7 @@ export {
   type EnvelopeEvent,
   type EnvelopeState,
 } from "./envelope-machine";
-export { giftSideLabel, toGiftCards, type GiftCard } from "./gift-cards";
+export { toGiftCards, type GiftCard } from "./gift-cards";
 export {
   RSVP_MESSAGE_MAX,
   createRsvpSchema,
@@ -52,10 +52,8 @@ export { dressCodeSchema, type DressCode } from "./dress-code";
 export {
   eventTitle,
   eventsForSide,
-  otherSide,
   partiesInSideOrder,
   sideLabel,
-  sideWording,
   timelineForEvents,
   visibleEvents,
   type Party,

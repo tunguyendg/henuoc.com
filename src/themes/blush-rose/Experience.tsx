@@ -21,7 +21,7 @@ interface ExperienceProps {
   names: string;
   initials: readonly [string, string];
   dateLabel?: string;
-  salutation?: string;
+  envelopeText?: string;
   photo?: ImageView;
 }
 
@@ -34,7 +34,7 @@ export function Experience({
   names,
   initials,
   dateLabel,
-  salutation,
+  envelopeText,
   photo,
 }: ExperienceProps) {
   // preview = builder: no music at all (docs/07 §10).
@@ -113,7 +113,9 @@ export function Experience({
           </p>
           <p className={cn(s.script, "max-w-full text-5xl")}>{names}</p>
           {dateLabel && <p className="text-lg">{dateLabel}</p>}
-          {salutation && <p className="mt-2 max-w-full font-semibold break-words">{salutation}</p>}
+          {envelopeText && (
+            <p className="mt-2 max-w-full font-semibold break-words">{envelopeText}</p>
+          )}
         </div>
 
         <div className={s.stage}>

@@ -76,7 +76,7 @@ export interface EventView {
   side: EventSide;
 }
 
-export type TimelineIcon = "camera" | "rings" | "glasses" | "cake" | "music";
+export type TimelineIcon = "camera" | "rings" | "glasses" | "cake" | "candles";
 
 export interface TimelineItem {
   id: string;

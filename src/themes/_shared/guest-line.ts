@@ -65,6 +65,9 @@ const BARE_COMPANIONS = new Set(["gia đình", "gia dinh"]);
 const CONNECTORS = new Set(["&", "+", "và", "cùng"]);
 const MAX_COMPANION_WORDS = 2;
 
+const MAX_INPUT = 1000; // bound the work before any regex runs; a cut surrogate is dropped by DISALLOWED
+const INVISIBLE = /\p{Default_Ignorable_Code_Point}/gu; // Hangul fillers, variation selectors, CGJ…
+const STACKED_MARKS = /(\p{M}{2})\p{M}+/gu; // Vietnamese needs at most 2; more is "zalgo"
 const LIST_MARKER = /^\s*(?:\d+\s*[.)]|[-•*])\s+/u;
 const DISALLOWED = /[^\p{L}\p{M}\s&+\-']/gu;
 
@@ -76,7 +79,10 @@ function capitalise(word: string): string {
 
 function tokenise(line: string): string[] {
   const cleaned = line
+    .slice(0, MAX_INPUT)
     .normalize("NFC")
+    .replace(INVISIBLE, "")
+    .replace(STACKED_MARKS, "$1")
     .replace(LIST_MARKER, "")
     .replace(/[/,]/g, " ")
     .replace(DISALLOWED, "");

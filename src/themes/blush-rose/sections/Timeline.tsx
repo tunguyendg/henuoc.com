@@ -19,59 +19,62 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
         {/* Before the card in the DOM: the card paints over it, so only the part on the paper shows (multiply on paper only). */}
         <FlowerSprig corner="tr" inset={[16, -38]} width={150} rotate={8} />
         <div className={cn(s.card, "px-5 py-8")}>
-          <ol role="list" className="flex flex-col">
-            {items.map((item, index) => (
-              <li key={item.id}>
-                <Reveal
-                  delayMs={index * 120}
-                  className={cn(
-                    "grid grid-cols-[3.75rem_1rem_minmax(0,1fr)] gap-x-3",
-                    index < last && "pb-6",
-                  )}
-                >
-                  <p
+          <div className="grid grid-cols-[minmax(0,1fr)]">
+            {/* One axis behind every dot: spans all rows but the last, then its negative margin stops
+                it at the last dot's centre, however tall each step is. Outside the list (it is not an
+                item); `contents` lets the steps share this grid. 13px = the dot's centre (top-2 + half
+                of size-2.5), 5rem = the axis column's centre: change them together with the dot. */}
+            {items.length > 1 && (
+              <div
+                aria-hidden="true"
+                style={{ gridRow: `1 / ${items.length}` }}
+                className="col-start-1 mt-[13px] -mb-[13px] ml-[calc(5rem-0.5px)] w-px bg-(--br-card-accent)"
+              />
+            )}
+            <ol role="list" className="contents">
+              {items.map((item, index) => (
+                <li key={item.id} style={{ gridRow: index + 1 }} className="col-start-1">
+                  <Reveal
+                    delayMs={index * 120}
                     className={cn(
-                      s.title,
-                      "pt-0.5 text-right text-lg leading-snug font-semibold text-(--br-card-accent-text)",
+                      "grid grid-cols-[3.75rem_1rem_minmax(0,1fr)] gap-x-3",
+                      index < last && "pb-6",
                     )}
                   >
-                    {item.timeLabel}
-                  </p>
-                  <div aria-hidden="true" className="relative">
-                    {items.length > 1 && (
-                      <span
-                        className={cn(
-                          "absolute left-1/2 w-px -translate-x-1/2 bg-(--br-card-accent)",
-                          index === 0
-                            ? "top-3 bottom-0"
-                            : index === last
-                              ? "top-0 h-3"
-                              : "top-0 bottom-0",
-                        )}
-                      />
-                    )}
-                    <span className="absolute top-2 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-(--br-card-accent)" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-start gap-2">
-                      {item.icon && (
-                        <TimelineGlyph
-                          icon={item.icon}
-                          className="mt-0.5 size-6 shrink-0 text-(--br-card-accent)"
-                        />
+                    <p
+                      className={cn(
+                        s.title,
+                        "pt-0.5 text-right text-lg leading-snug font-semibold text-(--br-card-accent-text)",
                       )}
-                      <h3 className={cn(s.title, "text-lg leading-snug font-semibold break-words")}>
-                        {item.title}
-                      </h3>
+                    >
+                      {item.timeLabel}
+                    </p>
+                    <div aria-hidden="true" className="relative">
+                      <span className="absolute top-2 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-(--br-card-accent)" />
                     </div>
-                    {item.description && (
-                      <p className="mt-1 text-base break-words text-muted">{item.description}</p>
-                    )}
-                  </div>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
+                    <div className="min-w-0">
+                      <div className="flex items-start gap-2">
+                        {item.icon && (
+                          <TimelineGlyph
+                            icon={item.icon}
+                            className="mt-0.5 size-6 shrink-0 text-(--br-card-accent)"
+                          />
+                        )}
+                        <h3
+                          className={cn(s.title, "text-lg leading-snug font-semibold break-words")}
+                        >
+                          {item.title}
+                        </h3>
+                      </div>
+                      {item.description && (
+                        <p className="mt-1 text-base break-words text-muted">{item.description}</p>
+                      )}
+                    </div>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </Section>

@@ -11,8 +11,6 @@ export interface GiftCard {
   qrSvg?: string;
 }
 
-export { sideLabel as giftSideLabel } from "./side";
-
 const SIDE_ORDER: FamilySide[] = ["nha-trai", "nha-gai"];
 
 /** Swipe distance (px) past which a drag on the sheet handle closes it. */

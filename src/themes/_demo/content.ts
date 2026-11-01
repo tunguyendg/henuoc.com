@@ -74,7 +74,7 @@ const GROOM_RECEPTION_ADDR = "Đường Nguyễn Văn Trỗi, Phường Phú Nhu
 // "Khai tiệc" matches banquetTimeLabel on the reception events.
 const RECEPTION_STEPS: Omit<TimelineItem, "id" | "eventId">[] = [
   { timeLabel: "17:30", title: "Đón khách", icon: "camera" },
-  { timeLabel: "18:00", title: "Làm lễ", icon: "music" },
+  { timeLabel: "18:00", title: "Làm lễ", icon: "candles" },
   { timeLabel: "18:15", title: "Trao nhẫn cưới", icon: "rings" },
   { timeLabel: "18:30", title: "Khai tiệc", icon: "glasses" },
   { timeLabel: "19:30", title: "Cắt bánh & nâng ly", icon: "cake" },

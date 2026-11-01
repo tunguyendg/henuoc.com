@@ -80,7 +80,8 @@ export default function Theme({
   const ceremonies = sections.events ? events.filter((e) => CEREMONY_KINDS.includes(e.kind)) : [];
   const receptions = sections.events ? events.filter((e) => RECEPTION_KINDS.includes(e.kind)) : [];
   const mainEvent = pickMainEvent(events, content.weddingDate);
-  const mainDate = mainEvent?.startsAt ?? content.weddingDate;
+  // A guest with no visible event gets no date: the wedding-wide one could be the other side's.
+  const mainDate = mainEvent?.startsAt ?? (guest ? undefined : content.weddingDate);
   const dateLabel = mainDate ? weddingDateFormat.format(new Date(mainDate)) : undefined;
   const showCalendar = sections.events && Boolean(mainEvent);
   const showVenue =
@@ -105,7 +106,7 @@ export default function Theme({
         names={names}
         initials={initials}
         dateLabel={dateLabel}
-        salutation={guest ? envelopeLine(guest) : undefined}
+        envelopeText={guest ? envelopeLine(guest) : undefined}
         photo={content.cover}
       />
 
@@ -166,13 +167,14 @@ export default function Theme({
             fallbackEvent={mainEvent}
             weddingDate={mainEvent?.startsAt}
             names={names}
+            side={side}
             showRsvpLink={showRsvp}
           />
         )}
 
         {timeline.length > 0 && <Timeline items={timeline} />}
 
-        {showVenue && <Venue events={events} mainEvent={mainEvent} />}
+        {showVenue && <Venue events={events} mainEvent={mainEvent} side={side} />}
 
         {dressCode && dressCode.length > 0 && (
           <Section name="dress-code">

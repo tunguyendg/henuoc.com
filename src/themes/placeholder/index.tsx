@@ -55,7 +55,8 @@ export default function Theme({
   const invite = guest ? inviteLine(guest, side) : undefined;
   // Dates come from this side's main event (§2.1), not the wedding-wide weddingDate.
   const mainEvent = events.find((e) => e.startsAt === content.weddingDate) ?? events.at(-1);
-  const mainDate = mainEvent?.startsAt ?? content.weddingDate;
+  // A guest with no visible event gets no date: the wedding-wide one could be the other side's.
+  const mainDate = mainEvent?.startsAt ?? (guest ? undefined : content.weddingDate);
   const dateLabel = mainDate ? weddingDateFormat.format(new Date(mainDate)) : undefined;
   // RSVP needs a token in production. The demo has no guest, so it gets made-up limits and the
   // form's fake submit. We pass fields one by one: never the whole guest (it holds the token).
@@ -140,7 +141,10 @@ export default function Theme({
                   <p className="text-sm text-muted">{event.address}</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <MapButton url={event.mapUrl} />
-                    <AddToCalendar event={event} summary={`Đám cưới ${names} · ${event.title}`} />
+                    <AddToCalendar
+                      event={event}
+                      summary={`Đám cưới ${names} · ${eventTitle(event, side)}`}
+                    />
                   </div>
                 </li>
               ))}

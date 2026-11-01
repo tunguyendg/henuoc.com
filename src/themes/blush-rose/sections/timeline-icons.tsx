@@ -34,11 +34,15 @@ const PATHS: Record<TimelineIcon, ReactNode> = {
       <rect x="3" y="14.5" width="18" height="5" rx="1" />
     </>
   ),
-  music: (
+  candles: (
     <>
-      <path d="M9 17.5V5.5l10-2v12" />
-      <circle cx="6.5" cy="17.5" r="2.5" />
-      <circle cx="16.5" cy="15.5" r="2.5" />
+      <path d="M8 3.2c1 1.1 1.2 2.3 0 3.6-1.2-1.3-1-2.5 0-3.6Z" />
+      <path d="M8 6.8V10" />
+      <rect x="5.5" y="10" width="5" height="10" rx="0.75" />
+      <path d="M16 5.7c1 1.1 1.2 2.3 0 3.6-1.2-1.3-1-2.5 0-3.6Z" />
+      <path d="M16 9.3v3.2" />
+      <rect x="13.5" y="12.5" width="5" height="7.5" rx="0.75" />
+      <path d="M3.5 20h17" />
     </>
   ),
 };

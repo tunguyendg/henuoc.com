@@ -36,6 +36,8 @@ const rows: Row[] = [
   ["Anh Bình cùng vợ", "Anh", "Bình", P],
   ["Chị Mai Gia đình", "Chị", "Mai", F],
   ["Anh Minh & Các cháu", "Anh", "Minh & Các Cháu"],
+  ["Anh Minh và Chị Lan", "Anh", "Minh Và Chị Lan"],
+  ["Chị Lan & chồng", "Chị", "Lan", "& Người thương"],
   ["Cô Chú", "Cô Chú", ""],
   ["Gia đình", "Gia đình", ""],
   ["co chu Tư", "Cô Chú", "Tư"],
@@ -74,5 +76,20 @@ describe("parseGuestLine", () => {
     const { name } = parseGuestLine("𠀀".repeat(200));
     expect(Array.from(name)).toHaveLength(120);
     expect(() => encodeURIComponent(name)).not.toThrow(); // throws on a lone surrogate
+  });
+
+  it("lọc ký tự vô hình: tên chỉ gồm ký tự vô hình thành rỗng", () => {
+    expect(parseGuestLine("\u3164\u3164")).toEqual({ honorific: "", name: "" });
+    expect(parseGuestLine("Anh Mi\u034Fnh\uFE0F")).toEqual({ honorific: "Anh", name: "Minh" });
+  });
+
+  it("giới hạn dấu chồng, không mất dấu tiếng Việt", () => {
+    const { name } = parseGuestLine(`Z${"\u0301".repeat(116)}`);
+    expect(Array.from(name).length).toBeLessThanOrEqual(3);
+    expect(parseGuestLine("Nguyễn Thị Thuỷ")).toEqual({ honorific: "", name: "Nguyễn Thị Thuỷ" });
+  });
+
+  it("đầu vào rất dài vẫn trả kết quả trong giới hạn", () => {
+    expect(Array.from(parseGuestLine("a".repeat(2_000_000)).name).length).toBeLessThanOrEqual(120);
   });
 });

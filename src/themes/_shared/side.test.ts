@@ -3,7 +3,6 @@ import type { EventView, TimelineItem, WeddingContent } from "../types";
 import {
   eventsForSide,
   eventTitle,
-  otherSide,
   partiesInSideOrder,
   timelineForEvents,
   visibleEvents,
@@ -41,13 +40,6 @@ const content = {
   },
   families: { brideParents: "Họ gái", groomParents: "Họ trai", brideAddr: "Đ gái" },
 } as unknown as WeddingContent;
-
-describe("otherSide", () => {
-  it("đảo nhà trai thành nhà gái và ngược lại", () => {
-    expect(otherSide("nha-gai")).toBe("nha-trai");
-    expect(otherSide("nha-trai")).toBe("nha-gai");
-  });
-});
 
 describe("partiesInSideOrder", () => {
   it("thiệp nhà gái: cô dâu đứng trước, thiệp nhà trai: chú rể đứng trước", () => {

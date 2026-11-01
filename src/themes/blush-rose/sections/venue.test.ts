@@ -16,7 +16,7 @@ describe("Venue với key Google Maps", () => {
 
   it("nhúng iframe có title, lazy, referrerPolicy và chỉ chứa venue + địa chỉ", () => {
     const html = renderToStaticMarkup(
-      createElement(Venue, { events: demoContent.events, mainEvent: main }),
+      createElement(Venue, { events: demoContent.events, mainEvent: main, side: "nha-trai" }),
     );
     expect(html).toContain("<iframe");
     expect(html).toContain('title="Bản đồ Trung tâm tiệc cưới Hồng Ngà"');

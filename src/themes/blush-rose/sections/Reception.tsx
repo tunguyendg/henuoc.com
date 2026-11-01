@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import { AddToCalendar } from "../../_shared/AddToCalendar";
 import { Reveal } from "../../_shared/Reveal";
-import type { EventView } from "../../types";
+import { eventTitle } from "../../_shared/side";
+import type { EventView, InvitationKind } from "../../types";
 import { eventDateParts, lunarLine } from "../event-date";
 import { FlowerSprig, SectionHeading } from "../ornaments";
 import { s } from "../styles";
@@ -114,15 +115,17 @@ export function Reception({
   fallbackEvent,
   weddingDate,
   names,
+  side,
   showRsvpLink,
 }: {
   receptions: EventView[];
   fallbackEvent?: EventView;
   weddingDate?: string;
   names: string;
+  side: InvitationKind;
   showRsvpLink: boolean;
 }) {
-  const summary = (event: EventView) => `Đám cưới ${names} · ${event.title}`;
+  const summary = (event: EventView) => `Đám cưới ${names} · ${eventTitle(event, side)}`;
   return (
     <Section name="reception">
       <SectionHeading>{receptions.length > 0 ? "Thông tin tiệc cưới" : "Ngày vui"}</SectionHeading>
