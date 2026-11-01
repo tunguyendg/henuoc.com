@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { MiniInvitation } from "@/components/home/mini-invitation";
 import { PhoneFrame } from "@/components/home/phone-frame";
 import { Breadcrumb } from "@/components/seo/breadcrumb";
@@ -8,7 +9,9 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { RelatedLinks } from "@/components/seo/related-links";
 import { StyleChips } from "@/components/themes/style-chips";
 import { ThemeGrid } from "@/components/themes/theme-card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { ThemeCta } from "@/components/themes/theme-cta";
+import { getThemeThumbnail } from "@/components/themes/theme-thumbnails";
+import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { getVisibleTheme, similarThemes, visibleThemes } from "@/data/themes";
 import { site } from "@/lib/site";
@@ -34,7 +37,7 @@ export default async function Page({ params }: Props) {
 
   const path = themePath(slug);
   const seo = getSeoPage(path);
-  const createHref = `/tao-thiep?mau=${theme.slug}`;
+  const thumbnail = getThemeThumbnail(theme);
 
   return (
     <>
@@ -44,7 +47,21 @@ export default async function Page({ params }: Props) {
         <div className="mt-8 grid items-start gap-12 md:grid-cols-[auto_1fr] md:gap-16">
           <div className="mx-auto md:sticky md:top-24">
             <PhoneFrame>
-              <MiniInvitation style={theme.preview} />
+              {thumbnail ? (
+                // Khung trong tỉ lệ 9:19, ảnh 3:4 → object-contain trên nền giấy để không bị cắt.
+                <div className="relative size-full bg-[#F3EDE3]">
+                  <Image
+                    src={thumbnail}
+                    alt={`Thiệp mẫu ${theme.name}: ảnh chụp bìa thiệp`}
+                    fill
+                    sizes="240px"
+                    preload
+                    className="object-contain"
+                  />
+                </div>
+              ) : (
+                <MiniInvitation style={theme.preview} />
+              )}
             </PhoneFrame>
           </div>
 
@@ -57,23 +74,14 @@ export default async function Page({ params }: Props) {
             </h1>
             <p className="mt-5 text-lg text-muted">{theme.description}</p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {theme.status === "live" ? (
-                <Link href={createHref} className={buttonVariants({ size: "lg" })}>
-                  Dùng mẫu này <ArrowRight aria-hidden />
-                </Link>
-              ) : (
-                <Button size="lg" disabled>
-                  Sắp ra mắt
-                </Button>
-              )}
+            <ThemeCta theme={theme}>
               <Link
                 href="/mau-thiep-cuoi"
                 className={buttonVariants({ variant: "secondary", size: "lg" })}
               >
                 Xem mẫu khác
               </Link>
-            </div>
+            </ThemeCta>
 
             <h2 className="mt-12 text-lg font-bold text-ink">Mẫu này có gì</h2>
             <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
@@ -105,7 +113,7 @@ export default async function Page({ params }: Props) {
 
             <p className="mt-10 rounded-xl bg-rose-50 p-4 text-sm text-ink">
               {theme.status === "live"
-                ? "Đây là thiệp minh hoạ. Bản hoàn chỉnh có hiệu ứng mở thiệp, nhạc nền và đầy đủ các mục như trên."
+                ? "Ảnh trên chụp từ thiệp mẫu thật. Bấm “Xem thiệp thực tế” để mở phong bì, nghe nhạc nền và xem đủ các mục như trên."
                 : "Mẫu này đang được hoàn thiện nên chưa dùng được. Đây là bản minh hoạ để hai bạn hình dung phong cách."}
             </p>
           </div>

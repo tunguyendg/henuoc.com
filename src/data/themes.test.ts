@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { getThemeThumbnail } from "@/components/themes/theme-thumbnails";
+import { getSeoPage } from "@/lib/seo/pages";
 import { themeRegistry } from "@/themes/registry";
 import {
   MIN_STYLE_FAQ,
@@ -43,6 +45,9 @@ const LIVE = new Set(["blush-rose"]);
 
 const wordCount = (s: string) => s.trim().split(/\s+/).length;
 
+// next/font/google chỉ chạy trong compiler của Next → thay bằng class rỗng khi test.
+vi.mock("@/themes/blush-rose/fonts", () => ({ fontVariables: "" }));
+
 describe("catalog mẫu thiệp", () => {
   it("slug kebab-case, không trùng trong và giữa hai danh sách", () => {
     const all = [...themeStyles.map((s) => s.slug), ...themes.map((t) => t.slug)];
@@ -85,6 +90,18 @@ describe("catalog mẫu thiệp", () => {
     for (const t of themes.filter((x) => x.status === "live")) {
       expect(themeRegistry[t.slug], t.slug).toBeDefined();
     }
+  });
+
+  it("mẫu live có thumbnail, ảnh trong map và theme trong registry", () => {
+    for (const t of themes.filter((x) => x.status === "live")) {
+      expect(t.thumbnail, t.slug).toBe(true);
+      expect(getThemeThumbnail(t), t.slug).toBeDefined();
+      expect(themeRegistry[t.slug], t.slug).toBeDefined();
+    }
+  });
+
+  it("/tao-thiep không được index", () => {
+    expect(getSeoPage("/tao-thiep").index).toBe(false);
   });
 
   it("mẫu đã có code là live, các mẫu MIGRATED khác là preview, còn lại planned", () => {

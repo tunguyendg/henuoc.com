@@ -96,6 +96,7 @@
 - [ ] Trang pháp lý Tony duyệt, bỏ `index: false`
 - [ ] Cẩm nang ≥ 5 bài (PRD)
 - [ ] Chốt gói Supabase production (ADR-004)
+- [ ] Mọi CTA `/tao-thiep` phải dẫn tới luồng tạo thiệp chạy được hoặc trạng thái 'Sắp mở' trung thực
 
 ## 🧭 Quyết định chờ Tony
 
@@ -110,7 +111,8 @@
 - Nút nhạc đè chữ khi cuộn (timeline, nút Chỉ đường)
 - Hoa thẻ tiệc bị thẻ che gần hết; con dấu thẻ lễ chìm nền (palette hồng)
 - Quà mừng: chỉ hiện tài khoản bên đứng tên thiệp; gift sheet nhận màu theme
-- thumb.webp + og.webp cho trang mẫu
+- og.webp cho trang mẫu (thumb.webp đã có, 2026-11-01)
+- `manifest.thumbnail` trỏ `/themes/blush-rose/thumb.webp`, file không tồn tại; hiện không ai đọc field này (ảnh thật: `src/themes/blush-rose/thumb.webp`). Sửa khi có nơi đọc
 - JS trang demo 235 KB gzip (ngân sách 80 KB) → phân tích bundle trước launch
 - Reviewer chưa soát: lọc ký tự vô hình trong guest-line parser, vị trí hoa Venue
 - Lời mời: tách xưng hô / tên / kèm theo khi làm bảng khách mời (M4)

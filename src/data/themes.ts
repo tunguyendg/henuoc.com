@@ -6,7 +6,8 @@ import type { StyleSlug } from "@/themes/types";
  * trang chi tiết và sổ SEO. Sau này theme thật (M1) chỉ cần thay `preview` và `status`.
  *
  * status:
- *  - "live"    : có trong `themeRegistry` (code thật, đã qua QA — docs/07-THEMES.md §8) → index
+ *  - "live"    : có trong `themeRegistry` (code thật, đã qua QA — docs/07-THEMES.md §8) → index;
+ *                có ảnh bìa thật (`thumbnail`) thì thẻ + trang chi tiết dùng ảnh thay cho MiniInvitation
  *  - "preview" : có preview riêng, chưa có code → hiện ở trang công khai, noindex, không vào sitemap
  *  - "planned" : mới trên lộ trình → KHÔNG hiện ở trang công khai nào, chỉ ở /admin/mau-thiep
  */
@@ -40,6 +41,9 @@ export interface Theme {
   description: string; // 80–150 chữ, dùng cho trang chi tiết + SEO
   features: string[];
   palette: string[];
+  // Có ảnh bìa thật. Import ảnh nằm ở src/components/themes/theme-thumbnails.ts vì module này được
+  // src/proxy.ts và src/lib/seo/pages.ts import (import ảnh không được lọt vào bundle proxy).
+  thumbnail?: true;
 }
 
 export const themeStyles: ThemeStyle[] = [
@@ -366,6 +370,7 @@ export const themes: Theme[] = [
       "RSVP",
     ],
     palette: ["#F3EDE3", "#E8B9C3", "#C4A257", "#4A161A"],
+    thumbnail: true,
   },
   {
     slug: "botanical-garden",
