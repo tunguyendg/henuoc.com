@@ -50,5 +50,10 @@ export const manifest: ThemeManifest<BlushRoseOptions> = {
       source: "https://clevelandart.org/art/1959.15",
       license: "CC0",
     },
+    {
+      file: "src/assets/fonts/cormorant-garamond/",
+      source: "https://fonts.google.com/specimen/Cormorant+Garamond",
+      license: "OFL-1.1",
+    },
   ],
 };

@@ -1,4 +1,5 @@
-import { Cormorant_Garamond, Great_Vibes, Playfair_Display } from "next/font/google";
+import { Great_Vibes, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 
 // Loaded only by this theme (not the root layout) → other themes never pay for these files.
@@ -10,11 +11,30 @@ const title = Playfair_Display({
   variable: "--font-br-title",
 });
 
-const body = Cormorant_Garamond({
-  subsets: ["latin", "vietnamese"],
-  weight: ["500", "600"],
+// Self-hosted: next/font/google fails on a clean build for this family (it receives /l/font? URLs).
+// Google's files are variable, so one file per subset serves both weights. next/font/local cannot set
+// unicode-range: the browser finds each glyph by trying the faces in turn.
+const body = localFont({
+  src: [
+    {
+      path: "../../assets/fonts/cormorant-garamond/cormorant-garamond-vietnamese.woff2",
+      weight: "500 600",
+      style: "normal",
+    },
+    {
+      path: "../../assets/fonts/cormorant-garamond/cormorant-garamond-latin-ext.woff2",
+      weight: "500 600",
+      style: "normal",
+    },
+    {
+      path: "../../assets/fonts/cormorant-garamond/cormorant-garamond-latin.woff2",
+      weight: "500 600",
+      style: "normal",
+    },
+  ],
   display: "swap",
   variable: "--font-br-body",
+  adjustFontFallback: "Times New Roman",
 });
 
 const script = Great_Vibes({
