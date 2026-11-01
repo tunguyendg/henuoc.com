@@ -103,3 +103,14 @@
 
 - Gói Supabase cho production: Free (auto-pause 7 ngày, không backup) hay Pro? Quyết trước launch (ADR-004).
 - Thêm mục "Công cụ" (`/cong-cu`) vào menu chính? Đã có trang; hiện mới link từ footer + bài cẩm nang. (mặc định: có)
+
+## Blush Rose V1.1 (chưa làm — V1 đã chốt 2026-11-01)
+
+- Pill demo dính cố định đè nội dung → chỉ hiện đầu trang
+- Nút nhạc đè chữ khi cuộn (timeline, nút Chỉ đường)
+- Hoa thẻ tiệc bị thẻ che gần hết; con dấu thẻ lễ chìm nền (palette hồng)
+- Quà mừng: chỉ hiện tài khoản bên đứng tên thiệp; gift sheet nhận màu theme
+- thumb.webp + og.webp cho trang mẫu
+- JS trang demo 235 KB gzip (ngân sách 80 KB) → phân tích bundle trước launch
+- Reviewer chưa soát: lọc ký tự vô hình trong guest-line parser, vị trí hoa Venue
+- Lời mời: tách xưng hô / tên / kèm theo khi làm bảng khách mời (M4)
