@@ -83,7 +83,7 @@ describe("createWedding", () => {
     expect(mocks.create).toHaveBeenCalledTimes(1);
     const { data } = mocks.create.mock.calls[0]![0] as { data: Record<string, unknown> };
     expect(data.slug).toBe("minhanh-hoangnam");
-    expect(data.themeSlug).toBe("placeholder");
+    expect(data.themeSlug).toBe("blush-rose"); // không gửi mẫu → mẫu live mặc định
     expect(data.brideName).toBe("Minh Anh");
     expect(data.groomName).toBe("Hoàng Nam");
     expect((data.weddingDate as Date).toISOString()).toBe("2026-12-19T17:00:00.000Z");
@@ -98,15 +98,35 @@ describe("createWedding", () => {
     expect(data.weddingDate).toBeNull();
   });
 
-  it("form gửi lén userId/role/themeSlug thì bị bỏ qua (chống mass-assignment)", async () => {
+  it("form gửi lén userId/role thì bị bỏ qua (chống mass-assignment)", async () => {
     const fd = goodForm();
     fd.append("userId", "ke-tan-cong");
     fd.append("role", "ADMIN");
-    fd.append("themeSlug", "mau-khac");
     await redirectUrl(createWedding(undefined, fd));
     const { data } = mocks.create.mock.calls[0]![0] as { data: Record<string, unknown> };
-    expect(data.themeSlug).toBe("placeholder");
     expect(data.members).toEqual({ create: { userId: USER_ID, role: "OWNER" } });
+  });
+
+  it("chọn mẫu blush-rose (live) thì tạo thiệp với mẫu đó", async () => {
+    const fd = goodForm();
+    fd.append("themeSlug", "blush-rose");
+    expect(await redirectUrl(createWedding(undefined, fd))).toBe("/dashboard");
+    const { data } = mocks.create.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(data.themeSlug).toBe("blush-rose");
+  });
+
+  it.each([
+    ["mẫu planned", "royal-gold"],
+    ["mẫu preview", "song-hy-do-son"],
+    ["mẫu lạ", "mau-khac"],
+    ["chuỗi path traversal", "../x"],
+  ])("chọn %s (%s) thì báo lỗi, không tạo và không chuyển trang", async (_ten, slug) => {
+    const fd = goodForm();
+    fd.append("themeSlug", slug);
+    const r = await createWedding(undefined, fd);
+    expect(r?.message).toMatch(/^Mẫu thiệp này chưa dùng được/);
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("slug bị trùng (P2002) thì thử lại với đuôi ngẫu nhiên", async () => {
