@@ -20,7 +20,9 @@ export default function Page() {
         <p className="mt-3 text-center text-muted">
           Chưa có tài khoản? Cứ nhập email, Hẹn Ước tự tạo cho bạn.
         </p>
-        <LoginForm />
+        <Suspense fallback={<div className="mt-8 h-72" />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </Container>
   );

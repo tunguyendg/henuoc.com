@@ -3,9 +3,14 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { auth } from "@/lib/auth";
+import { connection } from "next/server";
 
-// cache(): trong 1 request, layout + page + component gọi bao nhiêu lần cũng chỉ hỏi DB 1 lần
-export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
+// connection(): báo Next phần này chỉ chạy lúc có request, KHÔNG prerender
+// (Better Auth dùng crypto ngẫu nhiên khi đọc phiên → không được dựng sẵn)
+export const getSession = cache(async () => {
+  await connection();
+  return auth.api.getSession({ headers: await headers() });
+});
 
 /** Lớp kiểm THẬT: đối chiếu cookie với bảng session trong DB. Chưa đăng nhập → về /dang-nhap. */
 export async function requireUser() {

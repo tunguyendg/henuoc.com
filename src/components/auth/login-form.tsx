@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { safeNext } from "@/lib/safe-next";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
@@ -10,6 +11,8 @@ const inputClass =
 
 export function LoginForm() {
   const router = useRouter();
+  // ?next= do người ngoài điền được → luôn đi qua safeNext (chỉ nhận đường nội bộ /dashboard)
+  const next = safeNext(useSearchParams().get("next"));
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -35,7 +38,7 @@ export function LoginForm() {
     const { error } = await authClient.signIn.emailOtp({ email, otp });
     setPending(false);
     if (error) return setError("Mã không đúng hoặc đã hết hạn.");
-    router.push("/dashboard");
+    router.push(next);
     router.refresh(); // tải lại Server Component để thấy trạng thái đã đăng nhập
   }
 
@@ -44,7 +47,7 @@ export function LoginForm() {
       <Button
         variant="secondary"
         className="h-12 w-full"
-        onClick={() => authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" })}
+        onClick={() => authClient.signIn.social({ provider: "google", callbackURL: next })}
       >
         Tiếp tục với Google
       </Button>
