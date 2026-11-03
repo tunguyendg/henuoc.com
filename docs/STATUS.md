@@ -39,14 +39,16 @@
 - ✅ Lời mời theo loại thiệp + tên khách có cấu trúc (2026-10-31): `ThemeProps.side: InvitationKind` thêm `bao-hy` (chỉ sự kiện `chung`, không cột ông bà, chú rể trước). `_shared/invitation-wording.ts` (`announceLine`, `inviteLine`, `thanksLine`, `envelopeLine`; xưng "chúng tôi"; `inviteMessage` tuỳ chọn: demo nhà gái, nhà trai để trống, báo hỷ có), `_shared/guest-line.ts` (`parseGuestLine`, `HONORIFICS`). `GuestContext` đổi `salutation` → `honorific`/`name`/`companion`. Bỏ `_shared/salutation.ts`. Demo tĩnh: `/demo/[slug]`, `/nha-trai`, `/bao-hy` và mỗi bản có `/khach-moi`. Chưa nối: `Invitation` trong DB/`features/guest` vẫn `salutationPrefix`/`displayName`/`salutationSuffix` (mock có "& Bạn đời", "& Các cháu" ngoài 2 giá trị companion); khi làm builder/DB phải chốt mapping, và chưa có chỗ chọn loại thiệp `bao-hy` trong dữ liệu đám cưới. Khi nối `parseGuestLine` vào form: thêm Zod `.max()` ở đầu vào vì hàm normalize toàn chuỗi trước khi cắt.
 - Kho mẫu dùng ảnh thật + CTA trung thực (`2306917`): production "Sắp mở tạo thiệp" disabled, nút chính "Xem thiệp thực tế" → `/demo/<slug>`.
 - Cẩm nang: 18 bài (đạt PRD ≥ 5), có bài "lễ vu quy, thành hôn, tân hôn".
+- T-006 deploy tự động: `deploy.yml` (bật bằng `DEPLOY_ENABLED`), SSH 2210 + host key ghim, rsync → activate → smoke test đúng revision → rollback qua PREVIOUS. Đã chạy nhiều lần, revision khớp (Tony xác nhận 2026-11-03).
+- Biến auth trên panel AZDIGI đủ: đăng nhập production chạy (Tony xác nhận 2026-11-03).
+- Ảnh hoa `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` đã commit.
+- `NODE_TLS_REJECT_UNAUTHORIZED`: đóng. Giá trị 0 đến từ môi trường Claude Code, `.claude/settings.json` ghi đè =1.
+- `createWedding` lọc ký tự điều khiển / zero-width (`49d12d6`).
 
 ## 🔍 NEEDS VERIFICATION
 
-- T-006 deploy tự động: `deploy.yml` (bật bằng `DEPLOY_ENABLED`), SSH 2210 + host key ghim, rsync → activate → smoke test → rollback qua PREVIOUS. Chưa thử end-to-end: chép `activate.sh` + `rollback.sh` lên host, chuẩn bị CURRENT từ bản deploy tay.
-- Panel AZDIGI có đủ biến auth (`BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`=https://henuoc.com, `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY`) trước khi deploy bản có auth — thiếu là app throw lúc khởi động.
-- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`: repo Variable (Tony chuyển từ Secret, 2026-11-03), `_build.yml` đọc `vars.`. Kiểm: key giới hạn HTTP referrer `henuoc.com/*` + chỉ Maps Embed API; bản build release có nhúng bản đồ.
-- blush-rose trên iPhone + mở trong Zalo (Tony test); ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` đã commit chưa.
-- Máy dev: đã gỡ `NODE_TLS_REJECT_UNAUTHORIZED=0` khỏi shell profile chưa.
+- Bản đồ nhúng trên production: `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` là repo Variable (Tony chuyển từ Secret, 2026-11-03), `_build.yml` đọc `vars.`. Kiểm: key giới hạn HTTP referrer `henuoc.com/*` + chỉ Maps Embed API; bản build release có nhúng bản đồ.
+- blush-rose trên iPhone + mở trong Zalo (Tony test).
 
 ## 📋 TODO
 
@@ -55,7 +57,7 @@
 - Gỡ `notFound()` production ở `dashboard/layout.tsx` + `assertDashboardPreview()`: cần ownership (`requireWeddingAccess`) + dữ liệu thật thay mock. `getInviteLinkAction` vẫn chỉ chặn bằng NODE_ENV (TODO(auth) trong file).
 - `/api/rsvp` (chưa có route; `use-rsvp-form.ts` submit giả).
 - Builder `/tao-thiep` + T-028 "Dùng mẫu này" → `createWedding` (validate slug với registry phía server).
-- `createWedding` hardening: race 2 request (partial unique index, cần migration), rate limit, `.normalize("NFC")` + chặn `\p{C}`.
+- `createWedding` hardening còn: race 2 request (partial unique index, cần migration), rate limit.
 - T-006: `prisma migrate deploy` trong deploy (chưa có).
 - T-027 gallery + bộ lọc · mẫu tiếp theo (song-hy-do-son, ivory-editorial, seoul-romance, royal-gold).
 - Blush Rose V1.1 (danh sách cuối file).
@@ -65,14 +67,14 @@
 
 - M3 onboarding `/dashboard/bat-dau` (form + test slug/schema/createWedding đã có). Còn mở:
   - Trang nằm trong layout dashboard → người chưa có đám cưới vẫn thấy WeddingHeading/nav/banner (dữ liệu mock). Tony quyết: tách route group `(onboarding)` hay ẩn theo path. Chưa có link/redirect nào dẫn tới trang (dashboard chưa chuyển khi `getMyWedding()` null).
-  - `createWedding` (file Tony): race 2 request song song → 2 đám cưới (chặn bằng partial unique index OWNER/userId — cần migration, hỏi trước); chưa rate limit; tên nhận ký tự điều khiển/zero-width → thêm `.normalize("NFC")` + chặn `\p{C}`.
+  - `createWedding` (file Tony): race 2 request song song → 2 đám cưới (chặn bằng partial unique index OWNER/userId — cần migration, hỏi trước); chưa rate limit. (Ký tự điều khiển/zero-width đã lọc, `49d12d6`.)
   - Slug ghép từ tên = đoán được → route thiệp công khai `/thiep/[slug]` sau này BẮT BUỘC chỉ hiện `PUBLISHED`, DRAFT trả 404, noindex.
 
 - `wedding-access.ts` (có test IDOR `wedding-access.test.ts`): `getMyWedding` đang `select: { wedding: true }` = mọi cột → đừng truyền nguyên object xuống Client Component, nên select đúng cột. Server Action gọi `requireWeddingAccess` phải parse `weddingId` bằng Zod trước (rỗng/undefined → Prisma lỗi 500 thay vì 404).
 
 - `dashboard/layout.tsx` vẫn `notFound()` ở production → đăng nhập xong bị đẩy sang `/dashboard` là 404, nút Đăng xuất không hiện. Tony quyết gỡ trước khi deploy auth (proxy + requireUser đã có, còn thiếu ownership + dữ liệu thật thay mock).
 
-- Deploy sau T-032: panel AZDIGI phải có đủ `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (https://henuoc.com), `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY` — thiếu là app throw lúc khởi động. `BETTER_AUTH_URL` hiện nhận cả http/localhost (CI dùng giá trị giả) → cân nhắc chặn lúc runtime production.
+- Panel AZDIGI phải giữ đủ `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (https://henuoc.com), `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY` — thiếu là app throw lúc khởi động. `BETTER_AUTH_URL` hiện nhận cả http/localhost (CI dùng giá trị giả) → cân nhắc chặn lúc runtime production.
 
 - `getInviteLinkAction` (Server Action = endpoint công khai) đang chỉ chặn bằng NODE_ENV. Trước khi mở production: session + ownership, nếu không đoán guestId là lấy được link (có token) của nhà khác.
 
@@ -84,7 +86,6 @@
 - `MEDIA_HOSTS = ["media.henuoc.com"]` trong `url-allowlist.ts` là giả định — sửa khi chốt domain R2, KHÔNG nới thành so hậu tố. `maps.app.goo.gl` cho mọi path (link rút gọn Google).
 - STK nằm trong RSC payload trang thiệp (sheet chỉ ẩn giao diện, §10) — chấp nhận; muốn chống cào → tải gifts khi bấm + rate limit.
 - `/api/rsvp` chưa có: `use-rsvp-form.ts` submit giả mọi mode. Khi làm: token không qua props client, rate limit, server dựng ctx từ DB.
-- Máy dev đặt `NODE_TLS_REJECT_UNAUTHORIZED=0` (tắt kiểm chứng chỉ cho mọi lệnh Node/npm) → Tony gỡ khỏi shell profile.
 - Ảnh demo là JPG 1600px (~100–500KB) → theme thật cần bản WebP tối ưu để đạt ngân sách 600KB trang đầu (07-THEMES §8).
 - Slug mẫu sai trả 200 + noindex (giới hạn Cache Components) — chấp nhận. Riêng `/cam-nang/trang/*` và `/cam-nang/chu-de/*`: `proxy.ts` rewrite path lạ sang `/_khong-ton-tai` → 404 thật (có test). Nâng Next thì `curl -I` lại `/cam-nang/trang/99`. Thêm path danh sách mới → cập nhật `articleListPaths()`.
 - Keyword hub chủ đề ("chi phí đám cưới", "khách mời đám cưới") gần với bài đuôi dài → theo dõi Search Console sau launch, tranh thứ hạng thì đổi title chủ đề.
