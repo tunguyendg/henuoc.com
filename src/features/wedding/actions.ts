@@ -8,6 +8,7 @@ import { requireUser } from "@/lib/session";
 import { weddingSlug } from "@/lib/slug";
 import { getMyWedding } from "@/lib/wedding-access";
 import { createWeddingSchema } from "./schema";
+import { resolveThemeSlug } from "./theme-choice";
 
 export type CreateWeddingState =
   | {
@@ -31,6 +32,10 @@ export async function createWedding(
   const parsed = createWeddingSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { errors: z.flattenError(parsed.error).fieldErrors };
   const { brideName, groomName, weddingDate } = parsed.data;
+  const themeSlug = resolveThemeSlug(parsed.data.themeSlug);
+  if (!themeSlug) {
+    return { message: "Mẫu thiệp này chưa dùng được. Bạn chọn mẫu khác trong kho mẫu nhé." };
+  }
 
   // 3–4. Thử slug gốc, trùng thì thêm đuôi ngẫu nhiên, tối đa 5 lần
   const base = weddingSlug(brideName, groomName);
@@ -42,7 +47,7 @@ export async function createWedding(
       await db.wedding.create({
         data: {
           slug,
-          themeSlug: "placeholder", // chọn mẫu ở bước sau, không nhận từ form
+          themeSlug, //. đã kiểm: live + có trong registry
           brideName,
           groomName,
           weddingDate,

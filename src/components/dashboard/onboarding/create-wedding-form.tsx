@@ -1,13 +1,22 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createWedding, type CreateWeddingState } from "@/features/wedding/actions";
 
-type Values = { brideName: string; groomName: string; weddingDate: string };
+type Values = {
+  brideName: string;
+  groomName: string;
+  weddingDate: string;
+};
 
-const EMPTY: Values = { brideName: "", groomName: "", weddingDate: "" };
+const EMPTY: Values = {
+  brideName: "",
+  groomName: "",
+  weddingDate: "",
+};
 
 function text(fd: FormData, key: keyof Values): string {
   const v = fd.get(key);
@@ -15,8 +24,10 @@ function text(fd: FormData, key: keyof Values): string {
 }
 
 export function CreateWeddingForm() {
-  // React 19 tự reset form sau mỗi action → nhớ lại giá trị vừa gửi và trả về qua defaultValue,
-  // để khi có lỗi người dùng không phải gõ lại từ đầu.
+  // Lấy slug mẫu thiệp từ URL: ?mau=blush-rose
+  const mau = useSearchParams().get("mau") ?? "";
+
+  // Giữ lại dữ liệu đã nhập nếu Server Action trả về lỗi.
   const [values, setValues] = useState<Values>(EMPTY);
 
   const [state, formAction, isPending] = useActionState(
@@ -26,6 +37,7 @@ export function CreateWeddingForm() {
         groomName: text(fd, "groomName"),
         weddingDate: text(fd, "weddingDate"),
       });
+
       return createWedding(prev, fd);
     },
     undefined,
@@ -33,6 +45,8 @@ export function CreateWeddingForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <input type="hidden" name="themeSlug" value={mau} />
+
       <Input
         label="Tên cô dâu"
         name="brideName"
@@ -42,6 +56,7 @@ export function CreateWeddingForm() {
         defaultValue={values.brideName}
         error={state?.errors?.brideName?.[0]}
       />
+
       <Input
         label="Tên chú rể"
         name="groomName"
@@ -51,6 +66,7 @@ export function CreateWeddingForm() {
         defaultValue={values.groomName}
         error={state?.errors?.groomName?.[0]}
       />
+
       <Input
         label="Ngày cưới"
         name="weddingDate"
@@ -59,11 +75,13 @@ export function CreateWeddingForm() {
         hint="Chưa chốt ngày thì để trống, sửa sau được"
         error={state?.errors?.weddingDate?.[0]}
       />
+
       {state?.message ? (
         <p role="alert" className="text-sm text-danger">
           {state.message}
         </p>
       ) : null}
+
       <Button type="submit" size="lg" className="w-full" disabled={isPending}>
         {isPending ? "Đang tạo…" : "Tạo thiệp"}
       </Button>
