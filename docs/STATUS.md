@@ -1,13 +1,15 @@
 # STATUS — bảng tình hình dự án
 
 > Tổng chỉ huy (Claude Code) cập nhật file này sau mỗi việc. Tony đọc file này hoặc gõ `/bao-cao`.
-> Cập nhật lần cuối: 2026-10-31 (lời mời theo loại thiệp nhà gái / nhà trai / báo hỷ, tên khách có cấu trúc)
+> Cập nhật lần cuối: 2026-11-03 (rà P0: DONE / NEEDS VERIFICATION / TODO)
 
 ## Đang ở đâu
 
-**Hướng hiện tại:** dựng frontend MVP trên local trước (chưa backend), rồi mới M0 backend + deploy.
+**Hướng hiện tại:** frontend MVP chạy local (blush-rose là mẫu `live` đầu tiên), auth đã có; tiếp theo nối dữ liệu thật + deploy tự động.
 
-## ✅ Đã xong
+> Rà P0 ngày 2026-11-03 (chỉ đọc code + git, không chạy app). Phân loại: **DONE** = có code/commit và đã kiểm · **NEEDS VERIFICATION** = có code nhưng chưa ai kiểm trên môi trường thật · **TODO** = chưa làm.
+
+## ✅ DONE
 
 - T-002 `env.client.ts` / `env.server.ts` + `server-only` (Tony code 🔴) · test `env.client.test.ts` (4) + `env.server.test.ts` (3) · T-003 Prisma 7 + Supabase (Tony code 🔴): `prisma.config.ts`, schema auth + migration `init_auth`, `src/lib/db.ts`, `/api/health`, DATABASE_URL bắt buộc (`startsWith("postgres")`) · T-001 scaffold Next 16 · T-004 design tokens + UI primitives · T-005 CI (push main) · T-007 brand
 - Brand v3 "Nhẫn Tim" (ADR-003), favicon / apple-icon
@@ -26,30 +28,38 @@
 - T-010 khung theme engine: `src/themes/types.ts` (contract), `registry.ts` (dynamic import, memo, safeParse options), `_demo/content.ts`, theme `placeholder` (draft), route `/demo/[slug]` noindex — draft chỉ xem ở dev, production 404
 - Cẩm nang phân trang + chủ đề (2026-10-26): `/cam-nang` = trang 1, `/cam-nang/trang/[page]` (6 bài/trang, `/trang/1` 308 → `/cam-nang`), 4 chủ đề `/cam-nang/chu-de/{phong-tuc,thiep-loi-moi,khach-moi,chi-phi}` (intro + list + link chủ đề khác). Dữ liệu `src/data/article-topics.ts`, mỗi bài có `category`; sổ SEO tự sinh trang/sitemap; bài tự link lên chủ đề của nó
 - T-013 primitives `src/themes/_shared/` (Envelope, MusicToggle, useCountdown, AddToCalendar, MapButton, Gift + GiftSheet, Reveal, Watermark, RsvpForm submit giả) + `src/lib/url-allowlist.ts` + `src/lib/qr.ts` (dep `qrcode` 1.5.4) + nhạc demo CC0 `public/audio/` — ghép đủ vào `/demo/placeholder`, 412 test
+- T-032 đăng nhập: lõi Tony code (`src/lib/auth.ts`, `auth-client.ts`, `components/auth/login-form.tsx`, `api/auth/[...all]`). **OTP email + domain Resend Verified: DONE (Tony xác nhận 2026-11-03).** Phần phụ: env bắt buộc 5 biến auth + test, `/dang-ky` 308 → `/dang-nhap`, nút Đăng xuất, `/dang-nhap` có phiên → `/dashboard`, header marketing biết đăng nhập ở client (trang vẫn ○ Static), test `proxy.ts`.
+- `useMusic` (Tony code, `b2e018e`): phát nhạc sau cú chạm, nhớ trạng thái tắt.
+- Dashboard dữ liệu mẫu (mock): ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
+- T-026 taxonomy 10 phong cách × 20 mẫu + FAQ 10 phong cách; `status` live / preview / planned (planned ẩn khỏi trang công khai, 404 thật qua `proxy.ts`). Hiện: 1 live (blush-rose) · 5 preview · 14 planned.
+- ✅ blush-rose (2026-10-27): `src/themes/blush-rose/` (phong bì tự vẽ + dấu sáp, tên Great Vibes, thẻ lễ âm lịch, coverflow, lịch trái tim `month-grid.ts` + 19 test, dress code, bao lì xì → GiftSheet, credit Redouté CC0). Option `palette`: `do-do` (mặc định) / `hong-nhat`. Manifest `published`, catalog `live`. Còn: Tony test iPhone + Zalo, `thumb.webp`/`og.webp`, commit ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` (Tony quyết), CSS module bị rule `*.css` trong next.config biến thành global (theme dùng `theme.css` tiền tố `br-`).
+- ✅ blush-rose đợt sửa 1 (2026-10-28): thẻ "Thông tin lễ cưới" (cha mẹ 2 cột, Trưởng nam/Út nữ, khối ngày lớn, âm lịch từ `lunar.ts`), thẻ "Thông tin tiệc cưới" (đón khách/khai tiệc, lịch tim, thêm lịch, nút → `#xac-nhan`), lịch trình đỏ đô 5 mốc icon tự vẽ, Địa điểm nhúng Google Maps Embed (`src/lib/maps-embed.ts`, env `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` optional, GitHub Variables), dress code chỉ chấm màu + aria tên màu. Contract: `birthOrder`, `arrivalTimeLabel`/`banquetTimeLabel`, `timeline?`, SectionKey `timeline`/`dressCode`. Demo: 3 sự kiện TP.HCM (địa chỉ mới sau bỏ quận), album 3 ảnh Bin Thieu cùng cặp đôi + `npm run demo-album:fetch` (Tony thêm ID vào `src/content/demo-album/images.json`). Rủi ro: khi thêm CSP cần `frame-src https://www.google.com`.
+- ✅ Thiệp theo BÊN (2026-10-28): `ThemeProps.side` ("nha-trai"/"nha-gai"), `EventView.side` thêm "chung" (khớp enum DB `Side`), bỏ `couple.brideFirst` khỏi contract theme (dashboard/DB vẫn giữ: khi nối DB cần map `Wedding.brideFirst` → không dùng nữa hoặc bỏ cột, Tony quyết). Helper `src/themes/_shared/side.ts` (+19 test): thứ tự tên/ông bà, "Lễ Vu Quy"/"Lễ Tân Hôn", câu báo tin, lọc sự kiện + timeline theo bên. Áp cho blush-rose + placeholder. Demo tĩnh: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` (render chung `src/components/themes/demo-render.tsx`, pill chuyển bản). Quy tắc bắt buộc mọi theme: docs/07 §2.1.
+- ✅ blush-rose đợt sửa 2 (2026-10-29): thẻ lễ/tiệc/lịch trình nền đặc `.br-card` (do-do #4A161A/#F3EDE3/#C4A257, hong-nhat #8C4A5A/#F8EEF0/#E8B9C3; chữ nhấn hồng dùng #F3D0D7 vì #E8B9C3 chỉ 3.75:1), bo 16px, bóng mềm; hoa Redouté nằm SAU thẻ, ló ra trên nền giấy. Thẻ tiệc: ô lịch sáng + tim đặc, nút pill kem, "Google Calendar · Tải .ics" (AddToCalendar thêm prop `labels`/`separator`). Album coverflow tự chạy 3.5s (`coverflow.ts` + test), dừng khi chạm (chạy lại sau 6s), ra khỏi màn hình, tab ẩn, focus bàn phím; reduced-motion không tự chạy. JS route /demo/blush-rose: 235.2 KB gzip (trước 234.6, gồm framework). Tony đã bỏ khối lời mời + cặp đôi lặp (875df23). Chốt 2026-10-31: bìa có guest + `sections.invitation` mới hiện danh xưng (`inviteLine`, `_shared/salutation.ts`, không lặp "kính mời") + `inviteMessage`; không guest thì ẩn hẳn. Demo `/demo/[slug]/khach-moi` có khách giả (mode demo, không ghi DB).
+- ✅ Lời mời theo loại thiệp + tên khách có cấu trúc (2026-10-31): `ThemeProps.side: InvitationKind` thêm `bao-hy` (chỉ sự kiện `chung`, không cột ông bà, chú rể trước). `_shared/invitation-wording.ts` (`announceLine`, `inviteLine`, `thanksLine`, `envelopeLine`; xưng "chúng tôi"; `inviteMessage` tuỳ chọn: demo nhà gái, nhà trai để trống, báo hỷ có), `_shared/guest-line.ts` (`parseGuestLine`, `HONORIFICS`). `GuestContext` đổi `salutation` → `honorific`/`name`/`companion`. Bỏ `_shared/salutation.ts`. Demo tĩnh: `/demo/[slug]`, `/nha-trai`, `/bao-hy` và mỗi bản có `/khach-moi`. Chưa nối: `Invitation` trong DB/`features/guest` vẫn `salutationPrefix`/`displayName`/`salutationSuffix` (mock có "& Bạn đời", "& Các cháu" ngoài 2 giá trị companion); khi làm builder/DB phải chốt mapping, và chưa có chỗ chọn loại thiệp `bao-hy` trong dữ liệu đám cưới. Khi nối `parseGuestLine` vào form: thêm Zod `.max()` ở đầu vào vì hàm normalize toàn chuỗi trước khi cắt.
+- Kho mẫu dùng ảnh thật + CTA trung thực (`2306917`): production "Sắp mở tạo thiệp" disabled, nút chính "Xem thiệp thực tế" → `/demo/<slug>`.
+- Cẩm nang: 18 bài (đạt PRD ≥ 5), có bài "lễ vu quy, thành hôn, tân hôn".
 
-## 🔨 Đang làm
+## 🔍 NEEDS VERIFICATION
 
-- T-006 chặng tự động **đang thử**: deploy.yml (push main / chạy tay, bật bằng DEPLOY_ENABLED), SSH 2210 + host key đã ghim, rsync → activate → smoke test đúng revision → rollback qua PREVIOUS nếu không đạt. Cần chép lại cả activate.sh và rollback.sh lên host, chuẩn bị CURRENT từ bản deploy tay và thử end-to-end trước khi coi là xong.
+- T-006 deploy tự động: `deploy.yml` (bật bằng `DEPLOY_ENABLED`), SSH 2210 + host key ghim, rsync → activate → smoke test → rollback qua PREVIOUS. Chưa thử end-to-end: chép `activate.sh` + `rollback.sh` lên host, chuẩn bị CURRENT từ bản deploy tay.
+- Panel AZDIGI có đủ biến auth (`BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`=https://henuoc.com, `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY`) trước khi deploy bản có auth — thiếu là app throw lúc khởi động.
+- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`: repo Variable (Tony chuyển từ Secret, 2026-11-03), `_build.yml` đọc `vars.`. Kiểm: key giới hạn HTTP referrer `henuoc.com/*` + chỉ Maps Embed API; bản build release có nhúng bản đồ.
+- blush-rose trên iPhone + mở trong Zalo (Tony test); ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` đã commit chưa.
+- Máy dev: đã gỡ `NODE_TLS_REJECT_UNAUTHORIZED=0` khỏi shell profile chưa.
 
-- Dashboard dữ liệu mẫu: ✅ data layer `src/features/*` (repo + mock) · ✅ layout `/dashboard` · ✅ 6 trang Tổng quan / Thiệp / Khách mời / RSVP / Mua sắm / Checklist (tick lưu localStorage). Production: `assertDashboardPreview()` ở MỌI page + component đọc repos (layout guard KHÔNG đủ: layout/page render song song, payload vẫn rò) — gỡ khi có proxy.ts + session/ownership
+## 📋 TODO
 
-- T-032 đăng nhập (🔴 Tony code lõi `auth.ts` / `auth-client.ts` / `login-form.tsx` / `api/auth`). Phần phụ đã xong: env bắt buộc 5 biến auth + test, biến giả trong CI build, `.env.example` có hướng dẫn, H1 "Đăng nhập hoặc tạo tài khoản", `/dang-ky` 308 → `/dang-nhap`. Đã thêm: nút Đăng xuất (sidebar + header mobile, tải lại trang về `/`), `/dang-nhap` có phiên → `/dashboard`, test `proxy.ts`. Header marketing biết đăng nhập ở CLIENT (`site/header-actions.tsx`, `useSession`) → trang marketing vẫn ○ Static; đã đăng nhập hiện "Vào bảng điều khiển" + chữ cái đầu.
-
-## ⏭️ Tiếp theo (frontend)
-
-1. 🔴 Tony code `useMusic` (`src/themes/_shared/use-music.ts`, TODO trong file + bài học M1-themes Phần 2)
-2. ✅ T-026 taxonomy 10 phong cách × 20 mẫu (`data/themes.ts`, FAQ trang phong cách, luật index ≥ 2 mẫu live + intro + ≥ 3 FAQ). Sửa 2026-10-27: `status` live / preview (6 mẫu cũ, nút "Sắp ra mắt") / planned (14 mẫu mới: ẩn khỏi trang công khai + sitemap, `/mau-thiep-cuoi/<slug>` 404 thật qua `proxy.ts`, chỉ hiện ở `/admin/mau-thiep`). Tiếp: viết FAQ 10 phong cách · T-027 gallery + bộ lọc · 5 mẫu đầu song-hy-do-son, ivory-editorial, blush-rose, seoul-romance, royal-gold (T-014..016 đã đổi tên)
-   - ✅ blush-rose (2026-10-27): `src/themes/blush-rose/` (phong bì tự vẽ + dấu sáp, tên Great Vibes, thẻ lễ âm lịch, coverflow, lịch trái tim `month-grid.ts` + 19 test, dress code, bao lì xì → GiftSheet, credit Redouté CC0). Option `palette`: `do-do` (mặc định) / `hong-nhat`. Manifest `published`, catalog `live`. Còn: Tony test iPhone + Zalo, `thumb.webp`/`og.webp`, commit ảnh `public/images/ornaments/redoute/rosa-carolina-corymbosa.webp` (Tony quyết), CSS module bị rule `*.css` trong next.config biến thành global (theme dùng `theme.css` tiền tố `br-`).
-   - ✅ blush-rose đợt sửa 1 (2026-10-28): thẻ "Thông tin lễ cưới" (cha mẹ 2 cột, Trưởng nam/Út nữ, khối ngày lớn, âm lịch từ `lunar.ts`), thẻ "Thông tin tiệc cưới" (đón khách/khai tiệc, lịch tim, thêm lịch, nút → `#xac-nhan`), lịch trình đỏ đô 5 mốc icon tự vẽ, Địa điểm nhúng Google Maps Embed (`src/lib/maps-embed.ts`, env `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` optional, GitHub Variables), dress code chỉ chấm màu + aria tên màu. Contract: `birthOrder`, `arrivalTimeLabel`/`banquetTimeLabel`, `timeline?`, SectionKey `timeline`/`dressCode`. Demo: 3 sự kiện TP.HCM (địa chỉ mới sau bỏ quận), album 3 ảnh Bin Thieu cùng cặp đôi + `npm run demo-album:fetch` (Tony thêm ID vào `src/content/demo-album/images.json`). Rủi ro: khi thêm CSP cần `frame-src https://www.google.com`.
-   - ✅ Thiệp theo BÊN (2026-10-28): `ThemeProps.side` ("nha-trai"/"nha-gai"), `EventView.side` thêm "chung" (khớp enum DB `Side`), bỏ `couple.brideFirst` khỏi contract theme (dashboard/DB vẫn giữ: khi nối DB cần map `Wedding.brideFirst` → không dùng nữa hoặc bỏ cột, Tony quyết). Helper `src/themes/_shared/side.ts` (+19 test): thứ tự tên/ông bà, "Lễ Vu Quy"/"Lễ Tân Hôn", câu báo tin, lọc sự kiện + timeline theo bên. Áp cho blush-rose + placeholder. Demo tĩnh: `/demo/[slug]` = nhà gái, `/demo/[slug]/nha-trai` (render chung `src/components/themes/demo-render.tsx`, pill chuyển bản). Quy tắc bắt buộc mọi theme: docs/07 §2.1.
-   - ✅ blush-rose đợt sửa 2 (2026-10-29): thẻ lễ/tiệc/lịch trình nền đặc `.br-card` (do-do #4A161A/#F3EDE3/#C4A257, hong-nhat #8C4A5A/#F8EEF0/#E8B9C3; chữ nhấn hồng dùng #F3D0D7 vì #E8B9C3 chỉ 3.75:1), bo 16px, bóng mềm; hoa Redouté nằm SAU thẻ, ló ra trên nền giấy. Thẻ tiệc: ô lịch sáng + tim đặc, nút pill kem, "Google Calendar · Tải .ics" (AddToCalendar thêm prop `labels`/`separator`). Album coverflow tự chạy 3.5s (`coverflow.ts` + test), dừng khi chạm (chạy lại sau 6s), ra khỏi màn hình, tab ẩn, focus bàn phím; reduced-motion không tự chạy. JS route /demo/blush-rose: 235.2 KB gzip (trước 234.6, gồm framework). Tony đã bỏ khối lời mời + cặp đôi lặp (875df23). Chốt 2026-10-31: bìa có guest + `sections.invitation` mới hiện danh xưng (`inviteLine`, `_shared/salutation.ts`, không lặp "kính mời") + `inviteMessage`; không guest thì ẩn hẳn. Demo `/demo/[slug]/khach-moi` có khách giả (mode demo, không ghi DB).
-   - ✅ Lời mời theo loại thiệp + tên khách có cấu trúc (2026-10-31): `ThemeProps.side: InvitationKind` thêm `bao-hy` (chỉ sự kiện `chung`, không cột ông bà, chú rể trước). `_shared/invitation-wording.ts` (`announceLine`, `inviteLine`, `thanksLine`, `envelopeLine`; xưng "chúng tôi"; `inviteMessage` tuỳ chọn: demo nhà gái, nhà trai để trống, báo hỷ có), `_shared/guest-line.ts` (`parseGuestLine`, `HONORIFICS`). `GuestContext` đổi `salutation` → `honorific`/`name`/`companion`. Bỏ `_shared/salutation.ts`. Demo tĩnh: `/demo/[slug]`, `/nha-trai`, `/bao-hy` và mỗi bản có `/khach-moi`. Chưa nối: `Invitation` trong DB/`features/guest` vẫn `salutationPrefix`/`displayName`/`salutationSuffix` (mock có "& Bạn đời", "& Các cháu" ngoài 2 giá trị companion); khi làm builder/DB phải chốt mapping, và chưa có chỗ chọn loại thiệp `bao-hy` trong dữ liệu đám cưới. Khi nối `parseGuestLine` vào form: thêm Zod `.max()` ở đầu vào vì hàm normalize toàn chuỗi trước khi cắt.
-3. Cẩm nang thêm bài (PRD: ≥ 5 bài khi launch) — bài 3 "lễ vu quy, thành hôn, tân hôn" link từ bài ghi thiệp
-4. Mock builder `/tao-thiep` + dashboard (dữ liệu localStorage)
-
-## ⏭️ Sau đó (backend — phần lớn 🔴 Tony tự code)
-
-- T-006 việc sau: bổ sung `prisma migrate deploy` sau khi chốt quyền DB, thứ tự migration và chiến lược expand/contract. **Chưa có migrate trong deploy hiện tại.**
+- **Kiểm SSL 25/12/2026**: chứng chỉ Let's Encrypt henuoc.com hết hạn 2027-01-20 → kiểm auto-renew trên AZDIGI trước ngày đó (`curl -vI https://henuoc.com 2>&1 | grep expire`).
+- **P5 — đổi tên biến R2** (CHƯA đổi bây giờ): `R2_BUCKET` → `R2_PRIVATE_BUCKET` + `R2_PUBLIC_BUCKET`, `NEXT_PUBLIC_MEDIA_URL` giữ tên; cập nhật `.env.example`, `env.server.ts`, `MEDIA_HOSTS` trong `url-allowlist.ts` (đang giả định `media.henuoc.com`).
+- Gỡ `notFound()` production ở `dashboard/layout.tsx` + `assertDashboardPreview()`: cần ownership (`requireWeddingAccess`) + dữ liệu thật thay mock. `getInviteLinkAction` vẫn chỉ chặn bằng NODE_ENV (TODO(auth) trong file).
+- `/api/rsvp` (chưa có route; `use-rsvp-form.ts` submit giả).
+- Builder `/tao-thiep` + T-028 "Dùng mẫu này" → `createWedding` (validate slug với registry phía server).
+- `createWedding` hardening: race 2 request (partial unique index, cần migration), rate limit, `.normalize("NFC")` + chặn `\p{C}`.
+- T-006: `prisma migrate deploy` trong deploy (chưa có).
+- T-027 gallery + bộ lọc · mẫu tiếp theo (song-hy-do-son, ivory-editorial, seoul-romance, royal-gold).
+- Blush Rose V1.1 (danh sách cuối file).
+- `NEXT_PUBLIC_ALLOW_INDEXING` chưa có trong `_build.yml` (thêm ngày launch).
 
 ## ⚠️ Rủi ro / bảo mật đang theo dõi
 
@@ -94,8 +104,9 @@
 - [ ] Gallery `/mau-thiep-cuoi` chỉ còn mẫu `live` (mẫu `preview` chưa dùng được → chuyển `planned` hoặc làm xong code trước ngày launch)
 - [ ] Bật `NEXT_PUBLIC_ALLOW_INDEXING` (cả bước Build trong `_build.yml`)
 - [ ] Trang pháp lý Tony duyệt, bỏ `index: false`
-- [ ] Cẩm nang ≥ 5 bài (PRD)
+- [x] Cẩm nang ≥ 5 bài (PRD) — 18 bài
 - [ ] Chốt gói Supabase production (ADR-004)
+- [ ] SSL henuoc.com còn hạn (kiểm 25/12/2026, hết hạn 2027-01-20)
 - [ ] Mọi CTA `/tao-thiep` phải dẫn tới luồng tạo thiệp chạy được hoặc trạng thái 'Sắp mở' trung thực
 
 ## 🧭 Quyết định chờ Tony
